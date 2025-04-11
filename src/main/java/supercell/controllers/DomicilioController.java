@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/sucursalEmpresa")
+@RequestMapping("/domicilio")
 public class DomicilioController {
 
      // Agregar servicio.
@@ -36,7 +36,7 @@ public class DomicilioController {
         return ResponseEntity.ok(domicilio);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Domicilio> actualizarDomicilio(
             @PathVariable Long id,
             @RequestBody Domicilio domicilioActualizado) {

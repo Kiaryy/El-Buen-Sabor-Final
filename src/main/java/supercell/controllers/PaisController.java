@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/sucursalEmpresa/paises")
+@RequestMapping("/pais")
 public class PaisController {
     // Agregar servicio
     private final PaisService paisService;
@@ -31,7 +31,7 @@ public class PaisController {
         return ResponseEntity.ok(paisService.obtenerPaisPorId(id));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<PaisDTO> actualizarPais(
             @PathVariable Long id,
             @RequestBody PaisDTO paisDTO) {

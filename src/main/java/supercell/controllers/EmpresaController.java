@@ -35,7 +35,7 @@ public class EmpresaController {
         return ResponseEntity.ok(empresa);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Empresa> actualizarEmpresa(
             @PathVariable Long id,
             @RequestBody Empresa empresaActualizada) {

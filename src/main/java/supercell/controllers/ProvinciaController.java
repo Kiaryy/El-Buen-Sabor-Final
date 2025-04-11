@@ -37,7 +37,7 @@ public class ProvinciaController {
         return ResponseEntity.ok(provinciaService.obtenerProvinciaConLocalidades(id));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<ProvinciaDTO> actualizarProvincia(
             @PathVariable Long id,
            @RequestBody ProvinciaDTO provinciaDTO) {

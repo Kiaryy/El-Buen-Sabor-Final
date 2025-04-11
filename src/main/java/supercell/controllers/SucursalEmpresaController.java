@@ -13,7 +13,7 @@ import supercell.payload.SucursalDTO;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/sucursalEmpresa/sucursales")
+@RequestMapping("/sucursales")
 public class SucursalEmpresaController {
 
     // Agregar servicio
@@ -37,10 +37,10 @@ public class SucursalEmpresaController {
         return ResponseEntity.ok(sucursalService.obtenerSucursalConDetalle(id));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<SucursalDTO> actualizarSucursal(
             @PathVariable Long id,
-            @Valid @RequestBody SucursalDTO sucursalDTO) {
+            @RequestBody SucursalDTO sucursalDTO) {
         return ResponseEntity.ok(sucursalService.actualizarSucursal(id, sucursalDTO));
     }
 

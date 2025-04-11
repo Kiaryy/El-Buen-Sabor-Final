@@ -36,7 +36,7 @@ public class LocalidadController {
         return ResponseEntity.ok(localidadService.obtenerPorId(id));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Localidad> actualizarLocalidad( @PathVariable Long id, @RequestBody Localidad localidad)
     {
         return ResponseEntity.ok(localidadService.actualizarLocalidad(id, localidad));
