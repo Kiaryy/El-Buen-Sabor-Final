@@ -1,14 +1,10 @@
 package supercell.Models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -34,5 +30,11 @@ public class SucursalEmpresa {
 
     @OneToOne
     @JoinColumn(name = "domicilio_id", nullable = false) // Foreign key de domicilio
-    private Domicilio domicilio;   
+    private Domicilio domicilio;
+
+    @OneToMany(mappedBy = "sucursalEmpresa", fetch = FetchType.LAZY)
+    private List<SucursalInsumo> sucursalInsumos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "sucursal")
+    private List<PedidoVenta> pedidoVenta = new ArrayList<>();
 }
