@@ -20,7 +20,6 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long IDArticle;
 
-
     private String denomination;
     
     @Column(precision = 10, scale = 2)
