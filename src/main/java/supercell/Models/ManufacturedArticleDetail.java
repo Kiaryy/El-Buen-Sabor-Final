@@ -1,6 +1,5 @@
 package supercell.Models;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,21 +7,21 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
+
 @Entity
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Localidad {
+public class ManufacturedArticleDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long IDLocalidad;
+    private Long IDManufacturedArticleDetail;
 
-    @Column(nullable = false)
-    private String nombre;
-
+    private int quantity;
+    
     @ManyToOne
-    @JoinColumn(name = "provincia_id", nullable = false) // Foreign key de Provincia
-    private Provincia provincia;
+    @JoinColumn(name = "articleInventory_id", nullable = false) // ArticleInventory Foreign Key
+    private ArticleInventory articleInventory;
 }
