@@ -1,6 +1,5 @@
 package supercell.Models;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.*;
@@ -11,15 +10,13 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Empresa {
+public class Company {
     // @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // private Long IDEmpresa;
-    
+    // private Long IDCompany;
+        
     @Id
     private long cuil;
-    @Column(nullable = false)
-    private String nombre;
-    @Column(nullable = false)
-    private String razonSocial;
+    private String Name;
+    private String SocialReason;
 }

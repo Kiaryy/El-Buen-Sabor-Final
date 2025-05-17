@@ -1,6 +1,5 @@
 package supercell.Models.enums;
 
-public enum TipoEnvio {
+public enum OrderType {
     DELIVERY, TAKEAWAY
-
 }
