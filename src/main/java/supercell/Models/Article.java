@@ -22,8 +22,12 @@ public class Article {
 
     private String denomination;
     
+    private int currentStock;
+
+    private int maxStock;
+
     @Column(precision = 10, scale = 2)
-    private Double sellingPrice;
+    private Double buyingPrice;
 
     @ManyToOne
     @JoinColumn(name = "measuringUnit_id", nullable = false) // MeasuringUnit Foreign Key
@@ -32,9 +36,4 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false) // Category Foreign Key 
     private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "articleInventory_id", nullable = false) //ArticleInventory Foreign Key
-    private ArticleInventory articleInventory;
-    
 }

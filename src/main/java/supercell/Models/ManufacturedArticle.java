@@ -1,8 +1,8 @@
 package supercell.Models;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -23,11 +23,14 @@ public class ManufacturedArticle {
     private Long IDManufacturedArticle;
 
     private String description;
-    private String recipe;
+
+    @Column(precision = 10, scale = 2)
+    private Double Price;
 
     private int estimatedTimeMinutes;
 
+    private boolean isAvailable;
 
     @OneToMany(mappedBy = "manufacturedArticle", fetch = FetchType.LAZY)
-    private List<Article> articles = new ArrayList<>();
+    private List<ManufacturedArticleDetail> manufacturedArticleDetail;
 }
