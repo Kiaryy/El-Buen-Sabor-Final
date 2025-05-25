@@ -1,6 +1,5 @@
 package supercell.ElBuenSabor.Models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -36,7 +35,7 @@ public class ManufacturedArticle {
 
     @OneToMany(mappedBy = "manufacturedArticle", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<ManufacturedArticleDetail> manufacturedArticleDetail = new ArrayList<>();
+    private List<ManufacturedArticleDetail> manufacturedArticleDetail;
 
 
 }

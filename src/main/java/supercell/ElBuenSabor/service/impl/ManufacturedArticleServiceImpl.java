@@ -13,13 +13,12 @@ import supercell.ElBuenSabor.Models.ManufacturedArticleDetail;
 import supercell.ElBuenSabor.Models.payload.ManufacturedArticleDTO;
 import supercell.ElBuenSabor.Models.payload.ManufacturedArticleDetailDTO;
 import supercell.ElBuenSabor.repository.ArticleRepository;
-import supercell.ElBuenSabor.repository.ManufacturedArticleDetailRepository;
 import supercell.ElBuenSabor.repository.ManufacturedArticleRepository;
 import supercell.ElBuenSabor.service.ManufacturedArticleService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ManufacturedArticleServiceImpl implements ManufacturedArticleService {
@@ -27,8 +26,6 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
     private final ManufacturedArticleRepository manufacturedArticleRepository;
     @Autowired
     private final ArticleRepository articleRepository;
-    @Autowired
-    private final ManufacturedArticleDetailRepository manufacturedArticleDetailRepository;
 
     @Override
     public List<ManufacturedArticle> getAllManufacturedArticle() {
