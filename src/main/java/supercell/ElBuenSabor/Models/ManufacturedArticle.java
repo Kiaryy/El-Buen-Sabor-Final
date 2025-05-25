@@ -1,6 +1,9 @@
 package supercell.ElBuenSabor.Models;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -21,14 +24,19 @@ public class ManufacturedArticle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long IDManufacturedArticle;
 
+    private String name;
+    
     private String description;
 
-    private Double Price;
+    private Double price;
 
     private int estimatedTimeMinutes;
 
     private boolean isAvailable;
 
-    @OneToMany(mappedBy = "manufacturedArticle", cascade = CascadeType.ALL)
-    private List<ManufacturedArticleDetail> manufacturedArticleDetail;
+    @OneToMany(mappedBy = "manufacturedArticle", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<ManufacturedArticleDetail> manufacturedArticleDetail = new ArrayList<>();
+
+
 }

@@ -1,5 +1,7 @@
 package supercell.ElBuenSabor.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,5 +29,6 @@ public class ManufacturedArticleDetail {
 
     @ManyToOne
     @JoinColumn(name = "manufactured_article_id")
+    @JsonBackReference
     private ManufacturedArticle manufacturedArticle;
 }

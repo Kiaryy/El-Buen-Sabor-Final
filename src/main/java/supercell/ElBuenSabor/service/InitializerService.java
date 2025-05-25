@@ -9,13 +9,18 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import supercell.ElBuenSabor.Models.Article;
 import supercell.ElBuenSabor.Models.Category;
+import supercell.ElBuenSabor.Models.ManufacturedArticle;
+import supercell.ElBuenSabor.Models.ManufacturedArticleDetail;
 import supercell.ElBuenSabor.Models.MeasuringUnit;
 import supercell.ElBuenSabor.Models.Provider;
 import supercell.ElBuenSabor.repository.ArticleRepository;
 import supercell.ElBuenSabor.repository.CategoryRepository;
+import supercell.ElBuenSabor.repository.ManufacturedArticleDetailRepository;
+import supercell.ElBuenSabor.repository.ManufacturedArticleRepository;
 import supercell.ElBuenSabor.repository.MeasuringUnitRepository;
 import supercell.ElBuenSabor.repository.ProviderRepository;
 
@@ -30,7 +35,10 @@ public class InitializerService {
     private final CategoryRepository categoryRepository;
     @Autowired
     private final ProviderRepository providerRepository; 
-    
+    @Autowired
+    private final ManufacturedArticleRepository manufacturedArticleRepository;
+    @Autowired
+    private final ManufacturedArticleDetailRepository manufacturedArticleDetailRepository;
 
     public String initializeCategory(){
         List<Category> categories = new ArrayList<>();
@@ -97,6 +105,16 @@ public class InitializerService {
             .build()
         );
 
+        articles.add(Article.builder()
+        .denomination("Frutilla")
+        .currentStock(25)
+        .maxStock(25)
+        .buyingPrice(10.50D)
+        .category(categoryMap.get("Fruta")) 
+        .measuringUnit(unitMap.get("Gr")) 
+        .build()
+    );
+
         articleRepository.saveAll(articles);
         return "Articles Initialized";
     }
@@ -113,7 +131,7 @@ public class InitializerService {
             .lastShipmentDate(LocalDate.now())
             .shippingCost(50.0D)
             .category(categoryMap.get("Fruta"))
-            .articles(List.of(articleMap.get("Banana")))
+            .articles(List.of(articleMap.get("Banana"), articleMap.get("Frutilla")))
             .build()
         );
 
@@ -126,5 +144,42 @@ public class InitializerService {
         );
         providerRepository.saveAll(providers);
         return "Providers Initialized";
+    }
+
+    @Transactional
+    public String initializeManufacturedArticle() {
+        Map<String, Article> articleMap = articleRepository.findAll().stream()
+            .collect(Collectors.toMap(Article::getDenomination, a -> a));
+    
+        ManufacturedArticle manufacturedArticle = ManufacturedArticle.builder()
+            .name("Licuado Frutal")
+            .description("Licuado de bananas y frutilla.")
+            .price(50.0D)
+            .isAvailable(true)
+            .estimatedTimeMinutes(15)
+            .build();
+    
+        manufacturedArticle = manufacturedArticleRepository.save(manufacturedArticle);
+    
+        List<ManufacturedArticleDetail> details = new ArrayList<>();
+    
+        details.add(ManufacturedArticleDetail.builder()
+            .article(articleMap.get("Banana"))
+            .quantity(250)
+            .manufacturedArticle(manufacturedArticle)
+            .build());
+    
+        details.add(ManufacturedArticleDetail.builder()
+            .article(articleMap.get("Frutilla"))
+            .quantity(250)
+            .manufacturedArticle(manufacturedArticle)
+            .build());
+    
+        manufacturedArticleDetailRepository.saveAll(details);
+    
+        manufacturedArticle.setManufacturedArticleDetail(details);
+        manufacturedArticleRepository.save(manufacturedArticle);
+    
+        return "ManufacturedArticles Initialized";
     }
 }

@@ -21,6 +21,7 @@ public class InitializerController {
         initializerService.initializeMeasuringUnit();
         initializerService.initializeArticle();        
         initializerService.initializeProvider();
+        initializerService.initializeManufacturedArticle();
         return "Tables Initialized";
     }
 
