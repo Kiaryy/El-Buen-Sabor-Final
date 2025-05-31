@@ -1,0 +1,22 @@
+meta {
+  name: AddProvider
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/provider/add
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "shippingCost": 50.55,
+    "category": 3,
+    "articles": [
+      1,
+      2
+    ]
+  }
+}

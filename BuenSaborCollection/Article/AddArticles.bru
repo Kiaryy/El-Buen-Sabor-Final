@@ -1,0 +1,23 @@
+meta {
+  name: AddArticles
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/article/add
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "denomination": "Tomate",
+    "currentStock": 25,
+    "maxStock": 150,
+    "buyingPrice": 555.55,
+    "measuringUnit": 2,
+    "Category": 2
+  }
+  
+}

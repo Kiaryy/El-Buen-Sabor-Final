@@ -1,0 +1,18 @@
+meta {
+  name: UpdateArticle
+  type: http
+  seq: 3
+}
+
+patch {
+  url: http://localhost:8080/article/update/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "denomination": "Queso"
+  }
+  
+}

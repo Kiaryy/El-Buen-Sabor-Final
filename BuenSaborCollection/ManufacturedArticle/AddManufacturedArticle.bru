@@ -1,0 +1,31 @@
+meta {
+  name: AddManufacturedArticle
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/manufacturedArticle/add
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Plato De Frutas",
+    "description": "Plato de bananas y frutillas",
+    "price": 1000.69,
+    "estimatedTimeMinutes": 5,
+    "isAvailable": true,
+    "manufacturedArticleDetail": [
+      {
+        "articleId": 1,
+        "quantity": 200
+      },
+      {
+        "articleId": 2,
+        "quantity": 150
+      }
+    ]
+  }
+}

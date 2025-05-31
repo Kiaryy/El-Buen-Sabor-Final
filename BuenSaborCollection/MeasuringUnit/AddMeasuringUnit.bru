@@ -1,0 +1,17 @@
+meta {
+  name: AddMeasuringUnit
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/measuringUnit/add
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "unit": "mL"
+  }
+}
