@@ -10,5 +10,4 @@ public interface CategoryService {
     public List<Category> getAllCategories();
     public Category updateCategory(Long ID, CategoryDTO categoryDTO);
     public Category addCategory(CategoryDTO categoryDTO);
-    public boolean deleteCategory(Long ID);
 }

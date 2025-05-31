@@ -9,5 +9,4 @@ public interface ManufacturedArticleService {
     public List<ManufacturedArticle> getAllManufacturedArticle();
     public ManufacturedArticle updateManufacturedArticle(Long ID, ManufacturedArticleDTO manufacturedArticleDTO);
     public ManufacturedArticle addManufacturedArticle(ManufacturedArticleDTO manufacturedArticleDTO);
-    public boolean deleteManufacturedArticle(Long ID);
 }

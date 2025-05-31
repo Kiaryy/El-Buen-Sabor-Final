@@ -54,37 +54,27 @@ public class ProviderServiceImpl implements ProviderService{
 
     @Override
     public Provider updateProvider(Long ID, ProviderDTO providerDTO) {
-        Optional<Category> category = categoryRepository.findById(providerDTO.category());
 
-        List<Article> articles = new ArrayList<>();
 
-        for (Long articleID : providerDTO.articles()) {
-            articles.add(articleRepository.findById(articleID).get());
-        }
 
         return providerRepository.findById(ID).map(existingProvider ->{
-            if (providerDTO.shippingCost() != 0) {
+            if (providerDTO.shippingCost() != null) {
                 existingProvider.setShippingCost(providerDTO.shippingCost());
             }
             if (providerDTO.category() != 0) {
+                Optional<Category> category = categoryRepository.findById(providerDTO.category());
                 existingProvider.setCategory(category.get());
             }
             if (!providerDTO.articles().isEmpty()) {
+                List<Article> articles = new ArrayList<>();
+
+                for (Long articleID : providerDTO.articles()) {
+                    articles.add(articleRepository.findById(articleID).get());
+                }
                 existingProvider.setArticles(articles);
             }
             return providerRepository.save(existingProvider);
         }).orElseThrow(() -> new EntityNotFoundException("No se encontro un proveedor con el ID: " + ID));
 
-    }
-
-    @Override
-    public boolean deleteProvider(Long ID) {
-        if (providerRepository.existsById(ID)) {
-            providerRepository.deleteById(ID);
-            return true;
-        } else{
-            throw new EntityNotFoundException("No se encontro un proveedor con el ID: " + ID);
-        }
-    }
-    
+    }    
 }

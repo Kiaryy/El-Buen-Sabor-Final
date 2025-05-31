@@ -72,7 +72,7 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
             if (manufacturedArticleDTO.description() != null) {
                 existingManufacturedArticle.setDescription(manufacturedArticleDTO.description());
             }
-            if (manufacturedArticleDTO.price() != 0) {
+            if (manufacturedArticleDTO.price() != null) {
                 existingManufacturedArticle.setPrice(manufacturedArticleDTO.price());
             }
             if (manufacturedArticleDTO.estimatedTimeMinutes() != 0) {
@@ -84,15 +84,5 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
             return manufacturedArticleRepository.save(existingManufacturedArticle);
         }).orElseThrow(() -> new EntityNotFoundException("No se encontro una unidad de medida con el ID: " + ID));
         
-    }
-
-    @Override
-    public boolean deleteManufacturedArticle(Long ID) {
-        if (manufacturedArticleRepository.existsById(ID)) {
-            manufacturedArticleRepository.deleteById(ID);
-            return true;
-        } else{
-            throw new EntityNotFoundException("No se encontro una unidad de medida con el ID: " + ID);
-        }
     }
 }

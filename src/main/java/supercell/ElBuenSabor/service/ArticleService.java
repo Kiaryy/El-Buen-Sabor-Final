@@ -10,5 +10,4 @@ public interface ArticleService {
     public List<Article> getAllArticles();
     public Article updateArticle(Long ID, ArticleDTO articleDTO);
     public Article addArticle(ArticleDTO articleDTO);
-    public boolean deleteArticle(Long ID);
 }

@@ -40,14 +40,4 @@ public class MeasuringUnitServiceImpl implements MeasuringUnitService{
             return measuringUnitRepository.save(existingMeasuringUnit);
         }).orElseThrow(() -> new EntityNotFoundException("No se encontro una unidad de medida con el ID: " + ID));
     }
-
-    @Override 
-    public boolean deleteMeasuringUnit(Long ID){
-        if (measuringUnitRepository.existsById(ID)) {
-            measuringUnitRepository.deleteById(ID);
-            return true;
-        } else{
-            throw new EntityNotFoundException("No se encontro una unidad de medida con el ID: " + ID);
-        }
-    }
 }

@@ -8,5 +8,4 @@ public interface ProviderService {
     public List<Provider> getAllProviders();
     public Provider updateProvider(Long ID, ProviderDTO providerDTO);
     public Provider addProvider(ProviderDTO providerDTO);
-    public boolean deleteProvider(Long ID);
 }

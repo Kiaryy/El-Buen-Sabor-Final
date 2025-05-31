@@ -9,5 +9,4 @@ public interface MeasuringUnitService {
     public List<MeasuringUnit> getAllMeasuringUnits();
     public MeasuringUnit updateMeasuringUnit(Long ID, MeasuringUnitDTO measuringUnitDTO);
     public MeasuringUnit addMeasuringUnit(MeasuringUnitDTO measuringUnitDTO);
-    public boolean deleteMeasuringUnit(Long ID);
 }

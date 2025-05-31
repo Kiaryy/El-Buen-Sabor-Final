@@ -42,14 +42,4 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryRepository.save(existingCategory);
         }).orElseThrow(() -> new EntityNotFoundException("No se encontro una categoria con el ID: " + ID));
     }
-
-    @Override
-    public boolean deleteCategory(Long ID) {
-        if (categoryRepository.existsById(ID)) {
-            categoryRepository.deleteById(ID);
-            return true;
-        } else{
-            throw new EntityNotFoundException("No se encontro una categoria con el ID: " + ID);
-        }
-    }
 }

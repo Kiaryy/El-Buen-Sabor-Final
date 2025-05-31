@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import supercell.ElBuenSabor.Models.Article;
 import supercell.ElBuenSabor.Models.Category;
 import supercell.ElBuenSabor.Models.MeasuringUnit;
@@ -31,11 +32,13 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     @Override
+    @Transactional
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
 
     @Override
+    @Transactional
     public Article addArticle(ArticleDTO articleDTO) {
         Optional<Category> category = categoryRepository.findById(articleDTO.category());
         Optional<MeasuringUnit> measuringUnit = measuringUnitRepository.findById(articleDTO.measuringUnit());
@@ -53,11 +56,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public Article updateArticle(Long ID, ArticleDTO articleDTO) {
-        Optional<Category> category = categoryRepository.findById(articleDTO.category());
-        Optional<MeasuringUnit> measuringUnit = measuringUnitRepository.findById(articleDTO.measuringUnit());
-        
-        return articleRepository.findById(ID).map(existingArticle ->{
+        return articleRepository.findById(ID).map(existingArticle -> {
             if (articleDTO.denomination() != null) {
                 existingArticle.setDenomination(articleDTO.denomination());
             }
@@ -67,26 +68,18 @@ public class ArticleServiceImpl implements ArticleService {
             if (articleDTO.maxStock() != 0) {
                 existingArticle.setMaxStock(articleDTO.maxStock());
             }
-            if (articleDTO.buyingPrice() != 0) {
+            if (articleDTO.buyingPrice() != null) {
                 existingArticle.setBuyingPrice(articleDTO.buyingPrice());
             }
-            if (articleDTO.category() != 0) {
-                existingArticle.setCategory(category.get());
+            if (articleDTO.category() != null && articleDTO.category() != 0) {
+                Optional<Category> category = categoryRepository.findById(articleDTO.category());
+                existingArticle.setCategory(category.orElseThrow(() -> new EntityNotFoundException("Category not found")));
             }
-            if (articleDTO.measuringUnit() != 0) {
-                existingArticle.setMeasuringUnit(measuringUnit.get());
+            if (articleDTO.measuringUnit() != null && articleDTO.measuringUnit() != 0) {
+                Optional<MeasuringUnit> measuringUnit = measuringUnitRepository.findById(articleDTO.measuringUnit());
+                existingArticle.setMeasuringUnit(measuringUnit.orElseThrow(() -> new EntityNotFoundException("MeasuringUnit not found")));
             }
             return articleRepository.save(existingArticle);
-        }).orElseThrow(() -> new EntityNotFoundException("No se encontro un articulo con el ID: "+ ID));
-    }
-    
-    @Override
-    public boolean deleteArticle(Long ID) {
-        if (articleRepository.existsById(ID)) {
-            articleRepository.deleteById(ID);
-            return true;
-        }else{
-            throw new EntityNotFoundException("No se encontro un articulo con el ID: " + ID);
-        }
+        }).orElseThrow(() -> new EntityNotFoundException("No se encontro un articulo con el ID: " + ID));
     }
 }
