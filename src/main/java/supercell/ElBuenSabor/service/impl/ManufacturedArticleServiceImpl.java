@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import supercell.ElBuenSabor.Models.Article;
+import supercell.ElBuenSabor.Models.InventoryImage;
 import supercell.ElBuenSabor.Models.ManufacturedArticle;
 import supercell.ElBuenSabor.Models.ManufacturedArticleDetail;
 import supercell.ElBuenSabor.Models.payload.ManufacturedArticleDTO;
@@ -34,7 +35,7 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
     
     @Override
     @Transactional
-    public ManufacturedArticle addManufacturedArticle(ManufacturedArticleDTO manufacturedArticleDTO) {
+    public ManufacturedArticle addManufacturedArticle(ManufacturedArticleDTO manufacturedArticleDTO) {       
         ManufacturedArticle manufacturedArticle = ManufacturedArticle.builder()
             .name(manufacturedArticleDTO.name())
             .description(manufacturedArticleDTO.description())
@@ -58,8 +59,14 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
     
             details.add(detail);
         }
-    
+
         manufacturedArticle.setManufacturedArticleDetail(details);
+        
+        InventoryImage inventoryImage = InventoryImage.builder()
+            .imageData(manufacturedArticleDTO.inventoryImageDTO().imageData())
+            .build();
+    
+        manufacturedArticle.setManufacInventoryImage(inventoryImage);
     
         return manufacturedArticleRepository.save(manufacturedArticle);
     }
@@ -81,8 +88,31 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
             if (manufacturedArticleDTO.isAvailable() != false) {
                 existingManufacturedArticle.setAvailable(manufacturedArticleDTO.isAvailable());
             }
+            if (manufacturedArticleDTO.manufacturedArticleDetail() != null && !manufacturedArticleDTO.manufacturedArticleDetail().isEmpty()) {
+                List<ManufacturedArticleDetail> details = new ArrayList<>();
+                for (ManufacturedArticleDetailDTO detailDTO : manufacturedArticleDTO.manufacturedArticleDetail()) {
+                    Article article = articleRepository.findById(detailDTO.articleId())
+                        .orElseThrow(() -> new EntityNotFoundException("Artículo no encontrado con ID: " + detailDTO.articleId()));
+            
+                    ManufacturedArticleDetail detail = ManufacturedArticleDetail.builder()
+                        .article(article)
+                        .quantity(detailDTO.quantity())
+                        .manufacturedArticle(existingManufacturedArticle) 
+                        .build();
+            
+                    details.add(detail);
+                }
+                existingManufacturedArticle.setManufacturedArticleDetail(details);
+            }
+            if (manufacturedArticleDTO.inventoryImageDTO() != null) {
+                InventoryImage inventoryImage = InventoryImage.builder()
+                    .imageData(manufacturedArticleDTO.inventoryImageDTO().imageData())
+                    .build();
+
+                existingManufacturedArticle.setManufacInventoryImage(inventoryImage);
+            }
             return manufacturedArticleRepository.save(existingManufacturedArticle);
-        }).orElseThrow(() -> new EntityNotFoundException("No se encontro una unidad de medida con el ID: " + ID));
+        }).orElseThrow(() -> new EntityNotFoundException("No se encontro un articulo manufacturado con el ID: " + ID));
         
     }
 }
