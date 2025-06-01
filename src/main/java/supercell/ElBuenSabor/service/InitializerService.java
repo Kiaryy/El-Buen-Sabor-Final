@@ -23,7 +23,6 @@ import supercell.ElBuenSabor.Models.MeasuringUnit;
 import supercell.ElBuenSabor.Models.Provider;
 import supercell.ElBuenSabor.repository.ArticleRepository;
 import supercell.ElBuenSabor.repository.CategoryRepository;
-import supercell.ElBuenSabor.repository.ManufacturedArticleDetailRepository;
 import supercell.ElBuenSabor.repository.ManufacturedArticleRepository;
 import supercell.ElBuenSabor.repository.MeasuringUnitRepository;
 import supercell.ElBuenSabor.repository.ProviderRepository;
@@ -180,7 +179,7 @@ public class InitializerService {
     
         
             InventoryImage inventoryImage = InventoryImage.builder()
-                .imageData(Files.readAllBytes(new File("/home/kiary/mpv-shot0001.jpg").toPath()))
+                .imageData(Files.readAllBytes(new File("MENU/screenshot-20250601-160119.png").toPath()))
                 .build();
                 
             manufacturedArticle.setManufacturedArticleDetail(details);
