@@ -9,7 +9,8 @@ public record ManufacturedArticleDTO(
     Double price,
     int estimatedTimeMinutes,
     boolean isAvailable,
-    List<ManufacturedArticleDetailDTO> manufacturedArticleDetail
+    List<ManufacturedArticleDetailDTO> manufacturedArticleDetail,
+    InventoryImageDTO inventoryImageDTO
 ) {
     
 }

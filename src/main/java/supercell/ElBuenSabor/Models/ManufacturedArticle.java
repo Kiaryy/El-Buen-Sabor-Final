@@ -9,7 +9,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 
 @Entity
@@ -37,5 +39,7 @@ public class ManufacturedArticle {
     @JsonManagedReference
     private List<ManufacturedArticleDetail> manufacturedArticleDetail;
 
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "inventory_image_id", referencedColumnName = "IDInventoryImage")
+    private InventoryImage manufacInventoryImage;
 }

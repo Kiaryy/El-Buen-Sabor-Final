@@ -1,5 +1,8 @@
 package supercell.ElBuenSabor.service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import supercell.ElBuenSabor.Models.Article;
 import supercell.ElBuenSabor.Models.Category;
+import supercell.ElBuenSabor.Models.InventoryImage;
 import supercell.ElBuenSabor.Models.ManufacturedArticle;
 import supercell.ElBuenSabor.Models.ManufacturedArticleDetail;
 import supercell.ElBuenSabor.Models.MeasuringUnit;
@@ -37,8 +41,6 @@ public class InitializerService {
     private final ProviderRepository providerRepository; 
     @Autowired
     private final ManufacturedArticleRepository manufacturedArticleRepository;
-    @Autowired
-    private final ManufacturedArticleDetailRepository manufacturedArticleDetailRepository;
 
     public String initializeCategory(){
         List<Category> categories = new ArrayList<>();
@@ -148,37 +150,46 @@ public class InitializerService {
 
     @Transactional
     public String initializeManufacturedArticle() {
-        Map<String, Article> articleMap = articleRepository.findAll().stream()
-            .collect(Collectors.toMap(Article::getDenomination, a -> a));
+        try{
+            Map<String, Article> articleMap = articleRepository.findAll().stream()
+                .collect(Collectors.toMap(Article::getDenomination, a -> a));
+        
+            ManufacturedArticle manufacturedArticle = ManufacturedArticle.builder()
+                .name("Licuado Frutal")
+                .description("Licuado de bananas y frutilla.")
+                .price(50.0D)
+                .isAvailable(true)
+                .estimatedTimeMinutes(15)
+                .build();
+        
+            manufacturedArticle = manufacturedArticleRepository.save(manufacturedArticle);
+        
+            List<ManufacturedArticleDetail> details = new ArrayList<>();
+        
+            details.add(ManufacturedArticleDetail.builder()
+                .article(articleMap.get("Banana"))
+                .quantity(250)
+                .manufacturedArticle(manufacturedArticle)
+                .build());
+        
+            details.add(ManufacturedArticleDetail.builder()
+                .article(articleMap.get("Frutilla"))
+                .quantity(250)
+                .manufacturedArticle(manufacturedArticle)
+                .build());
     
-        ManufacturedArticle manufacturedArticle = ManufacturedArticle.builder()
-            .name("Licuado Frutal")
-            .description("Licuado de bananas y frutilla.")
-            .price(50.0D)
-            .isAvailable(true)
-            .estimatedTimeMinutes(15)
-            .build();
-    
-        manufacturedArticle = manufacturedArticleRepository.save(manufacturedArticle);
-    
-        List<ManufacturedArticleDetail> details = new ArrayList<>();
-    
-        details.add(ManufacturedArticleDetail.builder()
-            .article(articleMap.get("Banana"))
-            .quantity(250)
-            .manufacturedArticle(manufacturedArticle)
-            .build());
-    
-        details.add(ManufacturedArticleDetail.builder()
-            .article(articleMap.get("Frutilla"))
-            .quantity(250)
-            .manufacturedArticle(manufacturedArticle)
-            .build());
-    
-        manufacturedArticleDetailRepository.saveAll(details);
-    
-        manufacturedArticle.setManufacturedArticleDetail(details);
-        manufacturedArticleRepository.save(manufacturedArticle);
+        
+            InventoryImage inventoryImage = InventoryImage.builder()
+                .imageData(Files.readAllBytes(new File("/home/kiary/mpv-shot0001.jpg").toPath()))
+                .build();
+                
+            manufacturedArticle.setManufacturedArticleDetail(details);
+            manufacturedArticle.setManufacInventoryImage(inventoryImage);
+            manufacturedArticleRepository.save(manufacturedArticle);
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     
         return "ManufacturedArticles Initialized";
     }
