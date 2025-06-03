@@ -11,15 +11,17 @@ public class WebConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers("/auth/**").permitAll()
-                        // Protected paths
-                        /*
-                        * .requestMatchers("/insumos/**").hasAuthority("ADMIN")
-                        * */
-                        .anyRequest().permitAll()
-                );
-
+            .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers.frameOptions().disable())
+            .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/article/**").permitAll()
+                .requestMatchers("/client/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .anyRequest().permitAll()
+            );
+    
         return http.build();
     }
+    
 }
