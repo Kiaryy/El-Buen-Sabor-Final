@@ -1,0 +1,23 @@
+meta {
+  name: RegisterClient
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/client/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "firstName": "Juan",
+    "lastName": "Perez",
+    "phoneNumber": "123456",
+    "email": "juanp@mail.com",
+    "birthDate": "1998-04-06",
+    "username": "JuanP",
+    "password": "JuanP123"
+  }
+}

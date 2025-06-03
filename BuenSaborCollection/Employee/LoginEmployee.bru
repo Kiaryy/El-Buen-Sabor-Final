@@ -1,0 +1,18 @@
+meta {
+  name: LoginEmployee
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/employee/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "RGarcia",
+    "password": "RGarcia2000"
+  }
+}

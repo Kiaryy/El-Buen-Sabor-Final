@@ -1,0 +1,18 @@
+meta {
+  name: LoginClient
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/client/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username": "JuanP",
+    "password": "JuanP123"
+  }
+}

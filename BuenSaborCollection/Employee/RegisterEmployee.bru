@@ -1,0 +1,26 @@
+meta {
+  name: RegisterEmployee
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/employee/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "firstName": "Ricardo",
+    "lastName": "Garcia",
+    "phoneNumber": 4567988,
+    "email": "rgarcia@mail.com",
+    "birthDate": "2000-01-10",
+    "username": "RGarcia",
+    "password": "RGarcia2000",
+    "role": "CASHIER",
+    "salary": 4560,
+    "shift": "MORNING"
+  }
+}
