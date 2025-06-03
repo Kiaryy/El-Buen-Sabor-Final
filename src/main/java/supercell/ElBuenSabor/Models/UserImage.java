@@ -14,6 +14,7 @@ public class UserImage {
     private Long id;
 
     @Lob
+    @Column(name = "image_data", columnDefinition="MEDIUMBLOB")
     private byte[] imageData;
 }
 
