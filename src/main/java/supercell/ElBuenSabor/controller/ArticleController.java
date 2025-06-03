@@ -32,7 +32,7 @@ public class ArticleController {
 
     @PostMapping("/add")
     public ResponseEntity<Article> addArticle(@RequestBody ArticleDTO articleDTO){
-        return ResponseEntity.status(HttpStatus.OK).body(articleServiceImpl.addArticle(null));
+        return ResponseEntity.status(HttpStatus.OK).body(articleServiceImpl.addArticle(articleDTO));
     }
 
     @PatchMapping("/update/{ID}")

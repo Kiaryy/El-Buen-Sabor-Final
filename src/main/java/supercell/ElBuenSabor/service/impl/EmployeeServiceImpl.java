@@ -17,7 +17,7 @@ public class EmployeeServiceImpl implements AuthService<EmployeeDto> {
 
     @Override
     public String logIn(String username, String password) {
-        Optional<Employee> emp = employeeRepository.findByNameAndPassword(username, password);
+        Optional<Employee> emp = employeeRepository.findByUsernameAndPassword(username, password);
         return emp.isPresent() ? "Login OK" : "Login failed";
     }
 
@@ -29,6 +29,8 @@ public class EmployeeServiceImpl implements AuthService<EmployeeDto> {
         emp.setPhoneNumber(String.valueOf(dto.getPhoneNumber()));
         emp.setEmail(dto.getEmail());
         emp.setBirthDate(dto.getBirthDate());
+        
+        emp.setUsername(dto.getUsername());
 
         emp.setPassword(dto.getPassword());
         emp.setEmployeeRole(dto.getRole());

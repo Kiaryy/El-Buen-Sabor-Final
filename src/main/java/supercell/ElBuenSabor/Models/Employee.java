@@ -6,8 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import supercell.ElBuenSabor.Models.enums.Role;
-
-import java.time.LocalDate;
+import supercell.ElBuenSabor.Models.enums.Shift;
 
 @Entity
 @Getter
@@ -25,7 +24,10 @@ public class Employee extends Person {
 
     private Double salary;
 
-    private LocalDate shift;
+    @Enumerated(EnumType.STRING)
+    private Shift shift;
+
+    private String username;
     private String password;
 }
 

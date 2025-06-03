@@ -24,7 +24,7 @@ public class ClientService implements AuthService<ClientDto> {
     @Override
     public ClientDto register(ClientDto dto) {
         Client client = new Client();
-        client.setUsername(dto.getFirstName());
+        client.setName(dto.getFirstName());
         client.setLastName(dto.getLastName());
         client.setPhoneNumber(String.valueOf(dto.getPhoneNumber()));
         client.setEmail(dto.getEmail());

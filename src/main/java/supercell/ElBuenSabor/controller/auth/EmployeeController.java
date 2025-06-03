@@ -1,14 +1,14 @@
 package supercell.ElBuenSabor.controller.auth;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import supercell.ElBuenSabor.Models.payload.EmployeeDto;
+import supercell.ElBuenSabor.Models.payload.UserLoginDTO;
 import supercell.ElBuenSabor.service.AuthService;
 
 @RestController
-@RequestMapping("/api/employee")
+@RequestMapping("employee")
 @RequiredArgsConstructor
 public class EmployeeController {
 
@@ -21,8 +21,8 @@ public class EmployeeController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) {
-        String response = authService.logIn(username, password);
+    public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO) {
+        String response = authService.logIn(userLoginDTO.username(), userLoginDTO.password());
         return ResponseEntity.ok(response);
 
     }

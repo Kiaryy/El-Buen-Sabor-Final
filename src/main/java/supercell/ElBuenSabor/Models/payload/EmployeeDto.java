@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import supercell.ElBuenSabor.Models.enums.Role;
+import supercell.ElBuenSabor.Models.enums.Shift;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -23,5 +23,5 @@ public class EmployeeDto{
     private String password;
     private Role role;
     private Double salary;
-    private LocalDate shift;
+    private Shift shift;
 }
