@@ -6,5 +6,6 @@ import supercell.ElBuenSabor.Models.Employee;
 import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    Optional<Employee> findByUsernameAndPassword(String username, String password);
+    Optional<Employee> findByEmailAndPassword(String email, String password);
+    Optional<Employee> findByEmail(String email);
 }

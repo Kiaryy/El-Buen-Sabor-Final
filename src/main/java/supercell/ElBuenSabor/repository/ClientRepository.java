@@ -6,6 +6,7 @@ import supercell.ElBuenSabor.Models.Client;
 import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    Optional<Client> findByUsernameAndPassword(String username, String password);
+    Optional<Client> findByEmailAndPassword(String username, String password);
+    Optional<Client> findByEmail(String email);
 }
 
