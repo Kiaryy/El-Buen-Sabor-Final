@@ -16,16 +16,22 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import supercell.ElBuenSabor.Models.Article;
 import supercell.ElBuenSabor.Models.Category;
+import supercell.ElBuenSabor.Models.Country;
 import supercell.ElBuenSabor.Models.InventoryImage;
+import supercell.ElBuenSabor.Models.Location;
 import supercell.ElBuenSabor.Models.ManufacturedArticle;
 import supercell.ElBuenSabor.Models.ManufacturedArticleDetail;
 import supercell.ElBuenSabor.Models.MeasuringUnit;
 import supercell.ElBuenSabor.Models.Provider;
+import supercell.ElBuenSabor.Models.Province;
 import supercell.ElBuenSabor.repository.ArticleRepository;
 import supercell.ElBuenSabor.repository.CategoryRepository;
+import supercell.ElBuenSabor.repository.CountryRepository;
+import supercell.ElBuenSabor.repository.LocationRepository;
 import supercell.ElBuenSabor.repository.ManufacturedArticleRepository;
 import supercell.ElBuenSabor.repository.MeasuringUnitRepository;
 import supercell.ElBuenSabor.repository.ProviderRepository;
+import supercell.ElBuenSabor.repository.ProvinceRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +46,12 @@ public class InitializerService {
     private final ProviderRepository providerRepository; 
     @Autowired
     private final ManufacturedArticleRepository manufacturedArticleRepository;
+    @Autowired
+    private final CountryRepository countryRepository;
+    @Autowired
+    private final ProvinceRepository provinceRepository;
+    @Autowired
+    private final LocationRepository locationRepository;
 
     public String initializeCategory(){
         List<Category> categories = new ArrayList<>();
@@ -192,4 +204,34 @@ public class InitializerService {
     
         return "ManufacturedArticles Initialized";
     }
+    @Transactional
+    public String initializeCountryAndProvince() {
+    
+        Country country = Country.builder()
+            .name("Argentina")
+            .build();
+        countryRepository.save(country);
+    
+        Province province = Province.builder()
+            .name("Mendoza")
+            .country(country)
+            .build();
+        provinceRepository.save(province);
+    
+        List<String> locationNames = List.of(
+            "Godoy Cruz", "Guaymallén", "Las Heras", "Maipú", "Luján de Cuyo",
+            "San Martín", "Tunuyán", "Rivadavia", "Malargüe", "San Rafael"
+        );
+    
+        for (String name : locationNames) {
+            Location location = Location.builder()
+                .name(name)
+                .province(province)
+                .build();
+            locationRepository.save(location);
+        }
+    
+        return "Countries, Provinces, and 10 Locations Initialized";
+    }
 }
+
