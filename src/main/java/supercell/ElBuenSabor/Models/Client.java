@@ -1,5 +1,7 @@
 package supercell.ElBuenSabor.Models;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +23,10 @@ public class Client extends Person {
 
     @OneToOne(cascade = CascadeType.ALL)
     private UserImage userImage;
+
+        
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Domicile> domiciles;
 
 }
 

@@ -1,5 +1,7 @@
 package supercell.ElBuenSabor.Models;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,5 +31,9 @@ public class Employee extends Person {
 
     private String username;
     private String password;
+
+        
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Domicile> domiciles;
 }
 

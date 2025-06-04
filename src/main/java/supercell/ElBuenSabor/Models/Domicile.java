@@ -27,4 +27,12 @@ public class Domicile {
     @ManyToOne
     @JoinColumn(name = "location_id", nullable = false) // Location Foreign Key
     private Location location;   
+    
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = true)
+    private Client client;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id", nullable = true)
+    private Employee employee;
 }
