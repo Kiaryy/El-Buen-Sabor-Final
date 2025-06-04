@@ -22,7 +22,7 @@ public class ClientController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginDTO clientLoginDTO) {
-        String response = clientAuthService.logIn(clientLoginDTO.username(), clientLoginDTO.password());
+        String response = clientAuthService.logIn(clientLoginDTO.email(), clientLoginDTO.password());
         return ResponseEntity.ok(response);
     }
 }

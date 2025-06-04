@@ -22,7 +22,7 @@ public class EmployeeController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO) {
-        String response = authService.logIn(userLoginDTO.username(), userLoginDTO.password());
+        String response = authService.logIn(userLoginDTO.email(), userLoginDTO.password());
         return ResponseEntity.ok(response);
 
     }
