@@ -8,6 +8,7 @@ import supercell.ElBuenSabor.Models.enums.Role;
 import supercell.ElBuenSabor.Models.enums.Shift;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,9 +17,10 @@ import java.util.Date;
 public class EmployeeDto{
     private String firstName;
     private String lastName;
-    private Integer phoneNumber;
+    private String phoneNumber;
     private String email;
     private Date birthDate;
+    private List<DomicileDTO> domiciles;
     private String username;
     private String password;
     private Role role;
