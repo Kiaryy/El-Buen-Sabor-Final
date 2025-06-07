@@ -1,5 +1,6 @@
 package supercell.ElBuenSabor.Models.payload;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ public class ClientDto{
     private String lastName;
     private Integer phoneNumber;
     private String email;
+    @JsonFormat(pattern = "MM-yyyy")
     private Date birthDate;
     private String username;
     private String password;
