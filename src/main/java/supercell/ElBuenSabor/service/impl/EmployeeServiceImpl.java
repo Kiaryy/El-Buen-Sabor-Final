@@ -30,8 +30,14 @@ public class EmployeeServiceImpl implements AuthService<EmployeeDto> {
 
     @Override
     public String logIn(String email, String password) {
+        String response;
         Optional<Employee> emp = employeeRepository.findByEmailAndPassword(email, password);
-        return emp.isPresent() ? "Login OK" : "Login failed";
+        if (emp.isPresent()) {
+            response = "Login OK, Rol: " + emp.get().getEmployeeRole();
+        } else{
+            response = "Login Failed";
+        }
+        return response ;
     }
 
     @Override
