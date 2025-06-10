@@ -30,7 +30,7 @@ public class ManufacturedArticle {
     private String description;
 
     private Double price;
-
+    private Integer stock;
     private int estimatedTimeMinutes;
 
     private boolean isAvailable;

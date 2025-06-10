@@ -12,10 +12,14 @@ public class WebConfig  {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
+                .headers(headers -> headers.frameOptions().disable())
                 .authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-                                .requestMatchers("/h2-console/*","/console/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/article/**").permitAll()
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/article/**").permitAll()
+                                .requestMatchers("/client/**").permitAll()
+                                .requestMatchers("/h2-console/**").permitAll()
+                                .requestMatchers("/api/orders/**").permitAll()
                         .anyRequest().permitAll()
                         // Protected paths
                         /*

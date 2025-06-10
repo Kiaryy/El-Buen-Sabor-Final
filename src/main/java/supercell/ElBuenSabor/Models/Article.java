@@ -19,7 +19,7 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long IDArticle;
-
+    private String name;
     private String denomination;
     
     private int currentStock;

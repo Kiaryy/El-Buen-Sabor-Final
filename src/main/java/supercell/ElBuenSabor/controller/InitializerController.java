@@ -22,6 +22,7 @@ public class InitializerController {
         initializerService.initializeArticle();        
         initializerService.initializeProvider();
         initializerService.initializeManufacturedArticle();
+        initializerService.initializeClient();
         return "Tables Initialized";
     }
 

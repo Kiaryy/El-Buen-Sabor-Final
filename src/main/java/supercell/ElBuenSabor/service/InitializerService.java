@@ -3,6 +3,7 @@ package supercell.ElBuenSabor.service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,18 +15,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import supercell.ElBuenSabor.Models.Article;
-import supercell.ElBuenSabor.Models.Category;
-import supercell.ElBuenSabor.Models.InventoryImage;
-import supercell.ElBuenSabor.Models.ManufacturedArticle;
-import supercell.ElBuenSabor.Models.ManufacturedArticleDetail;
-import supercell.ElBuenSabor.Models.MeasuringUnit;
-import supercell.ElBuenSabor.Models.Provider;
-import supercell.ElBuenSabor.repository.ArticleRepository;
-import supercell.ElBuenSabor.repository.CategoryRepository;
-import supercell.ElBuenSabor.repository.ManufacturedArticleRepository;
-import supercell.ElBuenSabor.repository.MeasuringUnitRepository;
-import supercell.ElBuenSabor.repository.ProviderRepository;
+import supercell.ElBuenSabor.Models.*;
+import supercell.ElBuenSabor.repository.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +31,8 @@ public class InitializerService {
     private final ProviderRepository providerRepository; 
     @Autowired
     private final ManufacturedArticleRepository manufacturedArticleRepository;
-
+    @Autowired
+    private final ClientRepository clientRepository;
     public String initializeCategory(){
         List<Category> categories = new ArrayList<>();
         
@@ -191,5 +183,22 @@ public class InitializerService {
         }
     
         return "ManufacturedArticles Initialized";
+    }
+    public String initializeClient(){
+        try {
+            Client client = new Client();
+            client.setName("Juan");
+            client.setEmail("juan@Gmail.com");
+            client.setLastName("alberto");
+            client.setPhoneNumber("2031545");
+            client.setBirthDate(Date.valueOf("2000-01-15"));
+            client.setUsername("Juan");
+            client.setPassword("JuanPassword");
+            client.setAuth0Id("1");
+            clientRepository.save(client);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return "client initialized";
     }
 }

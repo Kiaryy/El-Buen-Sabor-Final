@@ -17,7 +17,7 @@ public class ClientDto{
     private String lastName;
     private Integer phoneNumber;
     private String email;
-    @JsonFormat(pattern = "MM-yyyy")
+    @JsonFormat (pattern = "MM-yyyy")
     private Date birthDate;
     private String username;
     private String password;
