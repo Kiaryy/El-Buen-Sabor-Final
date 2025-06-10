@@ -34,6 +34,13 @@ public class ClientService implements AuthService<ClientDto> {
         return clientOpt.isPresent() ? "Login OK" : "Login failed";
     }
 
+    
+    public Client getClient(Long ID){
+        Client client = clientRepository.findById(ID).
+        orElseThrow(() -> new EntityNotFoundException("No se encontro el cliente con el ID: " + ID));
+        return client;
+    }
+    
     @Override
     public ClientDto register(ClientDto dto) {
         clientRepository.findByEmail(dto.getEmail()).ifPresent(existing -> {

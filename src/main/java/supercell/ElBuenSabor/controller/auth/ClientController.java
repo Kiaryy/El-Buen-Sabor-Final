@@ -1,11 +1,15 @@
 package supercell.ElBuenSabor.controller.auth;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import supercell.ElBuenSabor.Models.payload.ClientDto;
 import supercell.ElBuenSabor.Models.payload.UserLoginDTO;
 import supercell.ElBuenSabor.service.AuthService;
+import supercell.ElBuenSabor.service.impl.ClientService;
 
 @RestController
 @RequestMapping("/client")
@@ -13,6 +17,14 @@ import supercell.ElBuenSabor.service.AuthService;
 public class ClientController {
 
     private final AuthService<ClientDto> clientAuthService;
+
+
+    @GetMapping("/{ID}")
+    public ResponseEntity<Object> returnClient(@PathVariable Long ID){
+        ClientService service = (ClientService) clientAuthService;
+        return ResponseEntity.status(HttpStatus.OK).body(service.getClient(ID));
+    }
+
 
     @PostMapping("/register")
     public ResponseEntity<String> registerClient(@RequestBody ClientDto clientDto) {

@@ -1,5 +1,7 @@
 package supercell.ElBuenSabor.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,9 +32,11 @@ public class Domicile {
     
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = true)
+    @JsonBackReference
     private Client client;
 
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = true)
+    @JsonBackReference
     private Employee employee;
 }
