@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import supercell.ElBuenSabor.Models.Article;
 import supercell.ElBuenSabor.Models.Category;
 import supercell.ElBuenSabor.Models.Country;
+import supercell.ElBuenSabor.Models.Employee;
 import supercell.ElBuenSabor.Models.InventoryImage;
 import supercell.ElBuenSabor.Models.Location;
 import supercell.ElBuenSabor.Models.ManufacturedArticle;
@@ -24,6 +25,8 @@ import supercell.ElBuenSabor.Models.ManufacturedArticleDetail;
 import supercell.ElBuenSabor.Models.MeasuringUnit;
 import supercell.ElBuenSabor.Models.Provider;
 import supercell.ElBuenSabor.Models.Province;
+import supercell.ElBuenSabor.Models.enums.Role;
+import supercell.ElBuenSabor.Models.enums.Shift;
 import supercell.ElBuenSabor.repository.ArticleRepository;
 import supercell.ElBuenSabor.repository.CategoryRepository;
 import supercell.ElBuenSabor.repository.CountryRepository;
@@ -52,6 +55,9 @@ public class InitializerService {
     private final ProvinceRepository provinceRepository;
     @Autowired
     private final LocationRepository locationRepository;
+    @Autowired
+    private final supercell.ElBuenSabor.repository.EmployeeRepository employeeRepository;
+
 
     public String initializeCategory(){
         List<Category> categories = new ArrayList<>();
@@ -232,6 +238,30 @@ public class InitializerService {
         }
     
         return "Countries, Provinces, and 10 Locations Initialized";
+    }
+    
+    @Transactional
+    public String initializeEmployees() {
+        List<Employee> employees = new ArrayList<>();
+
+        for (Role role : Role.values()) {
+            Employee employee = new Employee();
+            employee.setEmployeeRole(role);
+            employee.setSalary(25000.0); 
+            employee.setShift(Shift.MORNING); 
+            employee.setUsername(role.name().toLowerCase() + "_user");
+            employee.setPassword("password");
+            employee.setName("Name_" + role.name());
+            employee.setLastName("LastName_" + role.name());
+            employee.setPhoneNumber("123456789");
+            employee.setEmail(role.name().toLowerCase() + "@example.com");
+            employee.setBirthDate(new java.util.Date());
+
+            employees.add(employee);
+        }
+
+        employeeRepository.saveAll(employees);
+        return "Employees Initialized";
     }
 }
 
