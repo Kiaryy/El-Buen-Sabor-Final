@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.*;
@@ -38,6 +39,10 @@ public class ManufacturedArticle {
     @OneToMany(mappedBy = "manufacturedArticle", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<ManufacturedArticleDetail> manufacturedArticleDetail;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id") // Puedes personalizar el nombre de la columna
+    private Category category;  
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "inventory_image_id", referencedColumnName = "IDInventoryImage")

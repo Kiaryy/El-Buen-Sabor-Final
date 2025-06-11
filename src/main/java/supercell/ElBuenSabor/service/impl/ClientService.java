@@ -16,11 +16,25 @@ public class ClientService implements AuthService<ClientDto> {
     private final ClientRepository clientRepository;
 
     @Override
-    public String logIn(String username, String password) {
-        Optional<Client> clientOpt = clientRepository.findByUsernameAndPassword(username, password);
-        return clientOpt.isPresent() ? "Login OK" : "Login failed";
+
+    public String logIn(String email, String password) {
+        String response;
+        Optional<Client> clientOpt = clientRepository.findByEmailAndPassword(email, password);
+        if(clientOpt.isPresent()){
+            response = "Login OK, ID: " + clientOpt.get().getId();
+        } else{
+            response = "Login failed";
+        }
+        return response;
     }
 
+    
+    public Client getClient(Long ID){
+        Client client = clientRepository.findById(ID).
+        orElseThrow(() -> new EntityNotFoundException("No se encontro el cliente con el ID: " + ID));
+        return client;
+    }
+    
     @Override
     public ClientDto register(ClientDto dto) {
         Client client = new Client();

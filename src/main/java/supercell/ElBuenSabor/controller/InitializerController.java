@@ -22,7 +22,11 @@ public class InitializerController {
         initializerService.initializeArticle();        
         initializerService.initializeProvider();
         initializerService.initializeManufacturedArticle();
+
         initializerService.initializeClient();
+
+        initializerService.initializeCountryAndProvince();
+        initializerService.initializeEmployees();
         return "Tables Initialized";
     }
 

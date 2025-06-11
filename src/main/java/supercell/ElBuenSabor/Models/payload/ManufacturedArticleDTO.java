@@ -10,7 +10,8 @@ public record ManufacturedArticleDTO(
     int estimatedTimeMinutes,
     boolean isAvailable,
     List<ManufacturedArticleDetailDTO> manufacturedArticleDetail,
-    InventoryImageDTO inventoryImageDTO
+    InventoryImageDTO inventoryImageDTO,
+    Long category
 ) {
     
 }
