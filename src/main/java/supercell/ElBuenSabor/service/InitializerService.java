@@ -72,6 +72,11 @@ public class InitializerService {
             .build()
         );
 
+        categories.add(Category.builder()
+            .name("Licuado")
+            .build()
+        );
+
         categoryRepository.saveAll(categories);
         return "Categories Initialized";
     }
@@ -170,6 +175,9 @@ public class InitializerService {
         try{
             Map<String, Article> articleMap = articleRepository.findAll().stream()
                 .collect(Collectors.toMap(Article::getDenomination, a -> a));
+            
+            Map<String, Category> categoryMap = categoryRepository.findAll().stream()
+                .collect(Collectors.toMap(Category::getName, c -> c));
         
             ManufacturedArticle manufacturedArticle = ManufacturedArticle.builder()
                 .name("Licuado Frutal")
@@ -177,6 +185,7 @@ public class InitializerService {
                 .price(50.0D)
                 .isAvailable(true)
                 .estimatedTimeMinutes(15)
+                .category(categoryMap.get("Licuado"))
                 .build();
         
             manufacturedArticle = manufacturedArticleRepository.save(manufacturedArticle);

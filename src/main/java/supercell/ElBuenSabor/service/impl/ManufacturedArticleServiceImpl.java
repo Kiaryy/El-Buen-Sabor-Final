@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import supercell.ElBuenSabor.Models.Article;
+import supercell.ElBuenSabor.Models.Category;
 import supercell.ElBuenSabor.Models.InventoryImage;
 import supercell.ElBuenSabor.Models.ManufacturedArticle;
 import supercell.ElBuenSabor.Models.ManufacturedArticleDetail;
 import supercell.ElBuenSabor.Models.payload.ManufacturedArticleDTO;
 import supercell.ElBuenSabor.Models.payload.ManufacturedArticleDetailDTO;
 import supercell.ElBuenSabor.repository.ArticleRepository;
+import supercell.ElBuenSabor.repository.CategoryRepository;
 import supercell.ElBuenSabor.repository.ManufacturedArticleRepository;
 import supercell.ElBuenSabor.service.ManufacturedArticleService;
 
@@ -27,6 +29,8 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
     private final ManufacturedArticleRepository manufacturedArticleRepository;
     @Autowired
     private final ArticleRepository articleRepository;
+    @Autowired 
+    private final CategoryRepository categoryRepository;
 
     @Override
     public List<ManufacturedArticle> getAllManufacturedArticle() {
@@ -67,6 +71,11 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
             .build();
     
         manufacturedArticle.setManufacInventoryImage(inventoryImage);
+
+        Category category = categoryRepository.findById(manufacturedArticleDTO.category())
+            .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada con el ID: " + manufacturedArticleDTO.category()));
+        
+        manufacturedArticle.setCategory(category);
     
         return manufacturedArticleRepository.save(manufacturedArticle);
     }
@@ -110,6 +119,12 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
                     .build();
 
                 existingManufacturedArticle.setManufacInventoryImage(inventoryImage);
+            }
+            if (manufacturedArticleDTO.category() != 0) {
+                Category category = categoryRepository.findById(manufacturedArticleDTO.category())
+                    .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada con el ID: " + manufacturedArticleDTO.category()));
+                
+                existingManufacturedArticle.setCategory(category);
             }
             return manufacturedArticleRepository.save(existingManufacturedArticle);
         }).orElseThrow(() -> new EntityNotFoundException("No se encontro un articulo manufacturado con el ID: " + ID));
