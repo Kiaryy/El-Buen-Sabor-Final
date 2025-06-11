@@ -30,8 +30,14 @@ public class ClientService implements AuthService<ClientDto> {
 
     @Override
     public String logIn(String email, String password) {
+        String response;
         Optional<Client> clientOpt = clientRepository.findByEmailAndPassword(email, password);
-        return clientOpt.isPresent() ? "Login OK" : "Login failed";
+        if(clientOpt.isPresent()){
+            response = "Login OK, ID: " + clientOpt.get().getId();
+        } else{
+            response = "Login failed";
+        }
+        return response;
     }
 
     
