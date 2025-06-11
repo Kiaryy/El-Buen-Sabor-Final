@@ -120,7 +120,7 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
 
                 existingManufacturedArticle.setManufacInventoryImage(inventoryImage);
             }
-            if (manufacturedArticleDTO.category() != 0) {
+            if (manufacturedArticleDTO.category() != null && manufacturedArticleDTO.category() != 0) {
                 Category category = categoryRepository.findById(manufacturedArticleDTO.category())
                     .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada con el ID: " + manufacturedArticleDTO.category()));
                 
