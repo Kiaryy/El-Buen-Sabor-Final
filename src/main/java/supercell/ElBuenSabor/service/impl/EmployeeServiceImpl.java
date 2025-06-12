@@ -40,6 +40,11 @@ public class EmployeeServiceImpl implements AuthService<EmployeeDto> {
         return response ;
     }
 
+    
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
+    
     @Override
     public EmployeeDto register(EmployeeDto dto) {
         employeeRepository.findByEmail(dto.getEmail()).ifPresent(existing ->{

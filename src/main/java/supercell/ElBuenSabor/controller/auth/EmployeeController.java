@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import supercell.ElBuenSabor.Models.payload.EmployeeDto;
 import supercell.ElBuenSabor.Models.payload.UserLoginDTO;
 import supercell.ElBuenSabor.service.AuthService;
+import supercell.ElBuenSabor.service.impl.EmployeeServiceImpl;
+
 
 @RestController
 @RequestMapping("employee")
@@ -15,6 +17,12 @@ public class EmployeeController {
 
     private final AuthService<EmployeeDto> authService;
 
+    @GetMapping("/getAll")
+    public ResponseEntity<Employee> getAll(){
+        EmployeeServiceImpl service = (EmployeeServiceImpl) authService;
+        return service.getAllEmployees();
+    }
+    
     @PostMapping("/register")
     public ResponseEntity<EmployeeDto> registerEmployee(@RequestBody EmployeeDto employeeDto) {
         EmployeeDto response =  authService.register(employeeDto);
