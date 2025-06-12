@@ -3,10 +3,13 @@ package supercell.ElBuenSabor.controller.auth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import supercell.ElBuenSabor.Models.Employee;
 import supercell.ElBuenSabor.Models.payload.EmployeeDto;
 import supercell.ElBuenSabor.Models.payload.UserLoginDTO;
 import supercell.ElBuenSabor.service.AuthService;
 import supercell.ElBuenSabor.service.impl.EmployeeServiceImpl;
+
+import java.util.List;
 
 
 @RestController
@@ -18,9 +21,9 @@ public class EmployeeController {
     private final AuthService<EmployeeDto> authService;
 
     @GetMapping("/getAll")
-    public ResponseEntity<Employee> getAll(){
+    public ResponseEntity<List<Employee>> getAll(){
         EmployeeServiceImpl service = (EmployeeServiceImpl) authService;
-        return service.getAllEmployees();
+        return ResponseEntity.ok(service.getAllEmployees());
     }
     
     @PostMapping("/register")
