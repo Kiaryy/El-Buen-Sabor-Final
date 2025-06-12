@@ -111,7 +111,8 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
             
                     details.add(detail);
                 }
-                existingManufacturedArticle.setManufacturedArticleDetail(details);
+                existingManufacturedArticle.getManufacturedArticleDetail().clear();
+                existingManufacturedArticle.getManufacturedArticleDetail().addAll(details); 
             }
             if (manufacturedArticleDTO.inventoryImageDTO() != null) {
                 InventoryImage inventoryImage = InventoryImage.builder()
