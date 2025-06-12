@@ -1,4 +1,7 @@
 package supercell.ElBuenSabor.repository;
 
-public interface PayMethodRepository {
-}
+import org.springframework.data.jpa.repository.JpaRepository;
+import supercell.ElBuenSabor.Models.PayMethod;
+
+public interface PayMethodRepository extends JpaRepository<PayMethod, Long> {}
+
