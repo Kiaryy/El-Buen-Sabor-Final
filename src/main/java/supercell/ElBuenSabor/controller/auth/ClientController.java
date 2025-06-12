@@ -13,6 +13,7 @@ import supercell.ElBuenSabor.service.impl.ClientService;
 
 @RestController
 @RequestMapping("/client")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class ClientController {
 
