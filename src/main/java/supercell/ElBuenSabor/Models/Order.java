@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import supercell.ElBuenSabor.Models.enums.OrderState;
 import supercell.ElBuenSabor.Models.enums.OrderType;
+import supercell.ElBuenSabor.Models.enums.PayMethod;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,8 +35,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderType orderType;
 
-    @ManyToOne
-    @JoinColumn(name = "pay_method_id", referencedColumnName = "idPayMethod")
+    @Enumerated(EnumType.STRING)
     private PayMethod payMethod;
 
     @ManyToOne

@@ -1,10 +1,8 @@
 package supercell.ElBuenSabor.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import supercell.ElBuenSabor.Models.*;
-import supercell.ElBuenSabor.Models.enums.OrderState;
 import supercell.ElBuenSabor.Models.enums.OrderType;
 import supercell.ElBuenSabor.Models.payload.BillResponseDTO;
 import supercell.ElBuenSabor.Models.payload.OrderRequestDTO;
@@ -31,9 +29,10 @@ public class OrderServiceImpl implements OrderService {
         Client client = clientRepository.findById(request.getClientId())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
-        PayMethod payMethod = payMethodRepository.findById(request.getPayMethodId())
+        /*PayMethod payMethod = payMethodRepository.findById(request.getPayMethodId())
                 .orElseThrow(() -> new RuntimeException("Método de pago no encontrado"));
-        if(client == null || payMethod == null) {
+        */
+        if(client == null) {
             throw new RuntimeException("Cliente o metodo de pago no encontrado");
         }
 
@@ -43,9 +42,9 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalCost(request.getTotalCost());
         order.setOrderDate(request.getOrderDate());
         order.setClient(client);
-        order.setOrderState(OrderState.PREPARING);
+        order.setOrderState(request.getOrderState());
         order.setOrderType(request.isTakeAway()? OrderType.TAKEAWAY : OrderType.DELIVERY );
-        order.setPayMethod(payMethod);
+        order.setPayMethod(request.getPayMethod());
         order.setSubsidiaryId(request.getSubsidiaryId());
 
 
@@ -88,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
         Bill bill = new Bill();
         bill.setOrder(order);
         bill.setBillingDate(LocalDate.now());
-        bill.setMpPaymentID(payMethod.getIdPayMethod());
+        bill.setPayment(request.getPayMethod());
         bill.setMpMerchantOrderID(null);
         bill.setMpPreferenceID(null);
         bill.setTotalSale(order.getTotal());
@@ -106,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
         BillResponseDTO dto = new BillResponseDTO();
         dto.setId(bill.getId());
         dto.setBillingDate(bill.getBillingDate());
-        dto.setMpPaymentID(Math.toIntExact(bill.getMpPaymentID()));
+        dto.setPaymentMethod(bill.getPayment());
         dto.setMpMerchantOrderID(bill.getMpMerchantOrderID());
         dto.setMpPreferenceID(bill.getMpPreferenceID());
         dto.setTotalSale(bill.getTotalSale());

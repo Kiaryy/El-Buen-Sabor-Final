@@ -2,6 +2,8 @@ package supercell.ElBuenSabor.Models.payload;
 
 import lombok.Getter;
 import lombok.Setter;
+import supercell.ElBuenSabor.Models.enums.OrderState;
+import supercell.ElBuenSabor.Models.enums.PayMethod;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -12,11 +14,11 @@ public class OrderRequestDTO {
     private LocalTime estimatedFinishTime;
     private double total;
     private double totalCost;
-    private int orderStateId;
+    private OrderState orderState;
     private int orderTypeId;
-    private long payMethodId;
+    private PayMethod payMethod;
     private LocalDate orderDate;
-    private boolean takeAway;
+    private boolean isTakeAway;
     private long clientId;
     private int subsidiaryId;
     private List<OrderDetailDTO> orderDetails;

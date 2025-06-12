@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import supercell.ElBuenSabor.Models.enums.PayMethod;
 
 import java.time.LocalDate;
 
@@ -18,7 +19,7 @@ public class Bill {
     private Long id;
 
     private LocalDate billingDate;
-    private Long mpPaymentID;
+    private PayMethod Payment;
     private Integer mpMerchantOrderID;
     private String mpPreferenceID;
     private double totalSale;
@@ -27,5 +28,4 @@ public class Bill {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    // Getters and setters
 }

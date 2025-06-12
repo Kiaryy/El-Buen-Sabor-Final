@@ -185,6 +185,7 @@ public class InitializerService {
                 .price(50.0D)
                 .isAvailable(true)
                 .estimatedTimeMinutes(15)
+                    .stock(85)
                 .category(categoryMap.get("Licuado"))
                 .build();
         

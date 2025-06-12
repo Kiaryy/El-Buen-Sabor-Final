@@ -2,6 +2,7 @@ package supercell.ElBuenSabor.Models.payload;
 
 
 import lombok.Data;
+import supercell.ElBuenSabor.Models.enums.PayMethod;
 
 import java.time.LocalDate;
 
@@ -9,7 +10,7 @@ import java.time.LocalDate;
 public class BillResponseDTO {
     private Long id;
     private LocalDate billingDate;
-    private Integer mpPaymentID;
+    private PayMethod paymentMethod;
     private Integer mpMerchantOrderID;
     private String mpPreferenceID;
     private double totalSale;
