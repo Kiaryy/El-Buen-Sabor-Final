@@ -9,6 +9,7 @@ import supercell.ElBuenSabor.service.AuthService;
 
 @RestController
 @RequestMapping("employee")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class EmployeeController {
 
