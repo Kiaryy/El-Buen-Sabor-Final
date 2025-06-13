@@ -22,6 +22,7 @@ public class OrderServiceImpl implements OrderService {
     private final BillRepository billRepository;
     private final ManufacturedArticleRepository manufacturedArticleRepository;
     private final PayMethodRepository payMethodRepository;
+    private final ArticleRepository articleRepository;
 
     @Override
     public BillResponseDTO createOrder(OrderRequestDTO request) {
@@ -47,9 +48,9 @@ public class OrderServiceImpl implements OrderService {
         order.setPayMethod(request.getPayMethod());
         order.setSubsidiaryId(request.getSubsidiaryId());
 
-
+    /*
         List<OrderDetails> orderDetailsList = new ArrayList<>();
-        // Crear detalles
+
         for (OrderRequestDTO.OrderDetailDTO detailDTO : request.getOrderDetails()) {
             ManufacturedArticle mArticle = manufacturedArticleRepository.findById(detailDTO.getManufacturedArticleId())
                     .orElseThrow(() -> new RuntimeException("Artículo no encontrado"));
@@ -61,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
 
             mArticle.setStock(mArticle.getStock() - orderedQuantity);
             manufacturedArticleRepository.save(mArticle);
-            /*
+            *//*
                     for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
                         Article baseArticle = mad.getArticle();
                         int required = mad.getQuantity() * orderedQuantity;
@@ -72,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
                         mad.setArticle(baseArticle);
                         manufacturedArticleRepository.save();
                     }
-                    */
+                    *//*
             OrderDetails detail = new OrderDetails();
             detail.setOrder(order);
             detail.setManufacturedArticle(mArticle);
@@ -82,6 +83,7 @@ public class OrderServiceImpl implements OrderService {
             orderDetailsList.add(detail);
         }
         order.setOrderDetails(orderDetailsList);
+    */
         orderRepository.save(order);
 
         Bill bill = new Bill();
