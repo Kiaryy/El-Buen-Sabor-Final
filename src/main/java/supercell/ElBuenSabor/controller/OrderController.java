@@ -12,6 +12,7 @@ import com.mercadopago.resources.preference.Preference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,7 @@ import supercell.ElBuenSabor.service.OrderService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
