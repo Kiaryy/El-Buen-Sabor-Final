@@ -12,14 +12,11 @@ import com.mercadopago.resources.preference.Preference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import supercell.ElBuenSabor.Models.payload.BillResponseDTO;
 import supercell.ElBuenSabor.Models.payload.OrderRequestDTO;
 
+import supercell.ElBuenSabor.Models.payload.OrderResponseDTO;
 import supercell.ElBuenSabor.Models.payload.UserPreferenceRequest;
 import supercell.ElBuenSabor.service.OrderService;
 
@@ -39,6 +36,13 @@ public class OrderController {
     public ResponseEntity<BillResponseDTO> createOrder(@RequestBody OrderRequestDTO request) {
         BillResponseDTO response = orderService.createOrder(request);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponseDTO>> getAllOrders()
+    {
+        List<OrderResponseDTO> orderResponseDTOS = orderService.getAllOrders();
+        return ResponseEntity.ok(orderResponseDTOS);
     }
 
     @PostMapping("/createPreference")

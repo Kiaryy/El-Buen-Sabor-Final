@@ -1,5 +1,6 @@
 package supercell.ElBuenSabor.Models.payload;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import supercell.ElBuenSabor.Models.enums.OrderState;
@@ -23,7 +24,7 @@ public class OrderRequestDTO {
     private int subsidiaryId;
     private List<OrderDetailDTO> orderDetails;
 
-    @Getter @Setter
+    @Getter @Setter @Builder
     public static class OrderDetailDTO {
         private long manufacturedArticleId;
         private int quantity;

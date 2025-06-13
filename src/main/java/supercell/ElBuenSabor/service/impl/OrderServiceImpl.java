@@ -4,14 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import supercell.ElBuenSabor.Models.*;
 import supercell.ElBuenSabor.Models.enums.OrderType;
-import supercell.ElBuenSabor.Models.payload.BillResponseDTO;
-import supercell.ElBuenSabor.Models.payload.OrderRequestDTO;
+import supercell.ElBuenSabor.Models.payload.*;
 import supercell.ElBuenSabor.repository.*;
 import supercell.ElBuenSabor.service.OrderService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -97,6 +97,25 @@ public class OrderServiceImpl implements OrderService {
         return OrderServiceImpl.toDto(bill);
     }
 
+    public List<OrderResponseDTO> getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        ClientDto clientDto = new ClientDto();
+
+        return orders.stream().map(order -> OrderResponseDTO.builder()
+                .id(order.getId())
+                .estimatedFinishTime(order.getEstimatedFinishTime())
+                .total(order.getTotal())
+                .totalCost(order.getTotalCost())
+                .orderDate(order.getOrderDate())
+                .orderState(order.getOrderState().toString())
+                .orderType(order.getOrderType().toString())
+                .payMethod(order.getPayMethod().toString())
+                .subsidiaryId(order.getSubsidiaryId())
+                .client( OrderServiceImpl.clientToDto(order.getClient()) )
+                .build()).collect(Collectors.toList());
+    }
+
+
     public static BillResponseDTO toDto(Bill bill) {
         if (bill == null) {
             return null;
@@ -113,6 +132,22 @@ public class OrderServiceImpl implements OrderService {
             dto.setOrderId(Long.valueOf(bill.getOrder().getId()));
         }
 
+        return dto;
+    }
+    public static ClientDto clientToDto(Client client){
+        List<DomicileDTO> domicileDTOS = client.getDomiciles().stream().map((domicile -> {
+            DomicileDTO domicileDTO = new DomicileDTO( domicile.getStreet(), domicile.getZipCode(),domicile.getNumber(),null );
+            return domicileDTO;
+        })).toList();
+
+        ClientDto dto = new ClientDto();
+        dto.setUsername(client.getUsername());
+        dto.setFirstName(client.getName());
+        dto.setLastName(client.getLastName());
+        dto.setPhoneNumber(client.getPhoneNumber());
+        dto.setBirthDate(client.getBirthDate());
+        dto.setEmail(client.getEmail());
+        dto.setDomiciles(domicileDTOS);
         return dto;
     }
 }
