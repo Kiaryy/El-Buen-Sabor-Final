@@ -42,7 +42,7 @@ public class OrderController {
 
     @PostMapping("/createPreference")
     public Preference createPreference(@RequestBody List<UserPreferenceRequest> userItemsPreference ) {
-        MercadoPagoConfig.setAccessToken("APP_USR-3152703235404722-102218-53fe358050253c60902835a04a1b5a2a-2045302897");
+        MercadoPagoConfig.setAccessToken("APP_USR-5808544844698208-051510-6264c6c45bd16af4b067e869f6cb9357-2439047893");
 
         List<PreferenceItemRequest> items = new ArrayList<>();
 
