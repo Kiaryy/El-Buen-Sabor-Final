@@ -4,11 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import supercell.ElBuenSabor.Models.enums.OrderState;
+import supercell.ElBuenSabor.Models.enums.OrderType;
 import supercell.ElBuenSabor.Models.enums.PayMethod;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+
 @Getter
 @Setter
 public class OrderRequestDTO {
@@ -16,7 +18,7 @@ public class OrderRequestDTO {
     private double total;
     private double totalCost;
     private OrderState orderState;
-    private int orderTypeId;
+    private OrderType orderType;
     private PayMethod payMethod;
     private LocalDate orderDate;
     private boolean isTakeAway;

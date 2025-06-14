@@ -1,5 +1,5 @@
 package supercell.ElBuenSabor.Models.enums;
 
 public enum OrderType {
-    DELIVERY, TAKEAWAY
+    DELIVERY, TAKEAWAY, ON_SITE
 }

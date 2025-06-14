@@ -1,6 +1,7 @@
 package supercell.ElBuenSabor.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import supercell.ElBuenSabor.Models.*;
 import supercell.ElBuenSabor.Models.enums.OrderType;
@@ -9,12 +10,14 @@ import supercell.ElBuenSabor.repository.*;
 import supercell.ElBuenSabor.service.OrderService;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -36,54 +39,65 @@ public class OrderServiceImpl implements OrderService {
         if(client == null) {
             throw new RuntimeException("Cliente o metodo de pago no encontrado");
         }
+        LocalTime estimatedTime = request.getEstimatedFinishTime();
+
+        if(!request.isTakeAway()){
+            estimatedTime = estimatedTime.plusMinutes(10);
+        }
 
         Order order = new Order();
-        order.setEstimatedFinishTime(request.getEstimatedFinishTime());
+        order.setEstimatedFinishTime(estimatedTime);
         order.setTotal(request.getTotal());
         order.setTotalCost(request.getTotalCost());
         order.setOrderDate(request.getOrderDate());
         order.setClient(client);
         order.setOrderState(request.getOrderState());
-        order.setOrderType(request.isTakeAway()? OrderType.TAKEAWAY : OrderType.DELIVERY );
+        switch (request.getOrderType()){
+            case ON_SITE -> order.setOrderType(OrderType.ON_SITE);
+            case DELIVERY -> order.setOrderType(OrderType.DELIVERY);
+            case TAKEAWAY -> order.setOrderType(OrderType.TAKEAWAY);
+            default -> order.setOrderType(OrderType.ON_SITE);
+            }
         order.setPayMethod(request.getPayMethod());
         order.setSubsidiaryId(request.getSubsidiaryId());
-
-    /*
         List<OrderDetails> orderDetailsList = new ArrayList<>();
 
         for (OrderRequestDTO.OrderDetailDTO detailDTO : request.getOrderDetails()) {
             ManufacturedArticle mArticle = manufacturedArticleRepository.findById(detailDTO.getManufacturedArticleId())
                     .orElseThrow(() -> new RuntimeException("Artículo no encontrado"));
 
-            int orderedQuantity  = detailDTO.getQuantity();
-            if (mArticle.getStock() < orderedQuantity) {
-                throw new RuntimeException("Stock insuficiente para: " + mArticle.getName());
+            int orderedQty = detailDTO.getQuantity();
+
+            if (mArticle.getStock() < orderedQty) {
+                throw new RuntimeException("Stock insuficiente de: " + mArticle.getName());
+            }
+            mArticle.setStock(mArticle.getStock() - orderedQty);
+
+            for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
+                Article article = mad.getArticle();
+                int requiredAmount = mad.getQuantity() * orderedQty;
+
+                log.info("Articulo base: "+ article.getCurrentStock());
+                log.info("Required amount: "+ requiredAmount);
+                log.info("Manufacturad details quantity:  "+mad.getQuantity());
+
+                if (article.getCurrentStock() < requiredAmount) {
+                    throw new RuntimeException("Stock insuficiente de artículo base: " + article.getDenomination() + " hay: " + article.getCurrentStock() + "cantidad del ariculo");
+                }
+                article.setCurrentStock(article.getCurrentStock() - requiredAmount);
+                articleRepository.save(article);
             }
 
-            mArticle.setStock(mArticle.getStock() - orderedQuantity);
             manufacturedArticleRepository.save(mArticle);
-            *//*
-                    for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
-                        Article baseArticle = mad.getArticle();
-                        int required = mad.getQuantity() * orderedQuantity;
-                        if (baseArticle.getCurrentStock() < required) {
-                            throw new RuntimeException("Stock insuficiente de artículo base: " + baseArticle.getName());
-                        }
-                        baseArticle.setCurrentStock(baseArticle.getCurrentStock() - required);
-                        mad.setArticle(baseArticle);
-                        manufacturedArticleRepository.save();
-                    }
-                    *//*
+
             OrderDetails detail = new OrderDetails();
             detail.setOrder(order);
             detail.setManufacturedArticle(mArticle);
-            detail.setQuantity(detailDTO.getQuantity());
+            detail.setQuantity(orderedQty);
             detail.setSubTotal(detailDTO.getSubTotal());
-
             orderDetailsList.add(detail);
         }
         order.setOrderDetails(orderDetailsList);
-    */
         orderRepository.save(order);
 
         Bill bill = new Bill();
@@ -136,6 +150,7 @@ public class OrderServiceImpl implements OrderService {
 
         return dto;
     }
+
     public static ClientDto clientToDto(Client client){
         List<DomicileDTO> domicileDTOS = client.getDomiciles().stream().map((domicile -> {
             DomicileDTO domicileDTO = new DomicileDTO( domicile.getStreet(), domicile.getZipCode(),domicile.getNumber(),null );
