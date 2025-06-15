@@ -1,0 +1,31 @@
+meta {
+  name: AddSale
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/sale/add
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "denomination": "Oferta de Verano",
+    "startDate": "2025-06-15",
+    "endDate": "2025-07-15",
+    "startTime": "10:00:00",
+    "endTime": "22:00:00",
+    "saleDescription": "Descuento en platos fríos por temporada de calor.",
+    "salePrice": 1999.99,
+    "saleType": "SUMMERSALE",
+    "inventoryImage": {
+      "imageData": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO2RC3gAAAAASUVORK5CYII="
+    },
+    "manufacturedArticle": [
+      1,
+      2
+    ]
+  }
+}
