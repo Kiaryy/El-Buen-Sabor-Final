@@ -26,7 +26,7 @@ public class OrderServiceImpl implements OrderService {
     private final ManufacturedArticleRepository manufacturedArticleRepository;
     private final PayMethodRepository payMethodRepository;
     private final ArticleRepository articleRepository;
-
+    private final ManufacturedArticleDetailRepository articleDetailRepository;
     @Override
     public BillResponseDTO createOrder(OrderRequestDTO request) {
 
@@ -75,6 +75,11 @@ public class OrderServiceImpl implements OrderService {
 
             for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
                 Article article = mad.getArticle();
+                if(mad.getQuantity() < orderedQty) {
+                    throw new RuntimeException("Stock insuficiente de ingredientes del artículo: "+ mad.getManufacturedArticle().getName());
+                }
+                mad.setQuantity(mad.getQuantity() - orderedQty);
+                articleDetailRepository.save(mad);
                 // int requiredAmount = mad.getQuantity() * orderedQty;
 
                 // log.info("Articulo base: "+ article.getCurrentStock());
@@ -84,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
                 // if (article.getCurrentStock() < requiredAmount) {
                 //     throw new RuntimeException("Stock insuficiente de artículo base: " + article.getDenomination() + " hay: " + article.getCurrentStock() + "cantidad del ariculo");
                 // }
-                // article.setCurrentStock(article.getCurrentStock() - requiredAmount);
+                article.setCurrentStock(article.getCurrentStock() - orderedQty);
                 articleRepository.save(article);
             }
 
