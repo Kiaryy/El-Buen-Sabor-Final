@@ -376,7 +376,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
             manufacturedArticles.add(createManufactured("Tarta de Verduras", "Tarta con espinaca, cebolla y huevo", 1000.0, 30, categoryMap.get("Tarta"),
                 Map.of("Espinaca", 1, "Cebolla", 100, "Huevo", 2, "Harina de trigo", 100), "images/tarta_verduras.png"));
 
-            manufacturedArticles.add(createManufactured("Lasaña", "Lasaña con carne, salsa y queso", 1600.0, 40, categoryMap.get("Pasta"),
+            manufacturedArticles.add(createManufactured("Lasaña", "Lasaña con carne, salsa y queso", 1600.0, 40, categoryMap.get("Pastas"),
                 Map.of("Fideos", 200, "Carne picada", 200, "Queso mozzarella", 150, "Salsa de tomate", 100), "images/lasagna.png"));
 
             manufacturedArticles.add(createManufactured("Tortilla de Papas", "Clásica tortilla con huevo y papa", 900.0, 25, categoryMap.get("Tarta"),
