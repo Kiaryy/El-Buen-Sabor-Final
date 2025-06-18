@@ -6,7 +6,9 @@ public record ArticleDTO(
     int maxStock,
     Double buyingPrice,
     Long measuringUnit,
-    Long category
+    Long category,
+    InventoryImageDTO inventoryImageDTO,
+    boolean isForSale
 
 ) {
     

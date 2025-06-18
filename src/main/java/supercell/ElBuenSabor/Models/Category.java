@@ -18,4 +18,5 @@ public class Category {
     private Long IDCategory;
 
     private String name;
+    private boolean isForSale;
 }

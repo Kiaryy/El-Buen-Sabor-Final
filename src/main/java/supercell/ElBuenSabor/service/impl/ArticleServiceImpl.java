@@ -9,6 +9,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import supercell.ElBuenSabor.Models.Article;
 import supercell.ElBuenSabor.Models.Category;
+import supercell.ElBuenSabor.Models.InventoryImage;
 import supercell.ElBuenSabor.Models.MeasuringUnit;
 import supercell.ElBuenSabor.Models.payload.ArticleDTO;
 import supercell.ElBuenSabor.repository.ArticleRepository;
@@ -50,8 +51,14 @@ public class ArticleServiceImpl implements ArticleService {
             .buyingPrice(articleDTO.buyingPrice())
             .measuringUnit(measuringUnit.get())
             .category(category.get())
+            .isForSale(articleDTO.isForSale())
             .build();
-        
+
+        InventoryImage inventoryImage = InventoryImage.builder()
+            .imageData(articleDTO.inventoryImageDTO().imageData())
+            .build();
+
+        article.setInventoryImage(inventoryImage);
         return articleRepository.save(article);
     }
 
@@ -78,6 +85,16 @@ public class ArticleServiceImpl implements ArticleService {
             if (articleDTO.measuringUnit() != null && articleDTO.measuringUnit() != 0) {
                 Optional<MeasuringUnit> measuringUnit = measuringUnitRepository.findById(articleDTO.measuringUnit());
                 existingArticle.setMeasuringUnit(measuringUnit.orElseThrow(() -> new EntityNotFoundException("MeasuringUnit not found")));
+            }
+            if (!articleDTO.isForSale()) {
+                existingArticle.setForSale(articleDTO.isForSale());
+            }
+            if (articleDTO.inventoryImageDTO() != null) {
+                InventoryImage inventoryImage = InventoryImage.builder()
+                .imageData(articleDTO.inventoryImageDTO().imageData())
+                .build();
+    
+                existingArticle.setInventoryImage(inventoryImage);
             }
             return articleRepository.save(existingArticle);
         }).orElseThrow(() -> new EntityNotFoundException("No se encontro un articulo con el ID: " + ID));

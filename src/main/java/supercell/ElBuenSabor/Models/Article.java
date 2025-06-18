@@ -1,12 +1,14 @@
 package supercell.ElBuenSabor.Models;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 
 @Entity
@@ -28,6 +30,8 @@ public class Article {
 
     private Double buyingPrice;
 
+    private boolean isForSale;
+
     @ManyToOne
     @JoinColumn(name = "measuringUnit_id", nullable = false) // MeasuringUnit Foreign Key
     private MeasuringUnit measuringUnit;
@@ -35,4 +39,8 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false) // Category Foreign Key 
     private Category category;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "inventory_image_id", referencedColumnName = "IDInventoryImage")
+    private InventoryImage inventoryImage;
 }
