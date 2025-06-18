@@ -21,7 +21,7 @@ public class ClientController {
 
 
     @GetMapping("/{ID}")
-    public ResponseEntity<Object> returnClient(@PathVariable Long ID){
+    public ResponseEntity<Object> returnClient(@PathVariable("ID") Long ID){
         ClientService service = (ClientService) clientAuthService;
         return ResponseEntity.status(HttpStatus.OK).body(service.getClient(ID));
     }

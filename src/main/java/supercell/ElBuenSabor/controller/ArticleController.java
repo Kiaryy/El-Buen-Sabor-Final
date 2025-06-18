@@ -36,7 +36,7 @@ public class ArticleController {
     }
 
     @PatchMapping("/update/{ID}")
-    public ResponseEntity<Article> updateArticle(@PathVariable Long ID, @RequestBody ArticleDTO articleDTO){
+    public ResponseEntity<Article> updateArticle(@PathVariable("ID") Long ID, @RequestBody ArticleDTO articleDTO){
         return ResponseEntity.status(HttpStatus.OK).body(articleServiceImpl.updateArticle(ID, articleDTO));
     }
 }

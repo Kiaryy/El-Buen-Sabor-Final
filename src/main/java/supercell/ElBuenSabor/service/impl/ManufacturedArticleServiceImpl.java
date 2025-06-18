@@ -85,6 +85,9 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
     @Override
     public ManufacturedArticle updateManufacturedArticle(Long ID, ManufacturedArticleDTO manufacturedArticleDTO) {
         return manufacturedArticleRepository.findById(ID).map(existingManufacturedArticle ->{
+            if(manufacturedArticleDTO.name() !=null){
+                existingManufacturedArticle.setName(manufacturedArticleDTO.name());
+            }
             if (manufacturedArticleDTO.description() != null) {
                 existingManufacturedArticle.setDescription(manufacturedArticleDTO.description());
             }
@@ -94,7 +97,7 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
             if (manufacturedArticleDTO.estimatedTimeMinutes() != 0) {
                 existingManufacturedArticle.setEstimatedTimeMinutes(manufacturedArticleDTO.estimatedTimeMinutes());
             }
-            if (manufacturedArticleDTO.isAvailable() != false) {
+            if (manufacturedArticleDTO.isAvailable() || !manufacturedArticleDTO.isAvailable()) {
                 existingManufacturedArticle.setAvailable(manufacturedArticleDTO.isAvailable());
             }
             if (manufacturedArticleDTO.manufacturedArticleDetail() != null && !manufacturedArticleDTO.manufacturedArticleDetail().isEmpty()) {

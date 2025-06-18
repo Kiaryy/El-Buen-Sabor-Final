@@ -36,7 +36,7 @@ public class ManufacturedArticleController {
     }
 
     @PatchMapping("/update/{ID}")
-    public ResponseEntity<ManufacturedArticle> updateManufacturedArticle(@PathVariable Long ID, @RequestBody ManufacturedArticleDTO manufacturedArticleDTO){
+    public ResponseEntity<ManufacturedArticle> updateManufacturedArticle(@PathVariable("ID") Long ID, @RequestBody ManufacturedArticleDTO manufacturedArticleDTO){
         return ResponseEntity.status(HttpStatus.OK).body(manufacturedArticleServiceImpl.updateManufacturedArticle(ID, manufacturedArticleDTO));
     }
 }

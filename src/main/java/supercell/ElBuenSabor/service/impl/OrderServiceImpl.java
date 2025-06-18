@@ -68,23 +68,23 @@ public class OrderServiceImpl implements OrderService {
 
             int orderedQty = detailDTO.getQuantity();
 
-            if (mArticle.getStock() < orderedQty) {
-                throw new RuntimeException("Stock insuficiente de: " + mArticle.getName());
-            }
-            mArticle.setStock(mArticle.getStock() - orderedQty);
+            // if (mArticle.getStock() < orderedQty) {
+            //     throw new RuntimeException("Stock insuficiente de: " + mArticle.getName());
+            // }
+            // mArticle.setStock(mArticle.getStock() - orderedQty);
 
             for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
                 Article article = mad.getArticle();
-                int requiredAmount = mad.getQuantity() * orderedQty;
+                // int requiredAmount = mad.getQuantity() * orderedQty;
 
-                log.info("Articulo base: "+ article.getCurrentStock());
-                log.info("Required amount: "+ requiredAmount);
-                log.info("Manufacturad details quantity:  "+mad.getQuantity());
+                // log.info("Articulo base: "+ article.getCurrentStock());
+                // log.info("Required amount: "+ requiredAmount);
+                // log.info("Manufacturad details quantity:  "+mad.getQuantity());
 
-                if (article.getCurrentStock() < requiredAmount) {
-                    throw new RuntimeException("Stock insuficiente de artículo base: " + article.getDenomination() + " hay: " + article.getCurrentStock() + "cantidad del ariculo");
-                }
-                article.setCurrentStock(article.getCurrentStock() - requiredAmount);
+                // if (article.getCurrentStock() < requiredAmount) {
+                //     throw new RuntimeException("Stock insuficiente de artículo base: " + article.getDenomination() + " hay: " + article.getCurrentStock() + "cantidad del ariculo");
+                // }
+                // article.setCurrentStock(article.getCurrentStock() - requiredAmount);
                 articleRepository.save(article);
             }
 

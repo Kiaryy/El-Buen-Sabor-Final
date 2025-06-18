@@ -37,7 +37,7 @@ public class MeasuringUnitController {
     }
 
     @PatchMapping("/update/{ID}")
-    public ResponseEntity<MeasuringUnit> updateMeasuringUnit(@PathVariable Long ID, @RequestBody MeasuringUnitDTO measuringUnitDTO){
+    public ResponseEntity<MeasuringUnit> updateMeasuringUnit(@PathVariable("ID") Long ID, @RequestBody MeasuringUnitDTO measuringUnitDTO){
         return ResponseEntity.status(HttpStatus.OK).body(measuringUnitServiceImpl.updateMeasuringUnit(ID, measuringUnitDTO));
     }
 }

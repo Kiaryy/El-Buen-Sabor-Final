@@ -36,7 +36,7 @@ public class ProviderController {
     }
 
     @PatchMapping("/update/{ID}")
-    public ResponseEntity<Provider> updateProvider(@PathVariable Long ID, @RequestBody ProviderDTO providerDTO){
+    public ResponseEntity<Provider> updateProvider(@PathVariable("ID") Long ID, @RequestBody ProviderDTO providerDTO){
         return ResponseEntity.status(HttpStatus.OK).body(providerServiceImpl.updateProvider(ID, providerDTO));
     }
 }

@@ -37,7 +37,7 @@ public class SaleController {
     }
 
     @PatchMapping("/update/{ID}")
-    public ResponseEntity<Sale> updateSale(@PathVariable Long ID, @RequestBody SaleDTO saleDTO){
+    public ResponseEntity<Sale> updateSale(@PathVariable("ID") Long ID, @RequestBody SaleDTO saleDTO){
         return ResponseEntity.status(HttpStatus.OK).body(saleServiceImpl.updateSale(ID, saleDTO));
     }
 }
