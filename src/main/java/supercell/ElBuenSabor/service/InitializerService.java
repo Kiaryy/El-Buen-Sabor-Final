@@ -385,29 +385,29 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
             manufacturedArticles.add(createManufactured("Pizza Fugazzeta", "Pizza con cebolla caramelizada y queso", 1300.0, 25, categoryMap.get("Pizza"),
                 Map.of("Cebolla caramelizada", 100, "Queso mozzarella", 150, "Salsa de tomate", 80), "images/pizza_fugazzeta.png"));
 
-            // manufacturedArticles.add(createManufactured("Empanadas de Carne", "Empanadas con carne picada y condimentos", 900.0, 20, categoryMap.get("Empanada"),
-            //     Map.of("Carne picada", 150, "Cebolla", 50, "Pimiento rojo", 50, "Comino", 5), "images/empanadas_carne.png"));
+            manufacturedArticles.add(createManufactured("Empanadas de Carne", "Empanadas con carne picada y condimentos", 900.0, 20, categoryMap.get("Empanada"),
+                Map.of("Carne picada", 150, "Cebolla", 50, "Pimiento rojo", 50, "Comino", 5), "images/empanadas_carne.png"));
 
-            // manufacturedArticles.add(createManufactured("Sopa de Verduras", "Sopa nutritiva con varios vegetales", 700.0, 20, categoryMap.get("Sopa"),
-            //     Map.of("Zanahoria", 50, "Papa", 100, "Cebolla", 50, "Pimiento verde", 50), "images/sopa_verduras.png"));
+            manufacturedArticles.add(createManufactured("Sopa de Verduras", "Sopa nutritiva con varios vegetales", 700.0, 20, categoryMap.get("Sopa"),
+                Map.of("Zanahoria", 50, "Papa", 100, "Cebolla", 50, "Pimiento verde", 50), "images/sopa_verduras.png"));
 
-            // manufacturedArticles.add(createManufactured("Milanesa de Pollo", "Pechuga empanada con pan rallado", 1100.0, 30, categoryMap.get("Carnes y Cortes"),
-            //     Map.of("Pechuga de pollo", 200, "Pan rallado", 100, "Huevo", 1), "images/milanesa_pollo.png"));
+            manufacturedArticles.add(createManufactured("Milanesa de Pollo", "Pechuga empanada con pan rallado", 1100.0, 30, categoryMap.get("Carnes y Cortes"),
+                Map.of("Pechuga de pollo", 200, "Pan rallado", 100, "Huevo", 1), "images/milanesa_pollo.png"));
 
-            // manufacturedArticles.add(createManufactured("Spaghetti con salsa rosa", "Fideos con salsa y crema", 1200.0, 25, categoryMap.get("Pastas"),
-            //     Map.of("Fideos", 200, "Salsa de tomate", 100, "Crema de leche", 50), "images/spaghetti_salsa_rosa.png"));
+            manufacturedArticles.add(createManufactured("Spaghetti con salsa rosa", "Fideos con salsa y crema", 1200.0, 25, categoryMap.get("Pastas"),
+                Map.of("Fideos", 200, "Salsa de tomate", 100, "Crema de leche", 50), "images/spaghetti_salsa_rosa.png"));
 
-            // manufacturedArticles.add(createManufactured("Pizza Napolitana", "Pizza con tomate, ajo, albahaca y mozzarella", 1350.0, 30, categoryMap.get("Pizza"),
-            //     Map.of("Tomate", 100, "Ajo", 10, "Albahaca", 5, "Queso mozzarella", 150), "images/pizza_napolitana.png"));
+            manufacturedArticles.add(createManufactured("Pizza Napolitana", "Pizza con tomate, ajo, albahaca y mozzarella", 1350.0, 30, categoryMap.get("Pizza"),
+                Map.of("Tomate", 100, "Ajo", 10, "Albahaca", 5, "Queso mozzarella", 150), "images/pizza_napolitana.png"));
 
-            // manufacturedArticles.add(createManufactured("Sandwich de Jamón y Queso", "Clásico sandwich tostado", 850.0, 10, categoryMap.get("Carnes y Cortes"),
-            //     Map.of("Pan de hamburguesa", 2, "Queso mozzarella", 100, "Jamón cocido", 100), "images/sandwich_jamon_queso.png"));
+            manufacturedArticles.add(createManufactured("Sandwich de Jamón y Queso", "Clásico sandwich tostado", 850.0, 10, categoryMap.get("Carnes y Cortes"),
+                Map.of("Pan de hamburguesa", 2, "Queso mozzarella", 100, "Jamón cocido", 100), "images/sandwich_jamon_queso.png"));
 
-            // manufacturedArticles.add(createManufactured("Pollo al Horno con Papas", "Pechuga con papas y condimentos", 1500.0, 35, categoryMap.get("Carnes y Cortes"),
-            //     Map.of("Pechuga de pollo", 200, "Papa", 200, "Aceite de oliva", 20), "images/pollo_horno_papas.png"));
+            manufacturedArticles.add(createManufactured("Pollo al Horno con Papas", "Pechuga con papas y condimentos", 1500.0, 35, categoryMap.get("Carnes y Cortes"),
+                Map.of("Pechuga de pollo", 200, "Papa", 200, "Aceite de oliva", 20), "images/pollo_horno_papas.png"));
 
-            // manufacturedArticles.add(createManufactured("Pizza Hawaiana", "Pizza con jamón y ananá", 1400.0, 30, categoryMap.get("Pizza"),
-            //     Map.of("Queso mozzarella", 150, "Jamón cocido", 100, "Ananá", 100), "images/pizza_hawaiana.png"));
+            manufacturedArticles.add(createManufactured("Pizza Hawaiana", "Pizza con jamón y ananá", 1400.0, 30, categoryMap.get("Pizza"),
+                Map.of("Queso mozzarella", 150, "Jamón cocido", 100, "Ananá", 100), "images/pizza_hawaiana.png"));
 
             manufacturedArticleRepository.saveAll(manufacturedArticles);
 
