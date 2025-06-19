@@ -26,6 +26,7 @@ public class OrderRequestDTO {
     private boolean isTakeAway;
     private long clientId;
     private int subsidiaryId;
+    private String direction;
     private List<OrderDetailDTO> orderDetails;
 
     @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor

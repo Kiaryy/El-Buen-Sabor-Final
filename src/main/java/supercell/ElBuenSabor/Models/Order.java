@@ -37,7 +37,8 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private PayMethod payMethod;
-
+    @Column(name = "directionToSend")
+    private String direction;
     @ManyToOne
     private Client client;
 

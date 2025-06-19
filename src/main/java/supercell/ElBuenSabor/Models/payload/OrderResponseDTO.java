@@ -18,6 +18,7 @@ public class OrderResponseDTO {
     private String orderType;
     private String payMethod;
     private ClientDto client;
+    private String directionToSend;
     private Integer subsidiaryId;
 }
 

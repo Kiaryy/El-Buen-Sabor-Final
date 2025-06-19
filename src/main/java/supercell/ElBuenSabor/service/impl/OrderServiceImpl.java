@@ -60,6 +60,7 @@ public class OrderServiceImpl implements OrderService {
             }
         order.setPayMethod(request.getPayMethod());
         order.setSubsidiaryId(request.getSubsidiaryId());
+        order.setDirection(request.getDirection());
         List<OrderDetails> orderDetailsList = new ArrayList<>();
 
         for (OrderRequestDTO.OrderDetailDTO detailDTO : request.getOrderDetails()) {
@@ -133,6 +134,7 @@ public class OrderServiceImpl implements OrderService {
                 .payMethod(order.getPayMethod().toString())
                 .subsidiaryId(order.getSubsidiaryId())
                 .client( OrderServiceImpl.clientToDto(order.getClient()) )
+                .directionToSend(order.getDirection())
                 .build()).collect(Collectors.toList());
     }
 
