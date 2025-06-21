@@ -18,10 +18,14 @@ public class WebConfig {
                 .requestMatchers("/article/**").permitAll()
                 .requestMatchers("/client/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
-                .anyRequest().permitAll()
+                .requestMatchers("/oauth2/**", "/login/**", "/").permitAll() // allow login and success handler
+                .anyRequest().authenticated()
+            )
+            .oauth2Login(oauth2 -> oauth2
+                .defaultSuccessUrl("/oauth2/success", true)
             );
-    
+
         return http.build();
     }
-    
+
 }
