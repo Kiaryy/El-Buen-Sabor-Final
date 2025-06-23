@@ -40,7 +40,12 @@ public class ClientService implements AuthService<ClientDto> {
         return response;
     }
 
-    
+    public Client getClientWithEmail(String email){
+        Client client = clientRepository.findByEmail(email).
+        orElseThrow(()-> new EntityNotFoundException("No se encontro el cliente con email: " + email));
+        return client;
+    }
+
     public Client getClient(Long ID){
         Client client = clientRepository.findById(ID).
         orElseThrow(() -> new EntityNotFoundException("No se encontro el cliente con el ID: " + ID));
@@ -81,4 +86,40 @@ public class ClientService implements AuthService<ClientDto> {
         clientRepository.save(client);
         return dto;
     }
+
+    public Client updateClient(Long id, ClientDto dto) {
+        Client client = clientRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Client not found with ID: " + id));
+    
+        if (dto.getFirstName() != null) client.setName(dto.getFirstName());
+        if (dto.getLastName() != null) client.setLastName(dto.getLastName());
+        if (dto.getEmail() != null) client.setEmail(dto.getEmail());
+        if (dto.getPhoneNumber() != null) client.setPhoneNumber(dto.getPhoneNumber());
+        if (dto.getUsername() != null) client.setUsername(dto.getUsername());
+        if (dto.getPassword() != null) client.setPassword(dto.getPassword());
+        if (dto.getBirthDate() != null) client.setBirthDate(dto.getBirthDate());
+    
+        if (dto.getDomiciles() != null) {
+            client.getDomiciles().clear();
+    
+            for (DomicileDTO domicileDto : dto.getDomiciles()) {
+                Location location = locationRepository.findById(domicileDto.location())
+                    .orElseThrow(() -> new EntityNotFoundException("Location not found with ID: " + domicileDto.location()));
+    
+                Domicile domicile = Domicile.builder()
+                    .street(domicileDto.street())
+                    .zipCode(domicileDto.zipcode())
+                    .number(domicileDto.number())
+                    .location(location)
+                    .client(client)
+                    .build();
+    
+                client.getDomiciles().add(domicile);
+            }
+        }
+    
+        return clientRepository.save(client);
+    }
 }
+
+
