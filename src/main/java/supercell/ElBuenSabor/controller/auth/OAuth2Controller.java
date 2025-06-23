@@ -15,6 +15,7 @@ import supercell.ElBuenSabor.repository.ClientRepository;
 
 @RestController
 @RequestMapping("/oauth2")
+@CrossOrigin(origins = "*")
 public class OAuth2Controller {
 
     @Autowired
