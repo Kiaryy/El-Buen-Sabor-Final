@@ -6,6 +6,7 @@ import java.util.Map;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,7 @@ import supercell.ElBuenSabor.repository.ClientRepository;
 
 @RestController
 @RequestMapping("/oauth2")
-@CrossOrigin(origins = "*")
+
 public class OAuth2Controller {
 
     @Autowired
