@@ -14,12 +14,7 @@ public class WebConfig {
             .csrf(csrf -> csrf.disable())
             .headers(headers -> headers.frameOptions().disable())
             .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/article/**").permitAll()
-                .requestMatchers("/client/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/oauth2/**", "/login/**", "/").permitAll() // allow login and success handler
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
             )
             .oauth2Login(oauth2 -> oauth2
                 .defaultSuccessUrl("/oauth2/success", true)
