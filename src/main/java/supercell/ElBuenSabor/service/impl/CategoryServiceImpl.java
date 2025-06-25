@@ -40,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
             if (categoryDTO.name() != null) {
                 existingCategory.setName(categoryDTO.name());
             }
-            if (!categoryDTO.isForsale()) {
+            if (categoryDTO.isForsale() || !categoryDTO.isForsale()) {
                 existingCategory.setForSale(categoryDTO.isForsale());
             }
             return categoryRepository.save(existingCategory);

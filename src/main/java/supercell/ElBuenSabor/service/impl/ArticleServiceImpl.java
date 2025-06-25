@@ -86,7 +86,7 @@ public class ArticleServiceImpl implements ArticleService {
                 Optional<MeasuringUnit> measuringUnit = measuringUnitRepository.findById(articleDTO.measuringUnit());
                 existingArticle.setMeasuringUnit(measuringUnit.orElseThrow(() -> new EntityNotFoundException("MeasuringUnit not found")));
             }
-            if (!articleDTO.isForSale()) {
+            if (articleDTO.isForSale() || !articleDTO.isForSale()) {
                 existingArticle.setForSale(articleDTO.isForSale());
             }
             if (articleDTO.inventoryImageDTO() != null) {
