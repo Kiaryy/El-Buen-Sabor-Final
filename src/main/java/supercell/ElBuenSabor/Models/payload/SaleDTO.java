@@ -6,7 +6,7 @@ import java.util.List;
 
 import supercell.ElBuenSabor.Models.enums.SaleType;
 
-public record SaleDTO (
+public record SaleDTO(
     String denomination,
     LocalDate startDate,
     LocalDate endDate,
@@ -15,6 +15,7 @@ public record SaleDTO (
     String saleDescription,
     Double salePrice,
     SaleType saleType,
+    boolean isActive,
     InventoryImageDTO inventoryImage,
-    List<Long> manufacturedArticle
-){}
+    List<SaleDetailDTO> saleDetails
+) {}

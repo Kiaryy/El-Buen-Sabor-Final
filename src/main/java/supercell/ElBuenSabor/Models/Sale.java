@@ -37,6 +37,7 @@ public class Sale {
     private LocalTime endTime;
     private String saleDescription;
     private Double salePrice;
+    private boolean isActive;
 
     @Enumerated(EnumType.STRING)
     private SaleType saleType;
@@ -45,8 +46,7 @@ public class Sale {
     @JoinColumn(name = "inventory_image_id", referencedColumnName = "IDInventoryImage")
     private InventoryImage inventoryImage;
 
-    @OneToMany
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<ManufacturedArticle> manufacturedArticle;
-
+    private List<SaleDetail> saleDetails;
 }
