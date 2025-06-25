@@ -38,6 +38,11 @@ public class OrderController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderResponseDTO> getOrderById(@PathVariable Integer id) {
+        OrderResponseDTO dto = orderService.getOrderById(id);
+        return ResponseEntity.ok(dto);
+    }
     @GetMapping
     public ResponseEntity<List<OrderResponseDTO>> getAllOrders()
     {

@@ -11,4 +11,6 @@ public interface OrderService {
     BillResponseDTO createOrder(OrderRequestDTO orderRequestDTO);
 
     List<OrderResponseDTO> getAllOrders();
+
+    OrderResponseDTO getOrderById(Integer id);
 }

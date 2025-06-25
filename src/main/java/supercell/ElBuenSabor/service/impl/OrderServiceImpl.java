@@ -138,6 +138,26 @@ public class OrderServiceImpl implements OrderService {
                 .build()).collect(Collectors.toList());
     }
 
+    public OrderResponseDTO getOrderById(Integer id) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+       return OrderResponseDTO.builder()
+                .id(order.getId())
+                .estimatedFinishTime(order.getEstimatedFinishTime())
+                .total(order.getTotal())
+                .totalCost(order.getTotalCost())
+                .orderDate(order.getOrderDate())
+                .orderState(order.getOrderState().toString())
+                .orderType(order.getOrderType().toString())
+                .payMethod(order.getPayMethod().toString())
+                .subsidiaryId(order.getSubsidiaryId())
+                .client( OrderServiceImpl.clientToDto(order.getClient()) )
+                .directionToSend(order.getDirection())
+               .build();
+
+    }
+
+
 
     public static BillResponseDTO toDto(Bill bill) {
         if (bill == null) {

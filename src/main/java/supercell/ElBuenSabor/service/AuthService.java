@@ -7,4 +7,6 @@ public interface AuthService<T> {
     String logIn(String userName, String password);
 
     T register(T user);
+
+
 }
