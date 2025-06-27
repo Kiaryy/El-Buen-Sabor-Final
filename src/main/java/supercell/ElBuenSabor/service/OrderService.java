@@ -1,6 +1,6 @@
 package supercell.ElBuenSabor.service;
 
-
+import supercell.ElBuenSabor.Models.enums.OrderState;
 import supercell.ElBuenSabor.Models.payload.BillResponseDTO;
 import supercell.ElBuenSabor.Models.payload.OrderRequestDTO;
 import supercell.ElBuenSabor.Models.payload.OrderResponseDTO;
@@ -13,4 +13,6 @@ public interface OrderService {
     List<OrderResponseDTO> getAllOrders();
 
     OrderResponseDTO getOrderById(Integer id);
+
+    OrderResponseDTO changeOrderStatus(Integer orderId, OrderState orderState);
 }

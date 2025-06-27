@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import supercell.ElBuenSabor.Models.enums.OrderState;
 import supercell.ElBuenSabor.Models.payload.BillResponseDTO;
 import supercell.ElBuenSabor.Models.payload.OrderRequestDTO;
 
@@ -48,6 +49,12 @@ public class OrderController {
     {
         List<OrderResponseDTO> orderResponseDTOS = orderService.getAllOrders();
         return ResponseEntity.ok(orderResponseDTOS);
+    }
+
+    @PatchMapping("/orderState/{orderId}")
+    public ResponseEntity<OrderResponseDTO> changeOrderStatus(@PathVariable Integer orderId, @RequestBody OrderState orderState) {
+        OrderResponseDTO orderResponseDTO = orderService.changeOrderStatus(orderId,orderState);
+        return ResponseEntity.ok(orderResponseDTO);
     }
 
     @PostMapping("/createPreference")

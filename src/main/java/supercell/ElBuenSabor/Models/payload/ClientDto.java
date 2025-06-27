@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClientDto{
+    private Long clientId;
     private String firstName;
     private String lastName;
     private String phoneNumber;

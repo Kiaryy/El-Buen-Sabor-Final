@@ -1,0 +1,13 @@
+meta {
+  name: changeOrderStatus
+  type: http
+  seq: 1
+}
+patch{
+    url: http://localhost:8080/api/orders/orderState/1
+    body: json
+}
+
+body:json {
+    "REJECTED"
+}

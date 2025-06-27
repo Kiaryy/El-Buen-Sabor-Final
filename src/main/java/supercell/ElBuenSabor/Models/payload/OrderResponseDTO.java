@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -20,5 +22,6 @@ public class OrderResponseDTO {
     private ClientDto client;
     private String directionToSend;
     private Integer subsidiaryId;
+    private List<ProductsOrderedDto> manufacturedArticles;
 }
 
