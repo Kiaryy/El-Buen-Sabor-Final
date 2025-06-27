@@ -81,8 +81,13 @@ public class OrderServiceImpl implements OrderService {
                 if(mad.getQuantity() < orderedQty) {
                     throw new RuntimeException("Stock insuficiente de ingredientes del artículo: "+ mad.getManufacturedArticle().getName());
                 }
+                /*if(article.getCurrentStock() < 0 ){
+                    throw new RuntimeException("Stock insuficiente del insumo: "+article.getDenomination());
+                }*/
                 mad.setQuantity(mad.getQuantity() - orderedQty);
+
                 articleDetailRepository.save(mad);
+
                 // int requiredAmount = mad.getQuantity() * orderedQty;
 
                 // log.info("Articulo base: "+ article.getCurrentStock());
@@ -197,6 +202,38 @@ public class OrderServiceImpl implements OrderService {
                .client( OrderServiceImpl.clientToDto(order.getClient()) )
                .directionToSend(order.getDirection())
                .build();
+    }
+
+    @Override
+    public List<ProductsOrderedDto> getOrderedProductByUserId(Long userId) {
+        List<Order>orderList = orderRepository.findOrderByClient(userId);
+
+        if (orderList.isEmpty()){
+            throw new RuntimeException("No hay ordenes asociadas al cliente con id "+userId);
+        }
+        List<ProductsOrderedDto> dtoList = new ArrayList<>();
+
+        for (Order order : orderList) {
+            for (OrderDetails detail : order.getOrderDetails()) {
+                ManufacturedArticle article = detail.getManufacturedArticle();
+
+                ProductsOrderedDto dto = new ProductsOrderedDto(
+                        article.getIDManufacturedArticle(),
+                        article.getName(),
+                        article.getDescription(),
+                        article.getPrice(),
+                        article.getEstimatedTimeMinutes(),
+                        article.isAvailable(),
+                        detail.getQuantity(), // cantidad pedida
+                        null,
+                        article.getCategory().getIDCategory()
+                );
+
+                dtoList.add(dto);
+            }
+        }
+
+        return dtoList;
     }
 
     public static BillResponseDTO toDto(Bill bill) {

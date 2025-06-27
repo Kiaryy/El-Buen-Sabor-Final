@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import supercell.ElBuenSabor.service.InitializerService;
 
+import java.io.IOException;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/initialize")
@@ -16,7 +18,7 @@ public class InitializerController {
     private InitializerService initializerService;
 
     @GetMapping("/all")
-    public String initializeAll(){
+    public String initializeAll() throws IOException {
         initializerService.initializeCategory();
         initializerService.initializeMeasuringUnit();
         initializerService.initializeArticle();        
@@ -26,6 +28,7 @@ public class InitializerController {
         initializerService.initializeEmployees();
         initializerService.initializeUsers();
         initializerService.initializeSales();
+        initializerService.initializeOrders();
         return "Tables Initialized";
     }
 

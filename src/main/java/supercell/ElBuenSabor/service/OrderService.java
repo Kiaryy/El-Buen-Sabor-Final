@@ -4,6 +4,7 @@ import supercell.ElBuenSabor.Models.enums.OrderState;
 import supercell.ElBuenSabor.Models.payload.BillResponseDTO;
 import supercell.ElBuenSabor.Models.payload.OrderRequestDTO;
 import supercell.ElBuenSabor.Models.payload.OrderResponseDTO;
+import supercell.ElBuenSabor.Models.payload.ProductsOrderedDto;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface OrderService {
     OrderResponseDTO getOrderById(Integer id);
 
     OrderResponseDTO changeOrderStatus(Integer orderId, OrderState orderState);
+
+    List<ProductsOrderedDto> getOrderedProductByUserId(Long userId);
 }

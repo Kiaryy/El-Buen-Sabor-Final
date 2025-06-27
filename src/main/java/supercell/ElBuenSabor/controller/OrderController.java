@@ -14,11 +14,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import supercell.ElBuenSabor.Models.enums.OrderState;
-import supercell.ElBuenSabor.Models.payload.BillResponseDTO;
-import supercell.ElBuenSabor.Models.payload.OrderRequestDTO;
+import supercell.ElBuenSabor.Models.payload.*;
 
-import supercell.ElBuenSabor.Models.payload.OrderResponseDTO;
-import supercell.ElBuenSabor.Models.payload.UserPreferenceRequest;
 import supercell.ElBuenSabor.service.OrderService;
 
 import java.math.BigDecimal;
@@ -43,6 +40,11 @@ public class OrderController {
     public ResponseEntity<OrderResponseDTO> getOrderById(@PathVariable Integer id) {
         OrderResponseDTO dto = orderService.getOrderById(id);
         return ResponseEntity.ok(dto);
+    }
+    @GetMapping("/user/productOrdered/{userId}")
+    public ResponseEntity<List<ProductsOrderedDto>> getOrderedProducts(@PathVariable Long userId) {
+        List<ProductsOrderedDto> productsOrderedDto = orderService.getOrderedProductByUserId(userId);
+        return ResponseEntity.ok(productsOrderedDto);
     }
     @GetMapping
     public ResponseEntity<List<OrderResponseDTO>> getAllOrders()

@@ -13,40 +13,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import supercell.ElBuenSabor.Models.Article;
-import supercell.ElBuenSabor.Models.Category;
-import supercell.ElBuenSabor.Models.Client;
-import supercell.ElBuenSabor.Models.Country;
-import supercell.ElBuenSabor.Models.Domicile;
-import supercell.ElBuenSabor.Models.Employee;
-import supercell.ElBuenSabor.Models.InventoryImage;
-import supercell.ElBuenSabor.Models.Location;
-import supercell.ElBuenSabor.Models.ManufacturedArticle;
-import supercell.ElBuenSabor.Models.ManufacturedArticleDetail;
-import supercell.ElBuenSabor.Models.MeasuringUnit;
-import supercell.ElBuenSabor.Models.Provider;
-import supercell.ElBuenSabor.Models.Province;
-import supercell.ElBuenSabor.Models.Sale;
-import supercell.ElBuenSabor.Models.SaleDetail;
-import supercell.ElBuenSabor.Models.UserImage;
-import supercell.ElBuenSabor.Models.enums.Role;
-import supercell.ElBuenSabor.Models.enums.SaleType;
-import supercell.ElBuenSabor.Models.enums.Shift;
-import supercell.ElBuenSabor.repository.ArticleRepository;
-import supercell.ElBuenSabor.repository.CategoryRepository;
-import supercell.ElBuenSabor.repository.ClientRepository;
-import supercell.ElBuenSabor.repository.CountryRepository;
-import supercell.ElBuenSabor.repository.EmployeeRepository;
-import supercell.ElBuenSabor.repository.LocationRepository;
-import supercell.ElBuenSabor.repository.ManufacturedArticleRepository;
-import supercell.ElBuenSabor.repository.MeasuringUnitRepository;
-import supercell.ElBuenSabor.repository.ProviderRepository;
-import supercell.ElBuenSabor.repository.ProvinceRepository;
-import supercell.ElBuenSabor.repository.SaleRepository;
+import supercell.ElBuenSabor.Models.*;
+
+import supercell.ElBuenSabor.Models.enums.*;
+import supercell.ElBuenSabor.Models.enums.PayMethod;
+import supercell.ElBuenSabor.repository.*;
 
 @Service
 @RequiredArgsConstructor
@@ -73,7 +49,8 @@ public class InitializerService {
     private final ClientRepository clientRepository;
     @Autowired
     private final SaleRepository saleRepository;
-
+    @Autowired
+    private final OrderRepository orderRepository;
 
     public String initializeCategory() {
         List<Category> categories = List.of(
@@ -590,7 +567,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
         try {
             List<Client> users = new ArrayList<>();
             byte[] imageBytes = loadImageBytes("images/users/default_pfp.png");
-    
+
             users.add(createClient("Juan", "Garcia", "15487524168", "1994-01-30", "jgarcia@mail.com", "JGarcia", "JGarcia123", "Adolfo Calle", 161, "M5521", 1L, imageBytes));
             users.add(createClient("Lucia", "Martinez", "15487986512", "1990-06-15", "lucia.m@mail.com", "LMartinez", "Lucia2024", "San Martin", 832, "M5500", 2L, imageBytes));
             users.add(createClient("Carlos", "Perez", "15483321478", "1988-12-20", "c.perez@mail.com", "CarlosP", "Perez88!", "Godoy Cruz", 121, "M5530", 3L, imageBytes));
@@ -749,8 +726,47 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
             .quantity(qty)
             .build();
     }
-    
-    
-    
+
+    public void initializeOrders() throws IOException {
+
+        byte[] imageBytes = loadImageBytes("images/users/default_pfp.png");
+
+         List<Client> clients = clientRepository.findAll();
+        List<ManufacturedArticle> mArticles = manufacturedArticleRepository.findAll();
+
+        List<Order> orders = new ArrayList<>();
+        LocalDate baseDate = LocalDate.of(2025, 6, 1);
+        OrderState[] states = OrderState.values();
+        for (int i = 0; i < 30; i++) {
+            Order order = new Order();
+
+            order.setEstimatedFinishTime(LocalTime.of(12 + (i % 6), (i * 5) % 60));
+            order.setTotal(5000 + (i * 150));
+            order.setTotalCost(4000 + (i * 100));
+            order.setOrderDate(baseDate.plusDays(i));
+            order.setOrderState(states[i % states.length]);
+            order.setOrderType(i % 3 == 0 ? OrderType.TAKEAWAY :
+                    i % 3 == 1 ? OrderType.DELIVERY :
+                            OrderType.ON_SITE);
+            order.setPayMethod(i % 2 == 0 ? PayMethod.MERCADOPAGO : PayMethod.CASH);
+            order.setDirection("Calle Falsa " + (100 + i));
+            order.setSubsidiaryId((i % 5) + 1);
+
+            order.setClient(clients.get(i % clients.size()));
+
+            ManufacturedArticle mArticle = mArticles.get(i % mArticles.size());
+            OrderDetails detail = new OrderDetails();
+            detail.setQuantity(1 + i % 4);
+            detail.setSubTotal(1000.0 + (i * 50));
+            detail.setOrder(order);
+            detail.setManufacturedArticle(mArticle);
+
+            order.getOrderDetails().add(detail);
+
+            orders.add(order);
+        }
+        orderRepository.saveAll(orders);
+
+    }
 }
 
