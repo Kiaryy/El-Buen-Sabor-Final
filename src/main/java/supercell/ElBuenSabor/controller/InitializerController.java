@@ -24,6 +24,8 @@ public class InitializerController {
         initializerService.initializeManufacturedArticle();
         initializerService.initializeCountryAndProvince();
         initializerService.initializeEmployees();
+        initializerService.initializeUsers();
+        initializerService.initializeSales();
         return "Tables Initialized";
     }
 

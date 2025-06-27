@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +19,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import supercell.ElBuenSabor.Models.Article;
 import supercell.ElBuenSabor.Models.Category;
+import supercell.ElBuenSabor.Models.Client;
 import supercell.ElBuenSabor.Models.Country;
+import supercell.ElBuenSabor.Models.Domicile;
 import supercell.ElBuenSabor.Models.Employee;
 import supercell.ElBuenSabor.Models.InventoryImage;
 import supercell.ElBuenSabor.Models.Location;
@@ -26,16 +30,23 @@ import supercell.ElBuenSabor.Models.ManufacturedArticleDetail;
 import supercell.ElBuenSabor.Models.MeasuringUnit;
 import supercell.ElBuenSabor.Models.Provider;
 import supercell.ElBuenSabor.Models.Province;
+import supercell.ElBuenSabor.Models.Sale;
+import supercell.ElBuenSabor.Models.SaleDetail;
+import supercell.ElBuenSabor.Models.UserImage;
 import supercell.ElBuenSabor.Models.enums.Role;
+import supercell.ElBuenSabor.Models.enums.SaleType;
 import supercell.ElBuenSabor.Models.enums.Shift;
 import supercell.ElBuenSabor.repository.ArticleRepository;
 import supercell.ElBuenSabor.repository.CategoryRepository;
+import supercell.ElBuenSabor.repository.ClientRepository;
 import supercell.ElBuenSabor.repository.CountryRepository;
+import supercell.ElBuenSabor.repository.EmployeeRepository;
 import supercell.ElBuenSabor.repository.LocationRepository;
 import supercell.ElBuenSabor.repository.ManufacturedArticleRepository;
 import supercell.ElBuenSabor.repository.MeasuringUnitRepository;
 import supercell.ElBuenSabor.repository.ProviderRepository;
 import supercell.ElBuenSabor.repository.ProvinceRepository;
+import supercell.ElBuenSabor.repository.SaleRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +68,11 @@ public class InitializerService {
     @Autowired
     private final LocationRepository locationRepository;
     @Autowired
-    private final supercell.ElBuenSabor.repository.EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
+    @Autowired
+    private final ClientRepository clientRepository;
+    @Autowired
+    private final SaleRepository saleRepository;
 
 
     public String initializeCategory() {
@@ -222,6 +237,7 @@ public class InitializerService {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Failed to initialize users", e);
         }
         return "Articles Initialized";
     }
@@ -413,6 +429,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException("Failed to initialize users", e);
         }
 
         return "Manufactured Articles Initialized";
@@ -497,25 +514,243 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
     @Transactional
     public String initializeEmployees() {
         List<Employee> employees = new ArrayList<>();
-
-        for (Role role : Role.values()) {
-            Employee employee = new Employee();
-            employee.setEmployeeRole(role);
-            employee.setSalary(25000.0); 
-            employee.setShift(Shift.MORNING); 
-            employee.setUsername(role.name().toLowerCase() + "_user");
-            employee.setPassword("password");
-            employee.setName("Name_" + role.name());
-            employee.setLastName("LastName_" + role.name());
-            employee.setPhoneNumber("123456789");
-            employee.setEmail(role.name().toLowerCase() + "@example.com");
-            employee.setBirthDate(new java.util.Date());
-
-            employees.add(employee);
-        }
-
+    
+        Employee admin = new Employee();
+        admin.setEmployeeRole(Role.ADMIN);
+        admin.setSalary(30000.0);
+        admin.setShift(Shift.MORNING);
+        admin.setUsername("alice_admin");
+        admin.setPassword("password123");
+        admin.setName("Alice");
+        admin.setLastName("Anderson");
+        admin.setPhoneNumber("1111111111");
+        admin.setEmail("alice.admin@example.com");
+        admin.setBirthDate(java.sql.Date.valueOf("1990-05-15"));
+        employees.add(admin);
+    
+        Employee cashier = new Employee();
+        cashier.setEmployeeRole(Role.CASHIER);
+        cashier.setSalary(28000.0);
+        cashier.setShift(Shift.EVENING);
+        cashier.setUsername("bob_cashier");
+        cashier.setPassword("password123");
+        cashier.setName("Bob");
+        cashier.setLastName("Brown");
+        cashier.setPhoneNumber("2222222222");
+        cashier.setEmail("bob.cashier@example.com");
+        cashier.setBirthDate(java.sql.Date.valueOf("1988-11-23"));
+        employees.add(cashier);
+    
+        Employee chef1 = new Employee();
+        chef1.setEmployeeRole(Role.CHEF);
+        chef1.setSalary(29000.0);
+        chef1.setShift(Shift.NIGHT);
+        chef1.setUsername("carla_chef");
+        chef1.setPassword("password123");
+        chef1.setName("Carla");
+        chef1.setLastName("Cook");
+        chef1.setPhoneNumber("3333333333");
+        chef1.setEmail("carla.chef@example.com");
+        chef1.setBirthDate(java.sql.Date.valueOf("1992-03-08"));
+        employees.add(chef1);
+    
+        Employee driver = new Employee();
+        driver.setEmployeeRole(Role.DRIVER);
+        driver.setSalary(27000.0);
+        driver.setShift(Shift.EVENING);
+        driver.setUsername("david_driver");
+        driver.setPassword("password123");
+        driver.setName("David");
+        driver.setLastName("Doyle");
+        driver.setPhoneNumber("4444444444");
+        driver.setEmail("david.driver@example.com");
+        driver.setBirthDate(java.sql.Date.valueOf("1985-07-19"));
+        employees.add(driver);
+    
+        Employee chef2 = new Employee();
+        chef2.setEmployeeRole(Role.CHEF);
+        chef2.setSalary(29500.0);
+        chef2.setShift(Shift.MORNING);
+        chef2.setUsername("emma_chef");
+        chef2.setPassword("password123");
+        chef2.setName("Emma");
+        chef2.setLastName("Evans");
+        chef2.setPhoneNumber("5555555555");
+        chef2.setEmail("emma.chef@example.com");
+        chef2.setBirthDate(java.sql.Date.valueOf("1994-01-30"));
+        employees.add(chef2);
+    
         employeeRepository.saveAll(employees);
-        return "Employees Initialized";
+        return "Initialized " + employees.size() + " employees.";
     }
+    
+
+    @Transactional
+    public String initializeUsers() {
+        try {
+            List<Client> users = new ArrayList<>();
+            byte[] imageBytes = loadImageBytes("images/users/default_pfp.png");
+    
+            users.add(createClient("Juan", "Garcia", "15487524168", "1994-01-30", "jgarcia@mail.com", "JGarcia", "JGarcia123", "Adolfo Calle", 161, "M5521", 1L, imageBytes));
+            users.add(createClient("Lucia", "Martinez", "15487986512", "1990-06-15", "lucia.m@mail.com", "LMartinez", "Lucia2024", "San Martin", 832, "M5500", 2L, imageBytes));
+            users.add(createClient("Carlos", "Perez", "15483321478", "1988-12-20", "c.perez@mail.com", "CarlosP", "Perez88!", "Godoy Cruz", 121, "M5530", 3L, imageBytes));
+            users.add(createClient("Ana", "Lopez", "15481245789", "1995-03-10", "ana.lopez@mail.com", "AnaLo", "AnaSecure1", "Belgrano", 754, "M5502", 4L, imageBytes));
+            users.add(createClient("Diego", "Fernandez", "15487654231", "1992-07-25", "diego.f@mail.com", "DFernandez", "DiegoF22", "España", 903, "M5501", 5L, imageBytes));
+            users.add(createClient("Sofia", "Romero", "15489963214", "1996-09-02", "sofia.r@mail.com", "SofiaR", "SofPass94", "Las Heras", 425, "M5528", 6L, imageBytes));
+            users.add(createClient("Martin", "Alvarez", "15488751234", "1991-11-11", "martin.al@mail.com", "MartinA", "Marty123", "Patricias Mendocinas", 200, "M5519", 7L, imageBytes));
+            users.add(createClient("Valentina", "Diaz", "15486674839", "1993-04-17", "val.diaz@mail.com", "ValDiaz", "ValVal44", "25 de Mayo", 578, "M5517", 8L, imageBytes));
+            users.add(createClient("Tomas", "Sanchez", "15484562178", "1989-10-09", "tomas.s@mail.com", "TomasS", "TomasS!", "Mitre", 342, "M5503", 9L, imageBytes));
+            users.add(createClient("Camila", "Torres", "15484321876", "1997-08-28", "camila.t@mail.com", "CamilaT", "CamT2025", "Necochea", 129, "M5505", 10L, imageBytes));
+            users.add(createClient("Federico", "Mendez", "15487231645", "1990-02-02", "fede.m@mail.com", "FedeM", "FedePass", "Pedro Molina", 743, "M5506", 1L, imageBytes));
+            users.add(createClient("Julieta", "Herrera", "15486123547", "1994-05-21", "julieta.h@mail.com", "JulietaH", "Julieta90", "Olascoaga", 398, "M5508", 2L, imageBytes));
+            users.add(createClient("Sebastian", "Gomez", "15482314567", "1987-03-03", "sebas.g@mail.com", "SebasG", "Sebas@123", "Sarmiento", 856, "M5509", 3L, imageBytes));
+            users.add(createClient("Agustina", "Vega", "15485976123", "1992-06-06", "agus.v@mail.com", "AgusV", "Agustina1", "Paso de los Andes", 231, "M5510", 4L, imageBytes));
+            users.add(createClient("Bruno", "Silva", "15487765432", "1995-12-12", "bruno.s@mail.com", "BrunoS", "BrunoPwd", "Boulogne Sur Mer", 657, "M5511", 5L, imageBytes));
+    
+            clientRepository.saveAll(users);
+            return "Users Initialized";
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize users", e);
+        }
+    }
+    
+    private Client createClient(String name, String lastName, String phone, String birth, String email, String username, String password,
+                                String street, int number, String zip, Long locationId, byte[] imageBytes) {
+        Client client = new Client();
+        client.setName(name);
+        client.setLastName(lastName);
+        client.setPhoneNumber(phone);
+        client.setBirthDate(java.sql.Date.valueOf(birth));
+        client.setEmail(email);
+        client.setUsername(username);
+        client.setPassword(password);
+        client.setUserImage(UserImage.builder().imageData(imageBytes).build());
+    
+        Location location = locationRepository.findById(locationId)
+            .orElseThrow(() -> new RuntimeException("Location not found: " + locationId));
+        
+        Domicile domicile = Domicile.builder()
+                .street(street)
+                .zipCode(zip)
+                .number(number)
+                .location(location)
+                .client(client)
+                .build();
+    
+        client.setDomiciles(List.of(domicile));
+        return client;
+    }
+
+    @Transactional
+    public String initializeSales() {
+        try {
+            List<Sale> sales = new ArrayList<>();
+    
+            sales.add(buildSale(
+                "Oferta de Verano", SaleType.SUMMERSALE, "Descuento por temporada de calor.",
+                LocalDate.of(2025, Month.DECEMBER, 21), LocalDate.of(2026, Month.MARCH, 20),
+                "images/sale/summer_sale.png", 10000D,
+                List.of(
+                    detail(articleRepository.findById(42L).get(), 1),
+                    detail(manufacturedArticleRepository.findById(2L).get(), 1),
+                    detail(manufacturedArticleRepository.findById(3L).get(), 1)
+                )
+            ));
+    
+            sales.add(buildSale(
+                "Oferta de Invierno", SaleType.WINTERSALE, "Descuento por temporada de frio.",
+                LocalDate.of(2025, Month.JUNE, 20), LocalDate.of(2025, Month.SEPTEMBER, 22),
+                "images/sale/winter_sale.png", 15000D,
+                List.of(
+                    detail(articleRepository.findById(43L).get(), 1),
+                    detail(manufacturedArticleRepository.findById(9L).get(), 1),
+                    detail(manufacturedArticleRepository.findById(11L).get(), 1)
+                )
+            ));
+    
+            sales.add(buildSale(
+                "Oferta de Primavera", SaleType.SPRINGSALE, "Descuento por epoca primaveral.",
+                LocalDate.of(2025, Month.SEPTEMBER, 23), LocalDate.of(2025, Month.DECEMBER, 22),
+                "images/sale/spring_sale.png", 17000D,
+                List.of(
+                    detail(articleRepository.findById(47L).get(), 1),
+                    detail(manufacturedArticleRepository.findById(10L).get(), 1),
+                    detail(manufacturedArticleRepository.findById(15L).get(), 1)
+                )
+            ));
+    
+            sales.add(buildSale(
+                "Oferta de Otoño", SaleType.FALLSALE, "Descuento por epoca otoñal.",
+                LocalDate.of(2026, Month.MARCH, 20), LocalDate.of(2026, Month.JUNE, 20),
+                "images/sale/fall_sale.png", 15000D,
+                List.of(
+                    detail(articleRepository.findById(44L).get(), 1),
+                    detail(manufacturedArticleRepository.findById(5L).get(), 1),
+                    detail(manufacturedArticleRepository.findById(11L).get(), 1)
+                )
+            ));
+    
+            sales.add(buildSale(
+                "Oferta de Navidad", SaleType.CHRISTMASSALE, "Descuento por Navidad.",
+                LocalDate.of(2025, Month.DECEMBER, 1), LocalDate.of(2025, Month.DECEMBER, 30),
+                "images/sale/christmass_sale.png", 15000D,
+                List.of(
+                    detail(articleRepository.findById(56L).get(), 2),
+                    detail(manufacturedArticleRepository.findById(12L).get(), 1),
+                    detail(manufacturedArticleRepository.findById(1L).get(), 1)
+                )
+            ));
+    
+            saleRepository.saveAll(sales);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize users", e);
+        }
+    
+        return "Sales Initialized";
+    }
+    
+
+    private Sale buildSale(String denomination, SaleType type, String description, LocalDate start, LocalDate end, String imagePath, double price, List<SaleDetail> details) throws IOException {
+        InventoryImage image = InventoryImage.builder().imageData(loadImageBytes(imagePath)).build();
+    
+        Sale sale = Sale.builder()
+            .denomination(denomination)
+            .startDate(start)
+            .endDate(end)
+            .startTime(LocalTime.of(12, 0))
+            .endTime(LocalTime.of(12, 0))
+            .saleDescription(description)
+            .salePrice(price)
+            .isActive(true)
+            .saleType(type)
+            .inventoryImage(image)
+            .saleDetails(new ArrayList<>()) // Set below
+            .build();
+    
+        // Link sale to each detail
+        details.forEach(d -> d.setSale(sale));
+        sale.setSaleDetails(details);
+    
+        return sale;
+    }
+    
+    private SaleDetail detail(Article a, int qty) {
+        return SaleDetail.builder()
+            .article(a)
+            .quantity(qty)
+            .build();
+    }
+    
+    private SaleDetail detail(ManufacturedArticle ma, int qty) {
+        return SaleDetail.builder()
+            .manufacturedArticle(ma)
+            .quantity(qty)
+            .build();
+    }
+    
+    
+    
 }
 
