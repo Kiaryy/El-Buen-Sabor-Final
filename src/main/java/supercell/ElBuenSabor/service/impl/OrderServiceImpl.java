@@ -1,9 +1,10 @@
 package supercell.ElBuenSabor.service.impl;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import supercell.ElBuenSabor.Models.*;
 import supercell.ElBuenSabor.Models.enums.OrderState;
 import supercell.ElBuenSabor.Models.enums.OrderType;
@@ -29,17 +30,16 @@ public class OrderServiceImpl implements OrderService {
     private final PayMethodRepository payMethodRepository;
     private final ArticleRepository articleRepository;
     private final ManufacturedArticleDetailRepository articleDetailRepository;
+
+    @Transactional
     @Override
     public BillResponseDTO createOrder(OrderRequestDTO request) {
 
         Client client = clientRepository.findById(request.getClientId())
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
 
-        /*PayMethod payMethod = payMethodRepository.findById(request.getPayMethodId())
-                .orElseThrow(() -> new RuntimeException("Método de pago no encontrado"));
-        */
         if(client == null) {
-            throw new RuntimeException("Cliente o metodo de pago no encontrado");
+            throw new RuntimeException("Cliente no encontrado");
         }
         LocalTime estimatedTime = request.getEstimatedFinishTime();
 
@@ -71,19 +71,17 @@ public class OrderServiceImpl implements OrderService {
 
             int orderedQty = detailDTO.getQuantity();
 
-            // if (mArticle.getStock() < orderedQty) {
-            //     throw new RuntimeException("Stock insuficiente de: " + mArticle.getName());
-            // }
-            // mArticle.setStock(mArticle.getStock() - orderedQty);
-
             for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
                 Article article = mad.getArticle();
+
                 if(mad.getQuantity() < orderedQty) {
                     throw new RuntimeException("Stock insuficiente de ingredientes del artículo: "+ mad.getManufacturedArticle().getName());
                 }
-                /*if(article.getCurrentStock() < 0 ){
-                    throw new RuntimeException("Stock insuficiente del insumo: "+article.getDenomination());
-                }*/
+
+                if(article.getCurrentStock() < orderedQty ){
+                    throw new RuntimeException("Stock insuficiente del insumo: "+ article.getDenomination());
+                }
+
                 mad.setQuantity(mad.getQuantity() - orderedQty);
 
                 articleDetailRepository.save(mad);
@@ -128,30 +126,42 @@ public class OrderServiceImpl implements OrderService {
 
     public List<OrderResponseDTO> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
-        List<ProductsOrderedDto> orderResponseDTOs = new ArrayList<>();
+        List<OrderResponseDTO> responseList = new ArrayList<>();
 
         for (Order order : orders) {
-            List<OrderDetails> details = order.getOrderDetails();
-            for (OrderDetails detail : details) {
-                ManufacturedArticle mArticle = detail.getManufacturedArticle();
-                orderResponseDTOs.add(mapToManufacturedArticleDTO(mArticle,detail.getQuantity()));
-            }
+            List<ProductsOrderedDto> manufacturedArticles = order.getOrderDetails().stream()
+                    .map(detail -> mapToManufacturedArticleDTO(detail.getManufacturedArticle(), detail.getQuantity()))
+                    .toList();
+
+            Client client = order.getClient();
+            ClientDto clientDto = new ClientDto();
+            clientDto.setFirstName(client.getName());
+            clientDto.setLastName(client.getLastName());
+            clientDto.setPhoneNumber(client.getPhoneNumber());
+            clientDto.setEmail(client.getEmail());
+            clientDto.setBirthDate(client.getBirthDate());
+            clientDto.setUsername(client.getUsername());
+            clientDto.setPassword(client.getPassword());
+
+            OrderResponseDTO dto = new OrderResponseDTO();
+            dto.setId(order.getId());
+            dto.setEstimatedFinishTime(order.getEstimatedFinishTime());
+            dto.setTotal(order.getTotal());
+            dto.setTotalCost(order.getTotalCost());
+            dto.setOrderDate(order.getOrderDate());
+            dto.setOrderState(order.getOrderState().toString());
+            dto.setOrderType(order.getOrderType().toString());
+            dto.setPayMethod(order.getPayMethod().toString());
+            dto.setClient(clientDto);
+            dto.setDirectionToSend(order.getDirection());
+            dto.setSubsidiaryId(order.getSubsidiaryId());
+            dto.setManufacturedArticles(manufacturedArticles);
+
+            responseList.add(dto);
         }
 
-        return orders.stream().map(order -> OrderResponseDTO.builder()
-                .id(order.getId())
-                .estimatedFinishTime(order.getEstimatedFinishTime())
-                .total(order.getTotal())
-                .totalCost(order.getTotalCost())
-                .orderDate(order.getOrderDate())
-                .orderState(order.getOrderState().toString())
-                .orderType(order.getOrderType().toString())
-                .payMethod(order.getPayMethod().toString())
-                .subsidiaryId(order.getSubsidiaryId())
-                .client( OrderServiceImpl.clientToDto(order.getClient()) )
-                .directionToSend(order.getDirection())
-                .manufacturedArticles(orderResponseDTOs)
-                .build()).collect(Collectors.toList());
+        return responseList;
+
     }
 
     public OrderResponseDTO getOrderById(Integer id) {
@@ -272,13 +282,7 @@ public class OrderServiceImpl implements OrderService {
         dto.setDomiciles(domicileDTOS);
         return dto;
     }
-    private ProductsOrderedDto mapToManufacturedArticleDTO(ManufacturedArticle article,int quantity) {
-        List<ManufacturedArticleDetailDTO> details = article.getManufacturedArticleDetail().stream()
-                .map(detail -> new ManufacturedArticleDetailDTO(
-                        detail.getIDManufacturedArticleDetail(),
-                        detail.getManufacturedArticle().getStock()
-                )).toList();
-
+    private ProductsOrderedDto mapToManufacturedArticleDTO(ManufacturedArticle article, Integer quantityOrdered) {
         InventoryImageDTO imageDTO = new InventoryImageDTO(
                 article.getManufacInventoryImage().getImageData()
         );
@@ -290,10 +294,11 @@ public class OrderServiceImpl implements OrderService {
                 article.getPrice(),
                 article.getEstimatedTimeMinutes(),
                 article.isAvailable(),
-                quantity,
-                imageDTO,
+                quantityOrdered,
+                null,
                 article.getCategory().getIDCategory()
         );
     }
+
 
 }
