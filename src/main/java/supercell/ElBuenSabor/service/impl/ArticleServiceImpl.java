@@ -16,6 +16,7 @@ import supercell.ElBuenSabor.repository.ArticleRepository;
 import supercell.ElBuenSabor.repository.CategoryRepository;
 import supercell.ElBuenSabor.repository.MeasuringUnitRepository;
 import supercell.ElBuenSabor.service.ArticleService;
+import supercell.ElBuenSabor.service.ManufacturedArticleService;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,11 @@ public class ArticleServiceImpl implements ArticleService {
     private final CategoryRepository categoryRepository;
     @Autowired
     private final MeasuringUnitRepository measuringUnitRepository;
+    @Autowired
+    private ManufacturedArticleServiceImpl manufacturedArticleService;
+    @Autowired
+    private final SaleServiceImpl saleService;
+
 
 
     @Override
@@ -66,6 +72,10 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public Article updateArticle(Long ID, ArticleDTO articleDTO) {
         return articleRepository.findById(ID).map(existingArticle -> {
+    
+            Double oldPrice = existingArticle.getBuyingPrice();
+            Double newPrice = articleDTO.buyingPrice();
+    
             if (articleDTO.denomination() != null) {
                 existingArticle.setDenomination(articleDTO.denomination());
             }
@@ -75,9 +85,10 @@ public class ArticleServiceImpl implements ArticleService {
             if (articleDTO.maxStock() != 0) {
                 existingArticle.setMaxStock(articleDTO.maxStock());
             }
-            if (articleDTO.buyingPrice() != null) {
-                existingArticle.setBuyingPrice(articleDTO.buyingPrice());
+            if (newPrice != null) {
+                existingArticle.setBuyingPrice(newPrice);
             }
+    
             if (articleDTO.category() != null && articleDTO.category() != 0) {
                 Optional<Category> category = categoryRepository.findById(articleDTO.category());
                 existingArticle.setCategory(category.orElseThrow(() -> new EntityNotFoundException("Category not found")));
@@ -91,12 +102,21 @@ public class ArticleServiceImpl implements ArticleService {
             }
             if (articleDTO.inventoryImageDTO() != null) {
                 InventoryImage inventoryImage = InventoryImage.builder()
-                .imageData(articleDTO.inventoryImageDTO().imageData())
-                .build();
+                    .imageData(articleDTO.inventoryImageDTO().imageData())
+                    .build();
     
                 existingArticle.setInventoryImage(inventoryImage);
             }
-            return articleRepository.save(existingArticle);
+    
+            Article saved = articleRepository.save(existingArticle);
+    
+            if (newPrice != null && !newPrice.equals(oldPrice)) {
+                manufacturedArticleService.updatePricesForManufacturedArticlesUsingArticle(saved);
+                saleService.updateSalePricesUsingArticle(saved);
+            }
+    
+            return saved;
         }).orElseThrow(() -> new EntityNotFoundException("No se encontro un articulo con el ID: " + ID));
     }
+    
 }

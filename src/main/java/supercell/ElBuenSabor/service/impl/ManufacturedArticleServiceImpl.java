@@ -31,6 +31,8 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
     private final ArticleRepository articleRepository;
     @Autowired 
     private final CategoryRepository categoryRepository;
+    @Autowired
+    private final SaleServiceImpl saleService;
 
     @Override
     public List<ManufacturedArticle> getAllManufacturedArticle() {
@@ -43,7 +45,6 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
         ManufacturedArticle manufacturedArticle = ManufacturedArticle.builder()
             .name(manufacturedArticleDTO.name())
             .description(manufacturedArticleDTO.description())
-            .price(manufacturedArticleDTO.price())
             .isAvailable(manufacturedArticleDTO.isAvailable())
             .estimatedTimeMinutes(manufacturedArticleDTO.estimatedTimeMinutes())
             .build();
@@ -54,7 +55,7 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
         for (ManufacturedArticleDetailDTO detailDTO : manufacturedArticleDTO.manufacturedArticleDetail()) {
             Article article = articleRepository.findById(detailDTO.articleId())
                 .orElseThrow(() -> new EntityNotFoundException("Artículo no encontrado con ID: " + detailDTO.articleId()));
-    
+
             ManufacturedArticleDetail detail = ManufacturedArticleDetail.builder()
                 .article(article)
                 .quantity(detailDTO.quantity())
@@ -65,6 +66,12 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
         }
 
         manufacturedArticle.setManufacturedArticleDetail(details);
+
+        double price = details.stream()
+            .mapToDouble(detail -> detail.getArticle().getBuyingPrice() * detail.getQuantity())
+            .sum();
+
+        manufacturedArticle.setPrice(price * 1.25);
         
         InventoryImage inventoryImage = InventoryImage.builder()
             .imageData(manufacturedArticleDTO.inventoryImageDTO().imageData())
@@ -91,9 +98,6 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
             if (manufacturedArticleDTO.description() != null) {
                 existingManufacturedArticle.setDescription(manufacturedArticleDTO.description());
             }
-            if (manufacturedArticleDTO.price() != null) {
-                existingManufacturedArticle.setPrice(manufacturedArticleDTO.price());
-            }
             if (manufacturedArticleDTO.estimatedTimeMinutes() != 0) {
                 existingManufacturedArticle.setEstimatedTimeMinutes(manufacturedArticleDTO.estimatedTimeMinutes());
             }
@@ -116,6 +120,13 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
                 }
                 existingManufacturedArticle.getManufacturedArticleDetail().clear();
                 existingManufacturedArticle.getManufacturedArticleDetail().addAll(details); 
+
+                double price = details.stream()
+                .mapToDouble(detail -> detail.getArticle().getBuyingPrice() * detail.getQuantity())
+                .sum();
+    
+                existingManufacturedArticle.setPrice(price * 1.25);
+                saleService.updateSalePricesUsingManufacturedArticle(existingManufacturedArticle);
             }
             if (manufacturedArticleDTO.inventoryImageDTO() != null) {
                 InventoryImage inventoryImage = InventoryImage.builder()
@@ -134,4 +145,23 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
         }).orElseThrow(() -> new EntityNotFoundException("No se encontro un articulo manufacturado con el ID: " + ID));
         
     }
+
+    @Transactional
+    public void updatePricesForManufacturedArticlesUsingArticle(Article updatedArticle) {
+        List<ManufacturedArticle> affectedArticles = manufacturedArticleRepository.findAll();
+    
+        for (ManufacturedArticle ma : affectedArticles) {
+            boolean usesUpdatedArticle = ma.getManufacturedArticleDetail().stream()
+                .anyMatch(detail -> detail.getArticle().getIDArticle().equals(updatedArticle.getIDArticle()));
+    
+            if (usesUpdatedArticle) {
+                double totalPrice = ma.getManufacturedArticleDetail().stream()
+                    .mapToDouble(detail -> detail.getArticle().getBuyingPrice())
+                    .sum();
+                ma.setPrice(totalPrice * 1.25);
+                manufacturedArticleRepository.save(ma);
+            }
+        }
+    }
+    
 }

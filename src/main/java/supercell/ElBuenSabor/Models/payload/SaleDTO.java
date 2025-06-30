@@ -13,7 +13,6 @@ public record SaleDTO(
     LocalTime startTime,
     LocalTime endTime,
     String saleDescription,
-    Double salePrice,
     SaleType saleType,
     boolean isActive,
     InventoryImageDTO inventoryImage,

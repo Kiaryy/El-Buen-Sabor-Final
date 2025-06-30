@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import supercell.ElBuenSabor.Models.Article;
 import supercell.ElBuenSabor.Models.InventoryImage;
 import supercell.ElBuenSabor.Models.ManufacturedArticle;
 import supercell.ElBuenSabor.Models.Sale;
@@ -44,7 +46,6 @@ public class SaleServiceImpl implements SaleService {
             .startTime(saleDTO.startTime())
             .endTime(saleDTO.endTime())
             .saleDescription(saleDTO.saleDescription())
-            .salePrice(saleDTO.salePrice())
             .saleType(saleDTO.saleType())
             .isActive(saleDTO.isActive())
             .build();
@@ -54,6 +55,8 @@ public class SaleServiceImpl implements SaleService {
             .build();
 
         sale.setInventoryImage(inventoryImage);
+        
+        Double price = 0.0D;
 
         List<SaleDetail> details = new ArrayList<>();
         for (SaleDetailDTO dto : saleDTO.saleDetails()) {
@@ -69,11 +72,18 @@ public class SaleServiceImpl implements SaleService {
                 default -> throw new IllegalArgumentException("Invalid type: " + dto.type());
             }
 
+            if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
+                price += detail.getArticle().getBuyingPrice() * 0.90;
+            } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
+                price += detail.getManufacturedArticle().getPrice() * 0.90;
+            }
+
+
             details.add(detail);
         }
 
         sale.setSaleDetails(details);
-
+        sale.setSalePrice(price);
         return saleRepository.save(sale);
     }
 
@@ -87,7 +97,6 @@ public class SaleServiceImpl implements SaleService {
             if (saleDTO.startTime() != null) existingSale.setStartTime(saleDTO.startTime());
             if (saleDTO.endTime() != null) existingSale.setEndTime(saleDTO.endTime());
             if (saleDTO.saleDescription() != null) existingSale.setSaleDescription(saleDTO.saleDescription());
-            if (saleDTO.salePrice() != null) existingSale.setSalePrice(saleDTO.salePrice());
             if (saleDTO.saleType() != null) existingSale.setSaleType(saleDTO.saleType());
             if (saleDTO.isActive() || !saleDTO.isActive()) existingSale.setActive(saleDTO.isActive());;
             if (saleDTO.inventoryImage() != null) {
@@ -98,6 +107,8 @@ public class SaleServiceImpl implements SaleService {
             }
 
             if (saleDTO.saleDetails() != null) {
+                Double price = 0.0D;
+
                 List<SaleDetail> details = new ArrayList<>();
                 for (SaleDetailDTO dto : saleDTO.saleDetails()) {
                     SaleDetail detail = new SaleDetail();
@@ -112,15 +123,76 @@ public class SaleServiceImpl implements SaleService {
                         default -> throw new IllegalArgumentException("Invalid type: " + dto.type());
                     }
 
+                    if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
+                        price += detail.getArticle().getBuyingPrice() * 0.90;
+                    } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
+                        price += detail.getManufacturedArticle().getPrice() * 0.90;
+                    }
+
                     details.add(detail);
                 }
 
                 existingSale.getSaleDetails().clear();
                 existingSale.getSaleDetails().addAll(details);
+                existingSale.setSalePrice(price);
+
             }
 
             return saleRepository.save(existingSale);
         }).orElseThrow(() -> new EntityNotFoundException("Sale not found with ID: " + ID));
+    }   
+
+    @Transactional
+    public void updateSalePricesUsingArticle(Article updatedArticle) {
+        List<Sale> allSales = saleRepository.findAll();
+
+        for (Sale sale : allSales) {
+            boolean modified = false;
+            double totalPrice = 0.0;
+
+            for (SaleDetail detail : sale.getSaleDetails()) {
+                if (detail.getArticle() != null && detail.getArticle().getIDArticle().equals(updatedArticle.getIDArticle())) {
+                    modified = true;
+                }
+                if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
+                    totalPrice += detail.getArticle().getBuyingPrice() * 0.9;
+                } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
+                    totalPrice += detail.getManufacturedArticle().getPrice() * 0.9;
+                }
+            }
+
+            if (modified) {
+                sale.setSalePrice(totalPrice);
+                saleRepository.save(sale);
+            }
+        }
+    }
+
+    @Transactional
+    public void updateSalePricesUsingManufacturedArticle(ManufacturedArticle updatedMA) {
+        List<Sale> allSales = saleRepository.findAll();
+
+        for (Sale sale : allSales) {
+            boolean modified = false;
+            double totalPrice = 0.0;
+
+            for (SaleDetail detail : sale.getSaleDetails()) {
+                if (detail.getManufacturedArticle() != null &&
+                    detail.getManufacturedArticle().getIDManufacturedArticle().equals(updatedMA.getIDManufacturedArticle())) {
+                    modified = true;
+                }
+                if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
+                    totalPrice += detail.getArticle().getBuyingPrice() * 0.9;
+                } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
+                    totalPrice += detail.getManufacturedArticle().getPrice() * 0.9;
+                }
+            }
+
+            if (modified) {
+                sale.setSalePrice(totalPrice);
+                saleRepository.save(sale);
+            }
+        }
     }
 
 }
