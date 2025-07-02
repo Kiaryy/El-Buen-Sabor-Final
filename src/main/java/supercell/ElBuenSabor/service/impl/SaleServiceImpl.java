@@ -73,9 +73,9 @@ public class SaleServiceImpl implements SaleService {
             }
 
             if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                price += detail.getArticle().getBuyingPrice() * 0.90;
+                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * 0.90;
             } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                price += detail.getManufacturedArticle().getPrice() * 0.90;
+                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * 0.90;
             }
 
 
@@ -124,9 +124,9 @@ public class SaleServiceImpl implements SaleService {
                     }
 
                     if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                        price += detail.getArticle().getBuyingPrice() * 0.90;
+                        price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * 0.90;
                     } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                        price += detail.getManufacturedArticle().getPrice() * 0.90;
+                        price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * 0.90;
                     }
 
                     details.add(detail);
@@ -145,54 +145,58 @@ public class SaleServiceImpl implements SaleService {
     @Transactional
     public void updateSalePricesUsingArticle(Article updatedArticle) {
         List<Sale> allSales = saleRepository.findAll();
-
+    
         for (Sale sale : allSales) {
             boolean modified = false;
             double totalPrice = 0.0;
-
+    
             for (SaleDetail detail : sale.getSaleDetails()) {
                 if (detail.getArticle() != null && detail.getArticle().getIDArticle().equals(updatedArticle.getIDArticle())) {
                     modified = true;
                 }
+    
                 if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                    totalPrice += detail.getArticle().getBuyingPrice() * 0.9;
+                    totalPrice += detail.getArticle().getBuyingPrice() * detail.getQuantity() * 0.9;
                 } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                    totalPrice += detail.getManufacturedArticle().getPrice() * 0.9;
+                    totalPrice += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * 0.9;
                 }
             }
-
+    
             if (modified) {
                 sale.setSalePrice(totalPrice);
                 saleRepository.save(sale);
             }
         }
     }
+    
 
     @Transactional
     public void updateSalePricesUsingManufacturedArticle(ManufacturedArticle updatedMA) {
         List<Sale> allSales = saleRepository.findAll();
-
+    
         for (Sale sale : allSales) {
             boolean modified = false;
             double totalPrice = 0.0;
-
+    
             for (SaleDetail detail : sale.getSaleDetails()) {
                 if (detail.getManufacturedArticle() != null &&
                     detail.getManufacturedArticle().getIDManufacturedArticle().equals(updatedMA.getIDManufacturedArticle())) {
                     modified = true;
                 }
+    
                 if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                    totalPrice += detail.getArticle().getBuyingPrice() * 0.9;
+                    totalPrice += detail.getArticle().getBuyingPrice() * detail.getQuantity() * 0.9;
                 } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                    totalPrice += detail.getManufacturedArticle().getPrice() * 0.9;
+                    totalPrice += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * 0.9;
                 }
             }
-
+    
             if (modified) {
                 sale.setSalePrice(totalPrice);
                 saleRepository.save(sale);
             }
         }
     }
+    
 
 }

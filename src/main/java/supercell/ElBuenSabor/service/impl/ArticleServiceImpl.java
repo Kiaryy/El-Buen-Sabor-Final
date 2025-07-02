@@ -16,7 +16,6 @@ import supercell.ElBuenSabor.repository.ArticleRepository;
 import supercell.ElBuenSabor.repository.CategoryRepository;
 import supercell.ElBuenSabor.repository.MeasuringUnitRepository;
 import supercell.ElBuenSabor.service.ArticleService;
-import supercell.ElBuenSabor.service.ManufacturedArticleService;
 
 import java.util.List;
 import java.util.Optional;

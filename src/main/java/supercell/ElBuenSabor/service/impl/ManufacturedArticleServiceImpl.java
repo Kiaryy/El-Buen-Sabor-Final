@@ -156,10 +156,12 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
     
             if (usesUpdatedArticle) {
                 double totalPrice = ma.getManufacturedArticleDetail().stream()
-                    .mapToDouble(detail -> detail.getArticle().getBuyingPrice())
+                    .mapToDouble(detail -> detail.getArticle().getBuyingPrice() * detail.getQuantity())
                     .sum();
-                ma.setPrice(totalPrice * 1.25);
+                ma.setPrice(totalPrice * 1.25); 
                 manufacturedArticleRepository.save(ma);
+    
+                saleService.updateSalePricesUsingManufacturedArticle(ma);
             }
         }
     }
