@@ -1,6 +1,8 @@
 package supercell.ElBuenSabor.Models.payload;
 
 
+import java.util.List;
+
 public record ProductsOrderedDto(
         Long productId,
         String name,
@@ -9,7 +11,8 @@ public record ProductsOrderedDto(
         int estimatedTimeMinutes,
         boolean isAvailable,
         Integer quantityOrdered,
-        //List<ManufacturedArticleDetailDTO> manufacturedArticleDetail,
+       // List<ManufacturedArticleDetailDTO> manufacturedArticleDetail,
+        List<ArticleDTO> articles,
         InventoryImageDTO inventoryImageDTO,
         Long category
 ) {

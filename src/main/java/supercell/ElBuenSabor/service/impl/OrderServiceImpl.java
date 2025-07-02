@@ -14,8 +14,7 @@ import supercell.ElBuenSabor.service.OrderService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final PayMethodRepository payMethodRepository;
     private final ArticleRepository articleRepository;
     private final ManufacturedArticleDetailRepository articleDetailRepository;
+    private final SaleRepository saleRepository;
 
     @Transactional
     @Override
@@ -129,10 +129,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderResponseDTO> responseList = new ArrayList<>();
 
         for (Order order : orders) {
-            List<ProductsOrderedDto> manufacturedArticles = order.getOrderDetails().stream()
-                    .map(detail -> mapToManufacturedArticleDTO(detail.getManufacturedArticle(), detail.getQuantity()))
-                    .toList();
-
+            List<ProductsOrderedDto> manufacturedArticles = getManufacturedArticleDetails(order);
             Client client = order.getClient();
             ClientDto clientDto = new ClientDto();
             clientDto.setFirstName(client.getName());
@@ -162,6 +159,48 @@ public class OrderServiceImpl implements OrderService {
 
         return responseList;
 
+    }
+
+    private List<ProductsOrderedDto> getManufacturedArticleDetails(Order order) {
+
+        return order.getOrderDetails().stream()
+                .map(detail -> {
+                    ManufacturedArticle mArticle = detail.getManufacturedArticle();
+
+                    List<ArticleDTO> detailDTOs = mArticle.getManufacturedArticleDetail().stream()
+                            .map(d -> {
+                                return new ArticleDTO(
+                                                d.getArticle().getDenomination(),
+                                                d.getArticle().getCurrentStock(),
+                                                d.getArticle().getMaxStock(),
+                                                null,
+                                                null,
+                                                d.getArticle().getCategory().getIDCategory(),
+                                                null,
+                                                d.getArticle().isForSale()
+                                        );
+                            }
+                            )
+                            .toList();
+
+                    InventoryImageDTO imageDTO = new InventoryImageDTO(
+                            mArticle.getManufacInventoryImage().getImageData()
+                    );
+
+                    return new ProductsOrderedDto(
+                            mArticle.getIDManufacturedArticle(),
+                            mArticle.getName(),
+                            mArticle.getDescription(),
+                            mArticle.getPrice(),
+                            mArticle.getEstimatedTimeMinutes(),
+                            mArticle.isAvailable(),
+                            detail.getQuantity(),
+                            detailDTOs,
+                            null,
+                            mArticle.getCategory().getIDCategory()
+                    );
+                })
+                .toList();
     }
 
     public OrderResponseDTO getOrderById(Integer id) {
@@ -234,7 +273,8 @@ public class OrderServiceImpl implements OrderService {
                         article.getPrice(),
                         article.getEstimatedTimeMinutes(),
                         article.isAvailable(),
-                        detail.getQuantity(), // cantidad pedida
+                        detail.getQuantity(),
+                        null,
                         null,
                         article.getCategory().getIDCategory()
                 );
@@ -296,9 +336,124 @@ public class OrderServiceImpl implements OrderService {
                 article.isAvailable(),
                 quantityOrdered,
                 null,
+                null,
                 article.getCategory().getIDCategory()
         );
     }
 
+    public OrderWithPromosDTO getOrderWithProductsAndPromos(Integer orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+
+        List<ProductsOrderedDto> products = order.getOrderDetails().stream()
+                .map(detail -> {
+                    ManufacturedArticle article = detail.getManufacturedArticle();
+                    return new ProductsOrderedDto(
+                            article.getIDManufacturedArticle(),
+                            article.getName(),
+                            article.getDescription(),
+                            article.getPrice(),
+                            article.getEstimatedTimeMinutes(),
+                            article.isAvailable(),
+                            detail.getQuantity(),
+                            article.getManufacturedArticleDetail().stream()
+                                    .map(d -> {
+                                        return  new ArticleDTO(
+                                                d.getArticle().getDenomination(),
+                                                d.getArticle().getCurrentStock(),
+                                                d.getArticle().getMaxStock(),
+                                                d.getArticle().getBuyingPrice(),
+                                                d.getArticle().getMeasuringUnit().getIDMeasuringUnit(),
+                                                d.getArticle().getCategory().getIDCategory(),
+                                                null,
+                                                d.getArticle().isForSale()
+                                        );
+                                    })
+                                    .toList(),
+                            new InventoryImageDTO(article.getManufacInventoryImage().getImageData()),
+                            article.getCategory().getIDCategory()
+                    );
+                }).toList();
+
+        List<ManufacturedArticle> orderedArticles = order.getOrderDetails().stream()
+                .map(OrderDetails::getManufacturedArticle)
+                .distinct()
+                .toList();
+
+        List<Sale> sales = saleRepository.findSalesByManufacturedArticles(orderedArticles);
+
+        List<SaleResponseDTO> saleDtos = sales.stream()
+                .map(sale -> {
+                    List<ArticleDTO> articleDTOs = sale.getSaleDetails().stream()
+                            .map(detail -> {
+                                Article a = detail.getArticle();
+                                if (a == null) {
+                                    return null;
+                                }
+                                    return new ArticleDTO(
+                                            a.getDenomination(),
+                                            a.getCurrentStock(),
+                                            a.getMaxStock(),
+                                            a.getBuyingPrice(),
+                                            a.getMeasuringUnit().getIDMeasuringUnit(),
+                                            a.getCategory().getIDCategory(),
+                                            null,
+                                            a.isForSale()
+                                    );
+
+
+                            })
+                            .toList();
+
+                    return new SaleResponseDTO(
+                            Math.toIntExact(sale.getIDSale()),
+                            sale.getDenomination(),
+                            sale.getStartDate(),
+                            sale.getEndDate(),
+                            sale.getSaleDescription(),
+                            articleDTOs,
+                            sale.getSalePrice()
+
+                    );
+                })
+                .toList();
+
+        return new OrderWithPromosDTO(
+                order.getId(),
+                order.getOrderDate(),
+                order.getClient().getName() + " " + order.getClient().getLastName(),
+                products,
+                saleDtos
+        );
+    }
+
+    @Override
+    public OrderStatisticsDTO getOrderStatistics() {
+        List<Order> orders = orderRepository.findAll();
+
+        long totalOrders = orders.size();
+        double totalRevenue = orders.stream().mapToDouble(Order::getTotal).sum();
+        double totalCost = orders.stream().mapToDouble(Order::getTotalCost).sum();
+        double profit = totalRevenue - totalCost;
+
+        long canceledOrders = orders.stream().filter(o -> o.getOrderState() == OrderState.CANCELED).count();
+        long pendingOrders = orders.stream().filter(o -> o.getOrderState() == OrderState.PENDING).count();
+        long deliveredOrders = orders.stream().filter(o -> o.getOrderState() == OrderState.ARRIVED).count();
+
+        Map<String, Long> ordersByType = orders.stream()
+                .collect(Collectors.groupingBy(o -> o.getOrderType().name(), Collectors.counting()));
+
+        OrderStatisticsDTO dto = new OrderStatisticsDTO();
+        dto.setTotalOrders(totalOrders);
+        dto.setTotalRevenue(totalRevenue);
+        dto.setTotalCost(totalCost);
+        dto.setProfit(profit);
+        dto.setCanceledOrders(canceledOrders);
+        dto.setPendingOrders(pendingOrders);
+        dto.setDeliveredOrders(deliveredOrders);
+        dto.setOrdersByType(ordersByType);
+
+        return dto;
+    }
 
 }

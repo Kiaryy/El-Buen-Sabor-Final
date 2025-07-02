@@ -58,6 +58,17 @@ public class OrderController {
         OrderResponseDTO orderResponseDTO = orderService.changeOrderStatus(orderId,orderState);
         return ResponseEntity.ok(orderResponseDTO);
     }
+    @GetMapping("/{orderId}/details-with-promos")
+    public ResponseEntity<OrderWithPromosDTO> getOrderWithProductsAndSales(@PathVariable Integer orderId) {
+        OrderWithPromosDTO response = orderService.getOrderWithProductsAndPromos(orderId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<OrderStatisticsDTO> getOrderStatistics() {
+        OrderStatisticsDTO stats = orderService.getOrderStatistics();
+        return ResponseEntity.ok(stats);
+    }
 
     @PostMapping("/createPreference")
     public Preference createPreference(@RequestBody List<UserPreferenceRequest> userItemsPreference ) {
