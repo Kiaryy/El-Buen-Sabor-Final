@@ -23,6 +23,10 @@ public class OrderDetails {
     private Order order;
 
     @ManyToOne
+    @JoinColumn(name = "article_id")
+    private Article article;
+
+    @ManyToOne
     @JoinColumn(name = "manufacturedArticle")
     private ManufacturedArticle manufacturedArticle;
 

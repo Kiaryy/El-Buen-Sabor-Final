@@ -108,6 +108,30 @@ public class OrderServiceImpl implements OrderService {
             detail.setSubTotal(detailDTO.getSubTotal());
             orderDetailsList.add(detail);
         }
+        if (request.getArticleDetails() != null) {
+            for (OrderRequestDTO.ArticleDetailDTO detailDTO : request.getArticleDetails()) {
+                Article article = articleRepository.findById(detailDTO.articleId())
+                        .orElseThrow(() -> new RuntimeException("Artículo no encontrado"));
+                if(!article.isForSale()){
+                    throw new RuntimeException("Articulo no disponible para venta");
+                }
+                if (article.getCurrentStock() < detailDTO.quantity()) {
+                    throw new RuntimeException("Stock insuficiente de la bebida: " + article.getDenomination());
+                }
+
+                article.setCurrentStock(article.getCurrentStock() - detailDTO.quantity());
+                articleRepository.save(article);
+
+                OrderDetails detail = new OrderDetails();
+                detail.setOrder(order);
+                detail.setArticle(article);
+                detail.setQuantity(detailDTO.quantity());
+                detail.setSubTotal(detailDTO.subTotal());
+
+                orderDetailsList.add(detail);
+            }
+        }
+
         order.setOrderDetails(orderDetailsList);
         orderRepository.save(order);
 
@@ -130,6 +154,22 @@ public class OrderServiceImpl implements OrderService {
 
         for (Order order : orders) {
             List<ProductsOrderedDto> manufacturedArticles = getManufacturedArticleDetails(order);
+
+            List<ArticleDTO> articleDTOs = order.getOrderDetails().stream()
+                    .filter(detail -> detail.getArticle() != null)
+                    .map(detail -> {
+                        Article article = detail.getArticle();
+                        return new ArticleDTO(
+                                article.getDenomination(),
+                                article.getCurrentStock(),
+                                article.getMaxStock(),
+                                article.getBuyingPrice(),
+                                article.getMeasuringUnit().getIDMeasuringUnit(),
+                                article.getCategory().getIDCategory(),
+                                new InventoryImageDTO(article.getInventoryImage().getImageData()),
+                                article.isForSale()
+                        );
+                    }).toList();
             Client client = order.getClient();
             ClientDto clientDto = new ClientDto();
             clientDto.setFirstName(client.getName());
@@ -153,6 +193,7 @@ public class OrderServiceImpl implements OrderService {
             dto.setDirectionToSend(order.getDirection());
             dto.setSubsidiaryId(order.getSubsidiaryId());
             dto.setManufacturedArticles(manufacturedArticles);
+            dto.setOrderedArticles(articleDTOs); // Añadir las bebidas
 
             responseList.add(dto);
         }
@@ -164,6 +205,7 @@ public class OrderServiceImpl implements OrderService {
     private List<ProductsOrderedDto> getManufacturedArticleDetails(Order order) {
 
         return order.getOrderDetails().stream()
+                .filter(detail -> detail.getManufacturedArticle() != null)
                 .map(detail -> {
                     ManufacturedArticle mArticle = detail.getManufacturedArticle();
 
@@ -207,10 +249,27 @@ public class OrderServiceImpl implements OrderService {
         Order orders = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
 
-        List<ProductsOrderedDto> orderDetails = orders.getOrderDetails().stream().map((detail -> {
+        List<ArticleDTO> articleDTOs = orders.getOrderDetails().stream()
+                .filter(detail -> detail.getArticle() != null)
+                .map(detail -> {
+                    Article article = detail.getArticle();
+                    return new ArticleDTO(
+                            article.getDenomination(),
+                            article.getCurrentStock(),
+                            article.getMaxStock(),
+                            article.getBuyingPrice(),
+                            article.getMeasuringUnit().getIDMeasuringUnit(),
+                            article.getCategory().getIDCategory(),
+                            new InventoryImageDTO(article.getInventoryImage().getImageData()),
+                            article.isForSale()
+                    );
+                }).toList();
+        List<ProductsOrderedDto> orderDetails = orders.getOrderDetails().stream()
+                .filter(detail -> detail.getManufacturedArticle() != null)
+                .map((detail -> {
                 ManufacturedArticle mArticle = detail.getManufacturedArticle();
 
-                return  mapToManufacturedArticleDTO(mArticle,detail.getQuantity());
+                return mapToManufacturedArticleDTO(mArticle,detail.getQuantity());
                 })
 
         ).toList();
@@ -228,6 +287,7 @@ public class OrderServiceImpl implements OrderService {
                 .client( OrderServiceImpl.clientToDto(orders.getClient()) )
                 .manufacturedArticles(orderDetails)
                 .directionToSend(orders.getDirection())
+                .orderedArticles(articleDTOs)
                .build();
 
     }
@@ -255,31 +315,65 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<ProductsOrderedDto> getOrderedProductByUserId(Long userId) {
-        List<Order>orderList = orderRepository.findOrderByClient(userId);
+        List<Order> orderList = orderRepository.findOrderByClient(userId);
 
-        if (orderList.isEmpty()){
-            throw new RuntimeException("No hay ordenes asociadas al cliente con id "+userId);
+        if (orderList.isEmpty()) {
+            throw new RuntimeException("No hay órdenes asociadas al cliente con id " + userId);
         }
+
         List<ProductsOrderedDto> dtoList = new ArrayList<>();
 
         for (Order order : orderList) {
             for (OrderDetails detail : order.getOrderDetails()) {
-                ManufacturedArticle article = detail.getManufacturedArticle();
+                ManufacturedArticle mArticle = detail.getManufacturedArticle();
+                Article article = detail.getArticle();
 
-                ProductsOrderedDto dto = new ProductsOrderedDto(
-                        article.getIDManufacturedArticle(),
-                        article.getName(),
-                        article.getDescription(),
-                        article.getPrice(),
-                        article.getEstimatedTimeMinutes(),
-                        article.isAvailable(),
-                        detail.getQuantity(),
-                        null,
-                        null,
-                        article.getCategory().getIDCategory()
-                );
+                if (mArticle != null) {
+                    ProductsOrderedDto dto = new ProductsOrderedDto(
+                            mArticle.getIDManufacturedArticle(),
+                            mArticle.getName(),
+                            mArticle.getDescription(),
+                            mArticle.getPrice(),
+                            mArticle.getEstimatedTimeMinutes(),
+                            mArticle.isAvailable(),
+                            detail.getQuantity(),
+                            null,
+                            null,
+                            mArticle.getCategory().getIDCategory()
+                    );
+                    dtoList.add(dto);
+                }
 
-                dtoList.add(dto);
+                // Si es una bebida (Artículo directo)
+                if (article != null) {
+                    ArticleDTO articleDTO = new ArticleDTO(
+                            article.getDenomination(),
+                            article.getCurrentStock(),
+                            article.getMaxStock(),
+                            article.getBuyingPrice(),
+                            article.getMeasuringUnit().getIDMeasuringUnit(),
+                            article.getCategory().getIDCategory(),
+                            new InventoryImageDTO(
+                                    article.getInventoryImage() != null ?
+                                            article.getInventoryImage().getImageData() :
+                                            null),
+                            article.isForSale()
+                    );
+
+                    ProductsOrderedDto dto = new ProductsOrderedDto(
+                            article.getIDArticle(),
+                            article.getDenomination(),
+                            "",
+                            article.getBuyingPrice(),
+                            0,
+                            article.isForSale(),
+                            detail.getQuantity(),
+                            List.of(articleDTO),
+                            null,
+                            article.getCategory().getIDCategory()
+                    );
+                    dtoList.add(dto);
+                }
             }
         }
 

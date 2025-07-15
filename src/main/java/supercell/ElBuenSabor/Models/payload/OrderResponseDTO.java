@@ -27,5 +27,6 @@ public class OrderResponseDTO {
     private String directionToSend;
     private Integer subsidiaryId;
     private List<ProductsOrderedDto> manufacturedArticles;
+    private List<ArticleDTO> orderedArticles;
 }
 

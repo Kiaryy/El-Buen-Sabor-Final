@@ -24,7 +24,7 @@ public class ManufacturedArticleDetail {
     private int quantity;
     
     @ManyToOne
-    @JoinColumn(name = "article_id", nullable = false) // Article Foreign Key
+    @JoinColumn(name = "article_id", nullable = false)
     private Article article;
 
     @ManyToOne
