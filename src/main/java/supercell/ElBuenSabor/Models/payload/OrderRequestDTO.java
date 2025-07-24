@@ -28,14 +28,23 @@ public class OrderRequestDTO {
     private int subsidiaryId;
     private String direction;
     private List<OrderDetailDTO> orderDetails;
+    private List<SalesDTO> salesDetails;
     private List<ArticleDetailDTO> articleDetails;
 
     @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
     public static class OrderDetailDTO {
-        private long manufacturedArticleId;
+        private Long manufacturedArticleId;
         private int quantity;
         private double subTotal;
     }
+    
+    @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
+    public static class SalesDTO {
+        private Long SaleID;
+        private int quantity;
+        private double subTotal;
+    }
+
     public record ArticleDetailDTO(
             Long articleId,
             int quantity,

@@ -131,6 +131,45 @@ public class OrderServiceImpl implements OrderService {
                 orderDetailsList.add(detail);
             }
         }
+        for (OrderRequestDTO.SalesDTO saleDTO : request.getSalesDetails()) {
+            Sale sale = saleRepository.findById(saleDTO.getSaleID())
+                .orElseThrow(() -> new RuntimeException("Artículo no encontrado"));
+            for (SaleDetail saleDetail : sale.getSaleDetails()) {
+                if (saleDetail.getArticle() != null) {  
+                    if (saleDetail.getArticle().getCurrentStock() < saleDetail.getQuantity() * saleDTO.getQuantity()) {
+                        throw new RuntimeException("Stock insuficiente de la bebida: " + saleDetail.getArticle().getDenomination());
+                    }
+                    saleDetail.getArticle().setCurrentStock(saleDetail.getArticle().getCurrentStock() - saleDetail.getQuantity() * saleDTO.getQuantity());
+                    articleRepository.save(saleDetail.getArticle());
+                }
+                if (saleDetail.getManufacturedArticle() != null) {
+                    for (ManufacturedArticleDetail mad : saleDetail.getManufacturedArticle().getManufacturedArticleDetail()) {
+                        Article article = mad.getArticle();
+                        if(mad.getQuantity() < saleDetail.getQuantity() * saleDTO.getQuantity()) {
+                            throw new RuntimeException("Stock insuficiente de ingredientes del artículo: "+ mad.getManufacturedArticle().getName());
+                        }
+        
+                        if(article.getCurrentStock() < saleDetail.getQuantity() * saleDTO.getQuantity()){
+                            throw new RuntimeException("Stock insuficiente del insumo: "+ article.getDenomination());
+                        }
+                        
+                        mad.setQuantity(mad.getQuantity() - saleDetail.getQuantity() * saleDTO.getQuantity());
+
+                        articleDetailRepository.save(mad);
+                    }
+                    
+                }
+                
+            }
+            OrderDetails detail = new OrderDetails();
+            detail.setOrder(order);
+            detail.setSale(sale);
+            detail.setQuantity(saleDTO.getQuantity());
+            detail.setSubTotal(saleDTO.getSubTotal());
+
+            orderDetailsList.add(detail);
+            
+        }
 
         order.setOrderDetails(orderDetailsList);
         orderRepository.save(order);

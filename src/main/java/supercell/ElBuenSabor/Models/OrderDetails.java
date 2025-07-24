@@ -1,5 +1,7 @@
 package supercell.ElBuenSabor.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,5 +31,10 @@ public class OrderDetails {
     @ManyToOne
     @JoinColumn(name = "manufacturedArticle")
     private ManufacturedArticle manufacturedArticle;
+
+    @ManyToOne
+    @JoinColumn(name = "sale_id", nullable = true) // <-- allow null
+    @JsonBackReference
+    private Sale sale;
 
 }
