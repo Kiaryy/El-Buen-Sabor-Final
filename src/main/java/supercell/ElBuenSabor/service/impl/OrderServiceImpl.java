@@ -211,6 +211,8 @@ public class OrderServiceImpl implements OrderService {
                     }).toList();
             Client client = order.getClient();
             ClientDto clientDto = new ClientDto();
+            
+            clientDto.setClientId(client.getId());
             clientDto.setFirstName(client.getName());
             clientDto.setLastName(client.getLastName());
             clientDto.setPhoneNumber(client.getPhoneNumber());
