@@ -15,6 +15,7 @@ public record SaleDTO(
     String saleDescription,
     SaleType saleType,
     boolean isActive,
+    Double saleDiscount, // 0 to 1, where 1 is 100% of the original price
     InventoryImageDTO inventoryImage,
     List<SaleDetailDTO> saleDetails
 ) {}

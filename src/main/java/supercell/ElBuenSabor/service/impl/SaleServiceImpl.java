@@ -73,9 +73,9 @@ public class SaleServiceImpl implements SaleService {
             }
 
             if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * 0.90;
+                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * saleDTO.saleDiscount();
             } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * 0.90;
+                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * saleDTO.saleDiscount();
             }
 
 
@@ -124,9 +124,9 @@ public class SaleServiceImpl implements SaleService {
                     }
 
                     if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                        price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * 0.90;
+                        price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * saleDTO.saleDiscount();
                     } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                        price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * 0.90;
+                        price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * saleDTO.saleDiscount();
                     }
 
                     details.add(detail);
