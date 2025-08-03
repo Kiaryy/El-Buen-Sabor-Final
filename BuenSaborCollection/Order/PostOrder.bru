@@ -1,0 +1,48 @@
+meta {
+  name: PostOrder
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/orders
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "estimatedFinishTime": "10:00:00",
+    "total": 250.50,
+    "totalCost": 2553.75,
+    "orderState": "PREPARING",
+    "orderType": "DELIVERY",
+    "payMethod": "CASH",
+    "orderDate": "2025-06-15",
+    "isTakeAway": "false",
+    "clientId": 5,
+    "subsidiaryId": 1,
+    "direction": "Fake Avn",
+    "orderDetails": [
+      {
+        "manufacturedArticleId": 1,
+        "quantity": 2,
+        "subTotal": 150
+      }
+    ],
+    "salesDetails": [
+      {
+        "SaleID": 1,
+        "quantity": 2,
+        "subTotal": 150
+      }
+    ],
+    "articleDetails": [
+      {
+        "articleId": 1,
+        "quantity": 2,
+        "subTotal": 150
+      }
+    ]
+  }
+}

@@ -47,6 +47,7 @@ public class SaleServiceImpl implements SaleService {
             .endTime(saleDTO.endTime())
             .saleDescription(saleDTO.saleDescription())
             .saleType(saleDTO.saleType())
+            .saleDiscount(saleDTO.saleDiscount())
             .isActive(saleDTO.isActive())
             .build();
 
@@ -96,6 +97,10 @@ public class SaleServiceImpl implements SaleService {
             if (saleDTO.endDate() != null) existingSale.setEndDate(saleDTO.endDate());
             if (saleDTO.startTime() != null) existingSale.setStartTime(saleDTO.startTime());
             if (saleDTO.endTime() != null) existingSale.setEndTime(saleDTO.endTime());
+            if (saleDTO.saleDiscount() != null) {
+                existingSale.setSaleDiscount(saleDTO.saleDiscount());
+                updatePrices(existingSale, saleDTO);                
+            };
             if (saleDTO.saleDescription() != null) existingSale.setSaleDescription(saleDTO.saleDescription());
             if (saleDTO.saleType() != null) existingSale.setSaleType(saleDTO.saleType());
             if (saleDTO.isActive() || !saleDTO.isActive()) existingSale.setActive(saleDTO.isActive());;
@@ -107,35 +112,7 @@ public class SaleServiceImpl implements SaleService {
             }
 
             if (saleDTO.saleDetails() != null) {
-                Double price = 0.0D;
-
-                List<SaleDetail> details = new ArrayList<>();
-                for (SaleDetailDTO dto : saleDTO.saleDetails()) {
-                    SaleDetail detail = new SaleDetail();
-                    detail.setQuantity(dto.quantity());
-                    detail.setSale(existingSale);
-
-                    switch (dto.type().toUpperCase()) {
-                        case "ARTICLE" -> detail.setArticle(articleRepository.findById(dto.id())
-                            .orElseThrow(() -> new EntityNotFoundException("Article not found with ID: " + dto.id())));
-                        case "MANUFACTURED" -> detail.setManufacturedArticle(manufacturedArticleRepository.findById(dto.id())
-                            .orElseThrow(() -> new EntityNotFoundException("ManufacturedArticle not found with ID: " + dto.id())));
-                        default -> throw new IllegalArgumentException("Invalid type: " + dto.type());
-                    }
-
-                    if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                        price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * saleDTO.saleDiscount();
-                    } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                        price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * saleDTO.saleDiscount();
-                    }
-
-                    details.add(detail);
-                }
-
-                existingSale.getSaleDetails().clear();
-                existingSale.getSaleDetails().addAll(details);
-                existingSale.setSalePrice(price);
-
+                updatePrices(existingSale, saleDTO);
             }
 
             return saleRepository.save(existingSale);
@@ -156,9 +133,9 @@ public class SaleServiceImpl implements SaleService {
                 }
     
                 if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                    totalPrice += detail.getArticle().getBuyingPrice() * detail.getQuantity() * 0.9;
+                    totalPrice += detail.getArticle().getBuyingPrice() * detail.getQuantity() * sale.getSaleDiscount();
                 } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                    totalPrice += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * 0.9;
+                    totalPrice += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * sale.getSaleDiscount();
                 }
             }
     
@@ -169,7 +146,37 @@ public class SaleServiceImpl implements SaleService {
         }
     }
     
+    @Transactional
+    public void updatePrices(Sale existingSale,SaleDTO saleDTO){
+        Double price = 0.0D;
 
+        List<SaleDetail> details = new ArrayList<>();
+        for (SaleDetailDTO dto : saleDTO.saleDetails()) {
+            SaleDetail detail = new SaleDetail();
+            detail.setQuantity(dto.quantity());
+            detail.setSale(existingSale);
+
+            switch (dto.type().toUpperCase()) {
+                case "ARTICLE" -> detail.setArticle(articleRepository.findById(dto.id())
+                    .orElseThrow(() -> new EntityNotFoundException("Article not found with ID: " + dto.id())));
+                case "MANUFACTURED" -> detail.setManufacturedArticle(manufacturedArticleRepository.findById(dto.id())
+                    .orElseThrow(() -> new EntityNotFoundException("ManufacturedArticle not found with ID: " + dto.id())));
+                default -> throw new IllegalArgumentException("Invalid type: " + dto.type());
+            }
+
+            if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
+                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * saleDTO.saleDiscount();
+            } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
+                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * saleDTO.saleDiscount();
+            }
+
+            details.add(detail);
+        }
+
+        existingSale.getSaleDetails().clear();
+        existingSale.getSaleDetails().addAll(details);
+        existingSale.setSalePrice(price);
+    }
     @Transactional
     public void updateSalePricesUsingManufacturedArticle(ManufacturedArticle updatedMA) {
         List<Sale> allSales = saleRepository.findAll();
@@ -185,9 +192,9 @@ public class SaleServiceImpl implements SaleService {
                 }
     
                 if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                    totalPrice += detail.getArticle().getBuyingPrice() * detail.getQuantity() * 0.9;
+                    totalPrice += detail.getArticle().getBuyingPrice() * detail.getQuantity() * sale.getSaleDiscount();
                 } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                    totalPrice += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * 0.9;
+                    totalPrice += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * sale.getSaleDiscount();
                 }
             }
     

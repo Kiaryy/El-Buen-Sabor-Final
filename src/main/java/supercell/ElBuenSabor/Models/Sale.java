@@ -29,6 +29,7 @@ public class Sale {
     private LocalTime endTime;
     private String saleDescription;
     private Double salePrice;
+    private Double saleDiscount;
     private boolean isActive;
 
     @Enumerated(EnumType.STRING)
