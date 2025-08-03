@@ -92,18 +92,23 @@ public class SaleServiceImpl implements SaleService {
     @Override
     public Sale updateSale(Long ID, SaleDTO saleDTO) {
         return saleRepository.findById(ID).map(existingSale -> {
+            boolean discountUpdated = false;
+
             if (saleDTO.denomination() != null) existingSale.setDenomination(saleDTO.denomination());
             if (saleDTO.startDate() != null) existingSale.setStartDate(saleDTO.startDate());
             if (saleDTO.endDate() != null) existingSale.setEndDate(saleDTO.endDate());
             if (saleDTO.startTime() != null) existingSale.setStartTime(saleDTO.startTime());
             if (saleDTO.endTime() != null) existingSale.setEndTime(saleDTO.endTime());
+
             if (saleDTO.saleDiscount() != null) {
                 existingSale.setSaleDiscount(saleDTO.saleDiscount());
-                updatePrices(existingSale, saleDTO);                
-            };
+                discountUpdated = true;
+            }
+
             if (saleDTO.saleDescription() != null) existingSale.setSaleDescription(saleDTO.saleDescription());
             if (saleDTO.saleType() != null) existingSale.setSaleType(saleDTO.saleType());
-            if (saleDTO.isActive() || !saleDTO.isActive()) existingSale.setActive(saleDTO.isActive());;
+            if (saleDTO.isActive() || !saleDTO.isActive()) existingSale.setActive(saleDTO.isActive());
+
             if (saleDTO.inventoryImage() != null) {
                 InventoryImage inventoryImage = InventoryImage.builder()
                     .imageData(saleDTO.inventoryImage().imageData())
@@ -113,12 +118,28 @@ public class SaleServiceImpl implements SaleService {
 
             if (saleDTO.saleDetails() != null) {
                 updatePrices(existingSale, saleDTO);
+            } else if (discountUpdated) {
+                recalculatePricesWithExistingDetails(existingSale);
             }
 
             return saleRepository.save(existingSale);
         }).orElseThrow(() -> new EntityNotFoundException("Sale not found with ID: " + ID));
-    }   
-
+    }
+   
+    private void recalculatePricesWithExistingDetails(Sale sale) {
+        double price = 0.0;
+    
+        for (SaleDetail detail : sale.getSaleDetails()) {
+            if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
+                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * sale.getSaleDiscount();
+            } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
+                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * sale.getSaleDiscount();
+            }
+        }
+    
+        sale.setSalePrice(price);
+    }
+    
     @Transactional
     public void updateSalePricesUsingArticle(Article updatedArticle) {
         List<Sale> allSales = saleRepository.findAll();
