@@ -41,6 +41,6 @@ public class Article {
     private Category category;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "inventory_image_id", referencedColumnName = "IDInventoryImage")
+    @JoinColumn(name = "inventory_image_id", referencedColumnName = "IDInventoryImage", nullable = true)
     private InventoryImage inventoryImage;
 }
