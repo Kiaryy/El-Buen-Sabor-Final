@@ -84,6 +84,7 @@ public class InitializerService {
         MeasuringUnit.builder().unit("Kg").build(),
         MeasuringUnit.builder().unit("Gr").build(),
         MeasuringUnit.builder().unit("L").build(),
+        MeasuringUnit.builder().unit("Ml").build(),
         MeasuringUnit.builder().unit("Unit").build()
     );
 
@@ -104,29 +105,33 @@ public class InitializerService {
             List<Article> articles = new ArrayList<>();
 
             // --- 40 artículos base (ingredientes) sin imagen ---
-            articles.add(Article.builder().denomination("Tomate").currentStock(100).maxStock(200).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Kg")).build());
-            articles.add(Article.builder().denomination("Cebolla").currentStock(100).maxStock(200).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Kg")).build());
-            articles.add(Article.builder().denomination("Harina de trigo").currentStock(200).maxStock(500).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Kg")).build());
+            articles.add(Article.builder().denomination("Tomate").currentStock(100).maxStock(200).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Cebolla").currentStock(100).maxStock(200).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Harina de trigo").currentStock(200).maxStock(500).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Harina para Pizza").currentStock(200).maxStock(500).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Tapa de Empanada").currentStock(200).maxStock(500).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Capa de Lasaña").currentStock(200).maxStock(500).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Pan de Sandwich").currentStock(200).maxStock(500).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
             articles.add(Article.builder().denomination("Agua").currentStock(500).maxStock(1000).buyingPrice(5.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("L")).build());
             articles.add(Article.builder().denomination("Levadura").currentStock(50).maxStock(100).buyingPrice(15.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
             articles.add(Article.builder().denomination("Sal").currentStock(100).maxStock(200).buyingPrice(5.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
             articles.add(Article.builder().denomination("Comino").currentStock(100).maxStock(200).buyingPrice(5.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
             articles.add(Article.builder().denomination("Azúcar").currentStock(100).maxStock(200).buyingPrice(10.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Aceite de oliva").currentStock(50).maxStock(100).buyingPrice(100.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("L")).build());
+            articles.add(Article.builder().denomination("Aceite de oliva").currentStock(50).maxStock(100).buyingPrice(100.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Ml")).build());
             articles.add(Article.builder().denomination("Ajo").currentStock(20).maxStock(50).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Pimiento rojo").currentStock(50).maxStock(100).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Kg")).build());
-            articles.add(Article.builder().denomination("Pimiento verde").currentStock(50).maxStock(100).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Kg")).build());
-            articles.add(Article.builder().denomination("Zanahoria").currentStock(60).maxStock(100).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Kg")).build());
+            articles.add(Article.builder().denomination("Pimiento rojo").currentStock(50).maxStock(100).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Pimiento verde").currentStock(50).maxStock(100).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Zanahoria").currentStock(60).maxStock(100).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
             articles.add(Article.builder().denomination("Lechuga").currentStock(30).maxStock(50).buyingPrice(40.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Espinaca").currentStock(30).maxStock(50).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Espinaca").currentStock(30).maxStock(50).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
             articles.add(Article.builder().denomination("Rúcula").currentStock(20).maxStock(50).buyingPrice(55.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Papa").currentStock(100).maxStock(200).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Kg")).build());
-            articles.add(Article.builder().denomination("Queso mozzarella").currentStock(100).maxStock(200).buyingPrice(150.0).isForSale(false).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Kg")).build());
-            articles.add(Article.builder().denomination("Queso rallado").currentStock(50).maxStock(100).buyingPrice(150.0).isForSale(false).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Kg")).build());
-            articles.add(Article.builder().denomination("Jamón cocido").currentStock(50).maxStock(100).buyingPrice(145.0).isForSale(false).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Kg")).build());
+            articles.add(Article.builder().denomination("Papa").currentStock(100).maxStock(200).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Queso mozzarella").currentStock(100).maxStock(200).buyingPrice(150.0).isForSale(false).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Queso rallado").currentStock(50).maxStock(100).buyingPrice(150.0).isForSale(false).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Jamón cocido").currentStock(50).maxStock(100).buyingPrice(145.0).isForSale(false).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
             articles.add(Article.builder().denomination("Huevo").currentStock(60).maxStock(100).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Pechuga de pollo").currentStock(100).maxStock(150).buyingPrice(130.0).isForSale(false).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Kg")).build());
-            articles.add(Article.builder().denomination("Carne picada").currentStock(80).maxStock(150).buyingPrice(145.0).isForSale(false).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Kg")).build());
+            articles.add(Article.builder().denomination("Pechuga de pollo").currentStock(100).maxStock(150).buyingPrice(130.0).isForSale(false).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Carne picada").currentStock(80).maxStock(150).buyingPrice(145.0).isForSale(false).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
             articles.add(Article.builder().denomination("Albahaca").currentStock(10).maxStock(20).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
             articles.add(Article.builder().denomination("Orégano").currentStock(10).maxStock(20).buyingPrice(40.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
             articles.add(Article.builder().denomination("Pimienta").currentStock(10).maxStock(20).buyingPrice(35.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
@@ -291,6 +296,10 @@ public String initializeProvider() {
             requireArticle(articleMap, "Levadura"),
             requireArticle(articleMap, "Pan rallado"),
             requireArticle(articleMap, "Fideos"),
+            requireArticle(articleMap, "Pan de Sandwich"),
+            requireArticle(articleMap, "Tapa de Empanada"),
+            requireArticle(articleMap, "Capa de Lasaña"),
+            requireArticle(articleMap, "Harina para Pizza"),
             requireArticle(articleMap, "Pan de hamburguesa")))
         .build());
 
@@ -355,28 +364,28 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
             List<ManufacturedArticle> manufacturedArticles = new ArrayList<>();
 
             manufacturedArticles.add(createManufactured("Pizza Margarita", "Pizza con salsa de tomate, mozzarella y albahaca", 25, categoryMap.get("Pizza"),
-                Map.of("Salsa de tomate", 100, "Queso mozzarella", 150, "Albahaca", 10), "images/pizza_margarita.png"));
+                Map.of("Harina para Pizza", 500,"Salsa de tomate", 150, "Queso mozzarella", 150, "Albahaca", 10), "images/pizza_margarita.png"));
 
             manufacturedArticles.add(createManufactured("Ensalada Mixta", "Lechuga, tomate, cebolla y zanahoria", 15, categoryMap.get("Ensalada"),
                 Map.of("Lechuga", 1, "Tomate", 150, "Cebolla", 100, "Zanahoria", 100), "images/ensalada_mixta.png"));
 
             manufacturedArticles.add(createManufactured("Hamburguesa Completa", "Hamburguesa con pan, lechuga, tomate, queso y huevo", 20, categoryMap.get("Hamburguesa"),
-                Map.of("Pan de hamburguesa", 1, "Carne picada", 150, "Lechuga", 1, "Tomate", 100, "Queso mozzarella", 100, "Huevo", 1), "images/hamburguesa_completa.png"));
+                Map.of("Pan de hamburguesa", 1, "Carne picada", 150, "Lechuga", 1, "Tomate", 50, "Queso mozzarella", 50, "Huevo", 1), "images/hamburguesa_completa.png"));
 
             manufacturedArticles.add(createManufactured("Tarta de Verduras", "Tarta con espinaca, cebolla y huevo", 30, categoryMap.get("Tarta"),
-                Map.of("Espinaca", 1, "Cebolla", 100, "Huevo", 2, "Harina de trigo", 100), "images/tarta_verduras.png"));
+                Map.of("Espinaca", 50, "Cebolla", 100, "Huevo", 2, "Harina de trigo", 100), "images/tarta_verduras.png"));
 
             manufacturedArticles.add(createManufactured("Lasaña", "Lasaña con carne, salsa y queso", 40, categoryMap.get("Pastas"),
-                Map.of("Fideos", 200, "Carne picada", 200, "Queso mozzarella", 150, "Salsa de tomate", 100), "images/lasagna.png"));
+                Map.of("Capa de Lasaña", 3, "Carne picada", 200, "Queso mozzarella", 150, "Salsa de tomate", 100), "images/lasagna.png"));
 
             manufacturedArticles.add(createManufactured("Tortilla de Papas", "Clásica tortilla con huevo y papa", 25, categoryMap.get("Tarta"),
                 Map.of("Papa", 200, "Huevo", 3, "Cebolla", 50), "images/tortilla_papas.png"));
 
             manufacturedArticles.add(createManufactured("Pizza Fugazzeta", "Pizza con cebolla caramelizada y queso", 25, categoryMap.get("Pizza"),
-                Map.of("Cebolla caramelizada", 100, "Queso mozzarella", 150, "Salsa de tomate", 80), "images/pizza_fugazzeta.png"));
+                Map.of("Harina para Pizza", 500, "Cebolla caramelizada", 100, "Queso mozzarella", 150, "Salsa de tomate", 80), "images/pizza_fugazzeta.png"));
 
             manufacturedArticles.add(createManufactured("Empanadas de Carne", "Empanadas con carne picada y condimentos", 20, categoryMap.get("Empanada"),
-                Map.of("Carne picada", 150, "Cebolla", 50, "Pimiento rojo", 50, "Comino", 5), "images/empanadas_carne.png"));
+                Map.of("Tapa de Empanada", 12, "Carne picada", 150, "Cebolla", 50, "Pimiento rojo", 50, "Comino", 5), "images/empanadas_carne.png"));
 
             manufacturedArticles.add(createManufactured("Sopa de Verduras", "Sopa nutritiva con varios vegetales", 20, categoryMap.get("Sopa"),
                 Map.of("Zanahoria", 50, "Papa", 100, "Cebolla", 50, "Pimiento verde", 50), "images/sopa_verduras.png"));
@@ -388,16 +397,16 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
                 Map.of("Fideos", 200, "Salsa de tomate", 100, "Crema de leche", 50), "images/spaghetti_salsa_rosa.png"));
 
             manufacturedArticles.add(createManufactured("Pizza Napolitana", "Pizza con tomate, ajo, albahaca y mozzarella", 30, categoryMap.get("Pizza"),
-                Map.of("Tomate", 100, "Ajo", 10, "Albahaca", 5, "Queso mozzarella", 150), "images/pizza_napolitana.png"));
+                Map.of("Harina para Pizza", 500, "Tomate", 100, "Ajo", 10, "Albahaca", 5, "Queso mozzarella", 150), "images/pizza_napolitana.png"));
 
             manufacturedArticles.add(createManufactured("Sandwich de Jamón y Queso", "Clásico sandwich tostado", 10, categoryMap.get("Carnes y Cortes"),
-                Map.of("Pan de hamburguesa", 2, "Queso mozzarella", 100, "Jamón cocido", 100), "images/sandwich_jamon_queso.png"));
+                Map.of("Pan de Sandwich", 1, "Queso mozzarella", 100, "Jamón cocido", 100), "images/sandwich_jamon_queso.png"));
 
             manufacturedArticles.add(createManufactured("Pollo al Horno con Papas", "Pechuga con papas y condimentos", 35, categoryMap.get("Carnes y Cortes"),
                 Map.of("Pechuga de pollo", 200, "Papa", 200, "Aceite de oliva", 20), "images/pollo_horno_papas.png"));
 
             manufacturedArticles.add(createManufactured("Pizza Hawaiana", "Pizza con jamón y ananá", 30, categoryMap.get("Pizza"),
-                Map.of("Queso mozzarella", 150, "Jamón cocido", 100, "Ananá", 100), "images/pizza_hawaiana.png"));
+                Map.of("Harina para Pizza", 500, "Queso mozzarella", 150, "Jamón cocido", 100, "Ananá", 100), "images/pizza_hawaiana.png"));
 
             manufacturedArticleRepository.saveAll(manufacturedArticles);
 
