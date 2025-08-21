@@ -74,9 +74,9 @@ public class SaleServiceImpl implements SaleService {
             }
 
             if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * saleDTO.saleDiscount();
+                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * (100-saleDTO.saleDiscount())/100;
             } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * saleDTO.saleDiscount();
+                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * (100-saleDTO.saleDiscount())/100;
             }
 
 
@@ -131,9 +131,9 @@ public class SaleServiceImpl implements SaleService {
     
         for (SaleDetail detail : sale.getSaleDetails()) {
             if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * sale.getSaleDiscount();
+                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * (100-sale.getSaleDiscount())/100;
             } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * sale.getSaleDiscount();
+                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * (100-sale.getSaleDiscount())/100;
             }
         }
     
@@ -154,9 +154,9 @@ public class SaleServiceImpl implements SaleService {
                 }
     
                 if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                    totalPrice += detail.getArticle().getBuyingPrice() * detail.getQuantity() * sale.getSaleDiscount();
+                    totalPrice += detail.getArticle().getBuyingPrice() * detail.getQuantity() * (100-sale.getSaleDiscount())/100;
                 } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                    totalPrice += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * sale.getSaleDiscount();
+                    totalPrice += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * (100-sale.getSaleDiscount())/100;
                 }
             }
     
@@ -186,9 +186,9 @@ public class SaleServiceImpl implements SaleService {
             }
 
             if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * saleDTO.saleDiscount();
+                price += detail.getArticle().getBuyingPrice() * detail.getQuantity() * (100-saleDTO.saleDiscount())/100;
             } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * saleDTO.saleDiscount();
+                price += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * (100-saleDTO.saleDiscount())/100;
             }
 
             details.add(detail);
@@ -213,9 +213,9 @@ public class SaleServiceImpl implements SaleService {
                 }
     
                 if (detail.getArticle() != null && detail.getArticle().getBuyingPrice() != null) {
-                    totalPrice += detail.getArticle().getBuyingPrice() * detail.getQuantity() * sale.getSaleDiscount();
+                    totalPrice += detail.getArticle().getBuyingPrice() * detail.getQuantity() * (100-sale.getSaleDiscount())/100;
                 } else if (detail.getManufacturedArticle() != null && detail.getManufacturedArticle().getPrice() != null) {
-                    totalPrice += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * sale.getSaleDiscount();
+                    totalPrice += detail.getManufacturedArticle().getPrice() * detail.getQuantity() * (100-sale.getSaleDiscount())/100;
                 }
             }
     

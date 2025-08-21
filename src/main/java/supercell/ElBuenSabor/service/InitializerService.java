@@ -643,7 +643,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
             List<Sale> sales = new ArrayList<>();
     
             sales.add(buildSale(
-                "Oferta de Verano", SaleType.SUMMERSALE, 0.8 ,"Descuento por temporada de calor.",
+                "Oferta de Verano", SaleType.SUMMERSALE, 20D ,"Descuento por temporada de calor.",
                 LocalDate.of(2025, Month.DECEMBER, 21), LocalDate.of(2026, Month.MARCH, 20),
                 "images/sale/summer_sale.png",
                 List.of(
@@ -654,7 +654,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
             ));
     
             sales.add(buildSale(
-                "Oferta de Invierno", SaleType.WINTERSALE, 0.7, "Descuento por temporada de frio.",
+                "Oferta de Invierno", SaleType.WINTERSALE, 30D, "Descuento por temporada de frio.",
                 LocalDate.of(2025, Month.JUNE, 20), LocalDate.of(2025, Month.SEPTEMBER, 22),
                 "images/sale/winter_sale.png",
                 List.of(
@@ -665,7 +665,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
             ));
     
             sales.add(buildSale(
-                "Oferta de Primavera", SaleType.SPRINGSALE, 0.75,"Descuento por epoca primaveral.",
+                "Oferta de Primavera", SaleType.SPRINGSALE, 25D,"Descuento por epoca primaveral.",
                 LocalDate.of(2025, Month.SEPTEMBER, 23), LocalDate.of(2025, Month.DECEMBER, 22),
                 "images/sale/spring_sale.png",
                 List.of(
@@ -676,7 +676,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
             ));
     
             sales.add(buildSale(
-                "Oferta de Otoño", SaleType.FALLSALE, 0.85, "Descuento por epoca otoñal.",
+                "Oferta de Otoño", SaleType.FALLSALE, 15D, "Descuento por epoca otoñal.",
                 LocalDate.of(2026, Month.MARCH, 20), LocalDate.of(2026, Month.JUNE, 20),
                 "images/sale/fall_sale.png",
                 List.of(
@@ -687,7 +687,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
             ));
     
             sales.add(buildSale(
-                "Oferta de Navidad", SaleType.CHRISTMASSALE, 0.75, "Descuento por Navidad.",
+                "Oferta de Navidad", SaleType.CHRISTMASSALE, 25D, "Descuento por Navidad.",
                 LocalDate.of(2025, Month.DECEMBER, 1), LocalDate.of(2025, Month.DECEMBER, 30),
                 "images/sale/christmass_sale.png",
                 List.of(
@@ -724,7 +724,7 @@ return detail.getManufacturedArticle().getPrice() * detail.getQuantity();
 return 0.0;
 }).sum();
 
-double discountedPrice = fullPrice * saleDiscount;
+double discountedPrice = fullPrice * (100-saleDiscount)/100;
 
 Sale sale = Sale.builder()
 .denomination(denomination)
