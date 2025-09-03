@@ -145,9 +145,9 @@ public class OrderServiceImpl implements OrderService {
                 if (saleDetail.getManufacturedArticle() != null) {
                     for (ManufacturedArticleDetail mad : saleDetail.getManufacturedArticle().getManufacturedArticleDetail()) {
                         Article article = mad.getArticle();
-                        if(mad.getQuantity() < saleDetail.getQuantity() * saleDTO.getQuantity()) {
-                            throw new RuntimeException("Stock insuficiente de ingredientes del artículo: "+ mad.getManufacturedArticle().getName());
-                        }
+                        // if(mad.getQuantity() < saleDetail.getQuantity() * saleDTO.getQuantity()) {
+                        //     throw new RuntimeException("Stock insuficiente de ingredientes del artículo: "+ mad.getManufacturedArticle().getName());
+                        // }
         
                         if(article.getCurrentStock() < saleDetail.getQuantity() * saleDTO.getQuantity()){
                             throw new RuntimeException("Stock insuficiente del insumo: "+ article.getDenomination());
