@@ -28,5 +28,6 @@ public class OrderResponseDTO {
     private Integer subsidiaryId;
     private List<ProductsOrderedDto> manufacturedArticles;
     private List<ArticleDTO> orderedArticles;
+    private List<SaleResponseDTO> sales;
 }
 

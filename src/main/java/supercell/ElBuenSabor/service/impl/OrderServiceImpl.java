@@ -203,7 +203,8 @@ public class OrderServiceImpl implements OrderService {
                                 article.getMeasuringUnit().getIDMeasuringUnit(),
                                 article.getCategory().getIDCategory(),
                                 new InventoryImageDTO(article.getInventoryImage().getImageData()),
-                                article.isForSale()
+                                article.isForSale(),
+                                detail.getQuantity()
                         );
                     }).toList();
             Client client = order.getClient();
@@ -257,7 +258,8 @@ public class OrderServiceImpl implements OrderService {
                                                 null,
                                                 d.getArticle().getCategory().getIDCategory(),
                                                 null,
-                                                d.getArticle().isForSale()
+                                                d.getArticle().isForSale(),
+                                                0
                                         );
                             }
                             )
@@ -286,7 +288,8 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponseDTO getOrderById(Integer id) {
         Order orders = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
-
+    
+        // Articles with quantity
         List<ArticleDTO> articleDTOs = orders.getOrderDetails().stream()
                 .filter(detail -> detail.getArticle() != null)
                 .map(detail -> {
@@ -299,19 +302,54 @@ public class OrderServiceImpl implements OrderService {
                             article.getMeasuringUnit().getIDMeasuringUnit(),
                             article.getCategory().getIDCategory(),
                             new InventoryImageDTO(article.getInventoryImage().getImageData()),
-                            article.isForSale()
+                            article.isForSale(),
+                            detail.getQuantity()   // ✅ pass quantity
                     );
                 }).toList();
-        List<ProductsOrderedDto> orderDetails = orders.getOrderDetails().stream()
+    
+        // Manufactured articles (already include quantity)
+        List<ProductsOrderedDto> manufacturedArticles = orders.getOrderDetails().stream()
                 .filter(detail -> detail.getManufacturedArticle() != null)
-                .map((detail -> {
-                ManufacturedArticle mArticle = detail.getManufacturedArticle();
-
-                return mapToManufacturedArticleDTO(mArticle,detail.getQuantity());
+                .map(detail -> mapToManufacturedArticleDTO(detail.getManufacturedArticle(), detail.getQuantity()))
+                .toList();
+    
+        // Sales with quantity
+        List<SaleResponseDTO> saleDtos = orders.getOrderDetails().stream()
+                .filter(detail -> detail.getSale() != null)
+                .map(detail -> {
+                    Sale sale = detail.getSale();
+                    List<ArticleDTO> saleArticles = sale.getSaleDetails().stream()
+                            .map(sd -> {
+                                Article a = sd.getArticle();
+                                if (a == null) return null;
+                                return new ArticleDTO(
+                                        a.getDenomination(),
+                                        a.getCurrentStock(),
+                                        a.getMaxStock(),
+                                        a.getBuyingPrice(),
+                                        a.getMeasuringUnit().getIDMeasuringUnit(),
+                                        a.getCategory().getIDCategory(),
+                                        null,
+                                        a.isForSale(),
+                                        sd.getQuantity()   // ✅ quantity inside sale composition
+                                );
+                            })
+                            .filter(Objects::nonNull)
+                            .toList();
+    
+                    return new SaleResponseDTO(
+                            Math.toIntExact(sale.getIDSale()),
+                            sale.getDenomination(),
+                            sale.getStartDate(),
+                            sale.getEndDate(),
+                            sale.getSaleDescription(),
+                            saleArticles,
+                            sale.getSalePrice(),
+                            detail.getQuantity()   // ✅ quantity of this sale in the order
+                    );
                 })
-
-        ).toList();
-
+                .toList();
+    
         return OrderResponseDTO.builder()
                 .id(orders.getId())
                 .estimatedFinishTime(orders.getEstimatedFinishTime())
@@ -322,13 +360,14 @@ public class OrderServiceImpl implements OrderService {
                 .orderType(orders.getOrderType().toString())
                 .payMethod(orders.getPayMethod().toString())
                 .subsidiaryId(orders.getSubsidiaryId())
-                .client( OrderServiceImpl.clientToDto(orders.getClient()) )
-                .manufacturedArticles(orderDetails)
-                .directionToSend(orders.getDirection())
+                .client(OrderServiceImpl.clientToDto(orders.getClient()))
+                .manufacturedArticles(manufacturedArticles)
                 .orderedArticles(articleDTOs)
-               .build();
-
+                .sales(saleDtos)
+                .directionToSend(orders.getDirection())
+                .build();
     }
+    
 
     @Override
     public OrderResponseDTO changeOrderStatus(Integer orderId, OrderState orderState) {
@@ -395,7 +434,8 @@ public class OrderServiceImpl implements OrderService {
                                     article.getInventoryImage() != null ?
                                             article.getInventoryImage().getImageData() :
                                             null),
-                            article.isForSale()
+                            article.isForSale(),
+                            detail.getQuantity()
                     );
 
                     ProductsOrderedDto dto = new ProductsOrderedDto(
@@ -498,7 +538,8 @@ public class OrderServiceImpl implements OrderService {
                                                 d.getArticle().getMeasuringUnit().getIDMeasuringUnit(),
                                                 d.getArticle().getCategory().getIDCategory(),
                                                 null,
-                                                d.getArticle().isForSale()
+                                                d.getArticle().isForSale(),
+                                                0
                                         );
                                     })
                                     .toList(),
@@ -530,7 +571,8 @@ public class OrderServiceImpl implements OrderService {
                                             a.getMeasuringUnit().getIDMeasuringUnit(),
                                             a.getCategory().getIDCategory(),
                                             null,
-                                            a.isForSale()
+                                            a.isForSale(),
+                                            detail.getQuantity()
                                     );
 
 
@@ -544,7 +586,8 @@ public class OrderServiceImpl implements OrderService {
                             sale.getEndDate(),
                             sale.getSaleDescription(),
                             articleDTOs,
-                            sale.getSalePrice()
+                            sale.getSalePrice(),
+                            0
 
                     );
                 })

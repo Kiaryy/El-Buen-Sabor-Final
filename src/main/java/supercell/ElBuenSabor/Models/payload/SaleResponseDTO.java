@@ -10,6 +10,7 @@ public record SaleResponseDTO(
         LocalDate endDate,
         String saleDescription,
         List<ArticleDTO> articles,
-        double salePrice
+        double salePrice,
+        int quantity   // ✅ number of bundles ordered in this order
 ) {}
 
