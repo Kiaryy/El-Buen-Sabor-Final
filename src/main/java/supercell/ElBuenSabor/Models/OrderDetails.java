@@ -1,6 +1,7 @@
 package supercell.ElBuenSabor.Models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,10 +32,10 @@ public class OrderDetails {
     @ManyToOne
     @JoinColumn(name = "manufacturedArticle")
     private ManufacturedArticle manufacturedArticle;
-
+    
     @ManyToOne
-    @JoinColumn(name = "sale_id", nullable = true) // <-- allow null
-    @JsonBackReference
+    @JoinColumn(name = "sale_id", nullable = true)
+    @JsonIgnoreProperties("saleDetails") // prevent infinite recursion
     private Sale sale;
-
+    
 }

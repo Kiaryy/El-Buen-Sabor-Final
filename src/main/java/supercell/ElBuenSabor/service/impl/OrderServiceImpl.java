@@ -184,41 +184,85 @@ public class OrderServiceImpl implements OrderService {
         return OrderServiceImpl.toDto(bill);
     }
 
+    @Override
     public List<OrderResponseDTO> getAllOrders() {
         List<Order> orders = orderRepository.findAll();
         List<OrderResponseDTO> responseList = new ArrayList<>();
-
+    
         for (Order order : orders) {
-            List<ProductsOrderedDto> manufacturedArticles = getManufacturedArticleDetails(order);
-
+            // Force initialize orderDetails
+            order.getOrderDetails().forEach(detail -> {
+                if (detail.getSale() != null) {
+                    detail.getSale().getSaleDetails().size(); // load sales
+                }
+            });
+    
+            // Build articles list
             List<ArticleDTO> articleDTOs = order.getOrderDetails().stream()
-                    .filter(detail -> detail.getArticle() != null)
-                    .map(detail -> {
-                        Article article = detail.getArticle();
-                        return new ArticleDTO(
-                                article.getDenomination(),
-                                article.getCurrentStock(),
-                                article.getMaxStock(),
-                                article.getBuyingPrice(),
-                                article.getMeasuringUnit().getIDMeasuringUnit(),
-                                article.getCategory().getIDCategory(),
-                                new InventoryImageDTO(article.getInventoryImage().getImageData()),
-                                article.isForSale(),
-                                detail.getQuantity()
+                    .filter(d -> d.getArticle() != null)
+                    .map(d -> new ArticleDTO(
+                            d.getArticle().getDenomination(),
+                            d.getArticle().getCurrentStock(),
+                            d.getArticle().getMaxStock(),
+                            d.getArticle().getBuyingPrice(),
+                            d.getArticle().getMeasuringUnit().getIDMeasuringUnit(),
+                            d.getArticle().getCategory().getIDCategory(),
+                            d.getArticle().getInventoryImage() != null
+                                    ? new InventoryImageDTO(d.getArticle().getInventoryImage().getImageData())
+                                    : null,
+                            d.getArticle().isForSale(),
+                            d.getQuantity()
+                    ))
+                    .toList();
+    
+            // Build manufactured articles list
+            List<ProductsOrderedDto> manufacturedArticles = order.getOrderDetails().stream()
+                    .filter(d -> d.getManufacturedArticle() != null)
+                    .map(d -> mapToManufacturedArticleDTO(d.getManufacturedArticle(), d.getQuantity()))
+                    .toList();
+    
+            // Build sales list
+            List<SaleResponseDTO> salesDTOs = order.getOrderDetails().stream()
+                    .filter(d -> d.getSale() != null)
+                    .map(d -> {
+                        Sale sale = d.getSale();
+                        List<ArticleDTO> saleArticles = sale.getSaleDetails().stream()
+                                .map(sd -> {
+                                    if (sd.getArticle() == null) return null;
+                                    Article a = sd.getArticle();
+                                    return new ArticleDTO(
+                                            a.getDenomination(),
+                                            a.getCurrentStock(),
+                                            a.getMaxStock(),
+                                            a.getBuyingPrice(),
+                                            a.getMeasuringUnit().getIDMeasuringUnit(),
+                                            a.getCategory().getIDCategory(),
+                                            null,
+                                            a.isForSale(),
+                                            sd.getQuantity()
+                                    );
+                                })
+                                .filter(Objects::nonNull)
+                                .toList();
+    
+                        return new SaleResponseDTO(
+                                Math.toIntExact(sale.getIDSale()),
+                                sale.getDenomination(),
+                                sale.getStartDate(),
+                                sale.getEndDate(),
+                                sale.getSaleDescription(),
+                                saleArticles,
+                                sale.getSalePrice() != null ? sale.getSalePrice() : 0.0,
+                                d.getQuantity()
                         );
-                    }).toList();
+                    })
+                    .toList();
+    
+            // Build client DTO
             Client client = order.getClient();
-            ClientDto clientDto = new ClientDto();
-            
-            clientDto.setClientId(client.getId());
-            clientDto.setFirstName(client.getName());
-            clientDto.setLastName(client.getLastName());
-            clientDto.setPhoneNumber(client.getPhoneNumber());
-            clientDto.setEmail(client.getEmail());
-            clientDto.setBirthDate(client.getBirthDate());
-            clientDto.setUsername(client.getUsername());
-            clientDto.setPassword(client.getPassword());
-
+            ClientDto clientDto = clientToDto(client);
+    
+            // Build order response
             OrderResponseDTO dto = new OrderResponseDTO();
             dto.setId(order.getId());
             dto.setEstimatedFinishTime(order.getEstimatedFinishTime());
@@ -232,14 +276,17 @@ public class OrderServiceImpl implements OrderService {
             dto.setDirectionToSend(order.getDirection());
             dto.setSubsidiaryId(order.getSubsidiaryId());
             dto.setManufacturedArticles(manufacturedArticles);
-            dto.setOrderedArticles(articleDTOs); // Añadir las bebidas
-
+            dto.setOrderedArticles(articleDTOs);
+            dto.setSales(salesDTOs);
+    
             responseList.add(dto);
         }
-
+    
         return responseList;
-
     }
+    
+    
+
 
     private List<ProductsOrderedDto> getManufacturedArticleDetails(Order order) {
 
