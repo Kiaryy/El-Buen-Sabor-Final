@@ -32,7 +32,7 @@ public class EmployeeServiceImpl implements AuthService<EmployeeDto> {
     public String logIn(String email, String password) {
         String response;
         Optional<Employee> emp = employeeRepository.findByEmailAndPassword(email, password);
-        if (emp.isPresent()) {
+        if (emp.isPresent() && emp.get().isEnabled()) {
             response = "Login OK, Rol: " + emp.get().getEmployeeRole();
         } else{
             response = "Login Failed";

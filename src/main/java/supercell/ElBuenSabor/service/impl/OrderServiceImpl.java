@@ -391,7 +391,6 @@ public class OrderServiceImpl implements OrderService {
                     ManufacturedArticle mArticle = detail.getManufacturedArticle();
                     int qty = detail.getQuantity();
     
-                    // Discount ingredients from recipe
                     for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
                         Article ingredient = mad.getArticle();
                         int required = mad.getQuantity() * qty;
@@ -402,7 +401,6 @@ public class OrderServiceImpl implements OrderService {
                         articleRepository.save(ingredient);
                     }
     
-                    // Discount manufactured article stock
                     int stock = mArticle.getStock() != null ? mArticle.getStock() : 0;
                     if (stock < qty) {
                         throw new RuntimeException("Stock insuficiente del manufacturado: " + mArticle.getName());
@@ -450,8 +448,8 @@ public class OrderServiceImpl implements OrderService {
             }
         }
     
-        // --- Cancelled: restore stock ---
-        if (newState == OrderState.CANCELED && oldState != OrderState.CANCELED) {
+        // --- Cancelled: restore stock (ONLY if it was PREPARING) ---
+        if (newState == OrderState.CANCELED && oldState == OrderState.PREPARING) {
             for (OrderDetails detail : order.getOrderDetails()) {
                 if (detail.getArticle() != null && detail.getArticle().isForSale()) {
                     Article article = detail.getArticle();
@@ -488,6 +486,7 @@ public class OrderServiceImpl implements OrderService {
                 .directionToSend(order.getDirection())
                 .build();
     }
+    
     
     
 
