@@ -84,22 +84,22 @@ public class InitializerService {
 
     public String initializeCategory() {
         List<Category> categories = List.of(
-            Category.builder().name("Vegetal").isForSale(false).build(),
-            Category.builder().name("Fruta").isForSale(false).build(),
-            Category.builder().name("Lácteo").isForSale(false).build(),
-            Category.builder().name("Carnes").isForSale(false).build(),
-            Category.builder().name("Cereales y Harinas").isForSale(false).build(),
-            Category.builder().name("Condimentos").isForSale(false).build(),
-            Category.builder().name("Salsas").isForSale(false).build(),
-            Category.builder().name("Bebida").isForSale(true).build(),
-            Category.builder().name("Pizza").isForSale(true).build(),
-            Category.builder().name("Ensalada").isForSale(true).build(),
-            Category.builder().name("Hamburguesa").isForSale(true).build(),
-            Category.builder().name("Pastas").isForSale(true).build(),
-            Category.builder().name("Tarta").isForSale(true).build(),
-            Category.builder().name("Empanada").isForSale(true).build(),
-            Category.builder().name("Sopa").isForSale(true).build(),
-            Category.builder().name("Carnes y Cortes").isForSale(true).build()
+            Category.builder().name("Vegetal").isForSale(false).isEnabled(true).build(),
+            Category.builder().name("Fruta").isForSale(false).isEnabled(true).build(),
+            Category.builder().name("Lácteo").isForSale(false).isEnabled(true).build(),
+            Category.builder().name("Carnes").isForSale(false).isEnabled(true).build(),
+            Category.builder().name("Cereales y Harinas").isForSale(false).isEnabled(true).build(),
+            Category.builder().name("Condimentos").isForSale(false).isEnabled(true).build(),
+            Category.builder().name("Salsas").isForSale(false).isEnabled(true).build(),
+            Category.builder().name("Bebida").isForSale(true).isEnabled(true).build(),
+            Category.builder().name("Pizza").isForSale(true).isEnabled(true).build(),
+            Category.builder().name("Ensalada").isForSale(true).isEnabled(true).build(),
+            Category.builder().name("Hamburguesa").isForSale(true).isEnabled(true).build(),
+            Category.builder().name("Pastas").isForSale(true).isEnabled(true).build(),
+            Category.builder().name("Tarta").isForSale(true).isEnabled(true).build(),
+            Category.builder().name("Empanada").isForSale(true).isEnabled(true).build(),
+            Category.builder().name("Sopa").isForSale(true).isEnabled(true).build(),
+            Category.builder().name("Carnes y Cortes").isForSale(true).isEnabled(true).build()
 
             
         );
@@ -135,51 +135,51 @@ public class InitializerService {
             List<Article> articles = new ArrayList<>();
 
             // --- 40 artículos base (ingredientes) sin imagen ---
-            articles.add(Article.builder().denomination("Tomate").currentStock(5000).maxStock(10000).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Cebolla").currentStock(5000).maxStock(10000).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Harina de trigo").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Harina para Pizza").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Tapa de Empanada").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Capa de Lasaña").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Pan de Sandwich").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Agua").currentStock(5000).maxStock(10000).buyingPrice(5.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("L")).build());
-            articles.add(Article.builder().denomination("Levadura").currentStock(5000).maxStock(10000).buyingPrice(15.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Sal").currentStock(5000).maxStock(10000).buyingPrice(5.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Comino").currentStock(5000).maxStock(10000).buyingPrice(5.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Azúcar").currentStock(5000).maxStock(10000).buyingPrice(10.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Aceite de oliva").currentStock(5000).maxStock(10000).buyingPrice(100.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Ml")).build());
-            articles.add(Article.builder().denomination("Ajo").currentStock(5000).maxStock(50).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Pimiento rojo").currentStock(5000).maxStock(10000).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Pimiento verde").currentStock(5000).maxStock(10000).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Zanahoria").currentStock(5000).maxStock(10000).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Lechuga").currentStock(5000).maxStock(10000).buyingPrice(40.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Espinaca").currentStock(5000).maxStock(10000).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Rúcula").currentStock(5000).maxStock(10000).buyingPrice(55.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Papa").currentStock(5000).maxStock(10000).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Queso mozzarella").currentStock(5000).maxStock(10000).buyingPrice(150.0).isForSale(false).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Queso rallado").currentStock(5000).maxStock(10000).buyingPrice(150.0).isForSale(false).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Jamón cocido").currentStock(5000).maxStock(10000).buyingPrice(145.0).isForSale(false).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Huevo").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Pechuga de pollo").currentStock(5000).maxStock(10000).buyingPrice(130.0).isForSale(false).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Carne picada").currentStock(5000).maxStock(10000).buyingPrice(145.0).isForSale(false).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Albahaca").currentStock(5000).maxStock(10000).buyingPrice(50.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Orégano").currentStock(5000).maxStock(10000).buyingPrice(40.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Pimienta").currentStock(5000).maxStock(10000).buyingPrice(35.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Aceitunas").currentStock(5000).maxStock(10000).buyingPrice(120.0).isForSale(false).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Champiñones").currentStock(5000).maxStock(10000).buyingPrice(150.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Maíz en grano").currentStock(5000).maxStock(10000).buyingPrice(100.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Ananá").currentStock(5000).maxStock(10000).buyingPrice(155.0).isForSale(false).category(categoryMap.get("Fruta")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Cebolla caramelizada").currentStock(5000).maxStock(10000).buyingPrice(120.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Bacon").currentStock(5000).maxStock(10000).buyingPrice(120.0).isForSale(false).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Pan rallado").currentStock(5000).maxStock(10000).buyingPrice(90.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Manteca").currentStock(5000).maxStock(10000).buyingPrice(145.0).isForSale(false).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Crema de leche").currentStock(5000).maxStock(10000).buyingPrice(130.0).isForSale(false).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("L")).build());
-            articles.add(Article.builder().denomination("Salsa de tomate").currentStock(5000).maxStock(10000).buyingPrice(45.0).isForSale(false).category(categoryMap.get("Salsas")).measuringUnit(unitMap.get("L")).build());
-            articles.add(Article.builder().denomination("Fideos").currentStock(5000).maxStock(10000).buyingPrice(70.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
-            articles.add(Article.builder().denomination("Pan de hamburguesa").currentStock(5000).maxStock(10000).buyingPrice(60.0).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Pepino").currentStock(5000).maxStock(10000).buyingPrice(60.0).isForSale(false).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Unit")).build());
-            articles.add(Article.builder().denomination("Mostaza").currentStock(5000).maxStock(10000).buyingPrice(90.0).isForSale(false).category(categoryMap.get("Salsas")).measuringUnit(unitMap.get("L")).build());
-            articles.add(Article.builder().denomination("Ketchup").currentStock(5000).maxStock(10000).buyingPrice(90.0).isForSale(false).category(categoryMap.get("Salsas")).measuringUnit(unitMap.get("L")).build());
+            articles.add(Article.builder().denomination("Tomate").currentStock(5000).maxStock(10000).buyingPrice(50.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Cebolla").currentStock(5000).maxStock(10000).buyingPrice(50.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Harina de trigo").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).isEnabled(true).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Harina para Pizza").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).isEnabled(true).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Tapa de Empanada").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).isEnabled(true).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Capa de Lasaña").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).isEnabled(true).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Pan de Sandwich").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).isEnabled(true).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Agua").currentStock(5000).maxStock(10000).buyingPrice(5.0).isForSale(false).isEnabled(true).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("L")).build());
+            articles.add(Article.builder().denomination("Levadura").currentStock(5000).maxStock(10000).buyingPrice(15.0).isForSale(false).isEnabled(true).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Sal").currentStock(5000).maxStock(10000).buyingPrice(5.0).isForSale(false).isEnabled(true).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Comino").currentStock(5000).maxStock(10000).buyingPrice(5.0).isForSale(false).isEnabled(true).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Azúcar").currentStock(5000).maxStock(10000).buyingPrice(10.0).isForSale(false).isEnabled(true).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Aceite de oliva").currentStock(5000).maxStock(10000).buyingPrice(100.0).isForSale(false).isEnabled(true).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Ml")).build());
+            articles.add(Article.builder().denomination("Ajo").currentStock(5000).maxStock(50).buyingPrice(30.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Pimiento rojo").currentStock(5000).maxStock(10000).buyingPrice(50.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Pimiento verde").currentStock(5000).maxStock(10000).buyingPrice(45.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Zanahoria").currentStock(5000).maxStock(10000).buyingPrice(45.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Lechuga").currentStock(5000).maxStock(10000).buyingPrice(40.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Espinaca").currentStock(5000).maxStock(10000).buyingPrice(45.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Rúcula").currentStock(5000).maxStock(10000).buyingPrice(55.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Papa").currentStock(5000).maxStock(10000).buyingPrice(45.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Queso mozzarella").currentStock(5000).maxStock(10000).buyingPrice(150.0).isForSale(false).isEnabled(true).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Queso rallado").currentStock(5000).maxStock(10000).buyingPrice(150.0).isForSale(false).isEnabled(true).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Jamón cocido").currentStock(5000).maxStock(10000).buyingPrice(145.0).isForSale(false).isEnabled(true).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Huevo").currentStock(5000).maxStock(10000).buyingPrice(30.0).isForSale(false).isEnabled(true).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Pechuga de pollo").currentStock(5000).maxStock(10000).buyingPrice(130.0).isForSale(false).isEnabled(true).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Carne picada").currentStock(5000).maxStock(10000).buyingPrice(145.0).isForSale(false).isEnabled(true).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Albahaca").currentStock(5000).maxStock(10000).buyingPrice(50.0).isForSale(false).isEnabled(true).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Orégano").currentStock(5000).maxStock(10000).buyingPrice(40.0).isForSale(false).isEnabled(true).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Pimienta").currentStock(5000).maxStock(10000).buyingPrice(35.0).isForSale(false).isEnabled(true).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Aceitunas").currentStock(5000).maxStock(10000).buyingPrice(120.0).isForSale(false).isEnabled(true).category(categoryMap.get("Condimentos")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Champiñones").currentStock(5000).maxStock(10000).buyingPrice(150.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Maíz en grano").currentStock(5000).maxStock(10000).buyingPrice(100.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Ananá").currentStock(5000).maxStock(10000).buyingPrice(155.0).isForSale(false).isEnabled(true).category(categoryMap.get("Fruta")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Cebolla caramelizada").currentStock(5000).maxStock(10000).buyingPrice(120.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Bacon").currentStock(5000).maxStock(10000).buyingPrice(120.0).isForSale(false).isEnabled(true).category(categoryMap.get("Carnes")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Pan rallado").currentStock(5000).maxStock(10000).buyingPrice(90.0).isForSale(false).isEnabled(true).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Manteca").currentStock(5000).maxStock(10000).buyingPrice(145.0).isForSale(false).isEnabled(true).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Crema de leche").currentStock(5000).maxStock(10000).buyingPrice(130.0).isForSale(false).isEnabled(true).category(categoryMap.get("Lácteo")).measuringUnit(unitMap.get("L")).build());
+            articles.add(Article.builder().denomination("Salsa de tomate").currentStock(5000).maxStock(10000).buyingPrice(45.0).isForSale(false).isEnabled(true).category(categoryMap.get("Salsas")).measuringUnit(unitMap.get("L")).build());
+            articles.add(Article.builder().denomination("Fideos").currentStock(5000).maxStock(10000).buyingPrice(70.0).isForSale(false).isEnabled(true).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Gr")).build());
+            articles.add(Article.builder().denomination("Pan de hamburguesa").currentStock(5000).maxStock(10000).buyingPrice(60.0).isEnabled(true).isForSale(false).category(categoryMap.get("Cereales y Harinas")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Pepino").currentStock(5000).maxStock(10000).buyingPrice(60.0).isForSale(false).isEnabled(true).category(categoryMap.get("Vegetal")).measuringUnit(unitMap.get("Unit")).build());
+            articles.add(Article.builder().denomination("Mostaza").currentStock(5000).maxStock(10000).buyingPrice(90.0).isForSale(false).isEnabled(true).category(categoryMap.get("Salsas")).measuringUnit(unitMap.get("L")).build());
+            articles.add(Article.builder().denomination("Ketchup").currentStock(5000).maxStock(10000).buyingPrice(90.0).isForSale(false).isEnabled(true).category(categoryMap.get("Salsas")).measuringUnit(unitMap.get("L")).build());
 
             // --- Crear imágenes para las bebidas ---
             InventoryImage imgCocaCola = InventoryImage.builder()
@@ -229,21 +229,21 @@ public class InitializerService {
                 .build();
 
             // --- 15 artículos para vender (bebidas) con imagen ---
-            articles.add(Article.builder().denomination("Coca Cola 500ml").currentStock(50).maxStock(100).buyingPrice(1500.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCocaCola).build());
-            articles.add(Article.builder().denomination("Sprite 500ml").currentStock(50).maxStock(100).buyingPrice(1250.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgSprite).build());
-            articles.add(Article.builder().denomination("Fanta 500ml").currentStock(50).maxStock(100).buyingPrice(1750.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgFanta).build());
-            articles.add(Article.builder().denomination("Agua sin gas 500ml").currentStock(50).maxStock(100).buyingPrice(1000.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgAguaSinGas).build());
-            articles.add(Article.builder().denomination("Agua con gas 500ml").currentStock(50).maxStock(100).buyingPrice(1250.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgAguaConGas).build());
-            articles.add(Article.builder().denomination("Jugo de naranja").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgJugoNaranja).build());
-            articles.add(Article.builder().denomination("Jugo de manzana").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgJugoManzana).build());
-            articles.add(Article.builder().denomination("Té frío limón").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgTeFrioLimon).build());
-            articles.add(Article.builder().denomination("Coca Light 500ml").currentStock(50).maxStock(100).buyingPrice(1500.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCocaLight).build());
-            articles.add(Article.builder().denomination("Gaseosa lima limón").currentStock(50).maxStock(100).buyingPrice(1200.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgLimaLimon).build());
-            articles.add(Article.builder().denomination("Cerveza rubia 500ml").currentStock(30).maxStock(60).buyingPrice(1500.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCervezaRubia).build());
-            articles.add(Article.builder().denomination("Cerveza negra 500ml").currentStock(30).maxStock(60).buyingPrice(1500.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCervezaNegra).build());
-            articles.add(Article.builder().denomination("Vino tinto 750ml").currentStock(20).maxStock(40).buyingPrice(1700.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgVinoTinto).build());
-            articles.add(Article.builder().denomination("Vino blanco 750ml").currentStock(20).maxStock(40).buyingPrice(1700.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgVinoBlanco).build());
-            articles.add(Article.builder().denomination("Limonada casera").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgLimonada).build());
+            articles.add(Article.builder().denomination("Coca Cola 500ml").currentStock(50).maxStock(100).buyingPrice(1500.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCocaCola).build());
+            articles.add(Article.builder().denomination("Sprite 500ml").currentStock(50).maxStock(100).buyingPrice(1250.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgSprite).build());
+            articles.add(Article.builder().denomination("Fanta 500ml").currentStock(50).maxStock(100).buyingPrice(1750.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgFanta).build());
+            articles.add(Article.builder().denomination("Agua sin gas 500ml").currentStock(50).maxStock(100).buyingPrice(1000.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgAguaSinGas).build());
+            articles.add(Article.builder().denomination("Agua con gas 500ml").currentStock(50).maxStock(100).buyingPrice(1250.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgAguaConGas).build());
+            articles.add(Article.builder().denomination("Jugo de naranja").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgJugoNaranja).build());
+            articles.add(Article.builder().denomination("Jugo de manzana").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgJugoManzana).build());
+            articles.add(Article.builder().denomination("Té frío limón").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgTeFrioLimon).build());
+            articles.add(Article.builder().denomination("Coca Light 500ml").currentStock(50).maxStock(100).buyingPrice(1500.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCocaLight).build());
+            articles.add(Article.builder().denomination("Gaseosa lima limón").currentStock(50).maxStock(100).buyingPrice(1200.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgLimaLimon).build());
+            articles.add(Article.builder().denomination("Cerveza rubia 500ml").currentStock(30).maxStock(60).buyingPrice(1500.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCervezaRubia).build());
+            articles.add(Article.builder().denomination("Cerveza negra 500ml").currentStock(30).maxStock(60).buyingPrice(1500.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCervezaNegra).build());
+            articles.add(Article.builder().denomination("Vino tinto 750ml").currentStock(20).maxStock(40).buyingPrice(1700.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgVinoTinto).build());
+            articles.add(Article.builder().denomination("Vino blanco 750ml").currentStock(20).maxStock(40).buyingPrice(1700.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgVinoBlanco).build());
+            articles.add(Article.builder().denomination("Limonada casera").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).isEnabled(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgLimonada).build());
 
             articleRepository.saveAll(articles);
 
