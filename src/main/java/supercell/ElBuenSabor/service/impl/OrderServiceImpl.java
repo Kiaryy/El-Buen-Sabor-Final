@@ -437,25 +437,53 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
     
 
     @Override
+    @Transactional
     public OrderResponseDTO changeOrderStatus(Integer orderId, OrderState orderState) {
-       Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Orden no encontrada"));
-       order.setOrderState(orderState);
-       orderRepository.save(order);
-
-       return OrderResponseDTO.builder()
-               .id(order.getId())
-               .estimatedFinishTime(order.getEstimatedFinishTime())
-               .total(order.getTotal())
-               .totalCost(order.getTotalCost())
-               .orderDate(order.getOrderDate())
-               .orderState(order.getOrderState().toString())
-               .orderType(order.getOrderType().toString())
-               .payMethod(order.getPayMethod().toString())
-               .subsidiaryId(order.getSubsidiaryId())
-               .client( OrderServiceImpl.clientToDto(order.getClient()) )
-               .directionToSend(order.getDirection())
-               .build();
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
+    
+        // If cancelling, restore stock for articles marked as forSale
+        if (orderState == OrderState.CANCELED) {
+            for (OrderDetails detail : order.getOrderDetails()) {
+                // Case A: Direct article (drink, etc.)
+                if (detail.getArticle() != null && detail.getArticle().isForSale()) {
+                    Article article = detail.getArticle();
+                    article.setCurrentStock(article.getCurrentStock() + detail.getQuantity());
+                    articleRepository.save(article);
+                }
+    
+                // Case B: Article inside a Sale
+                if (detail.getSale() != null) {
+                    for (SaleDetail saleDetail : detail.getSale().getSaleDetails()) {
+                        if (saleDetail.getArticle() != null && saleDetail.getArticle().isForSale()) {
+                            Article article = saleDetail.getArticle();
+                            int restoreQty = saleDetail.getQuantity() * detail.getQuantity();
+                            article.setCurrentStock(article.getCurrentStock() + restoreQty);
+                            articleRepository.save(article);
+                        }
+                    }
+                }
+            }
+        }
+    
+        order.setOrderState(orderState);
+        orderRepository.save(order);
+    
+        return OrderResponseDTO.builder()
+                .id(order.getId())
+                .estimatedFinishTime(order.getEstimatedFinishTime())
+                .total(order.getTotal())
+                .totalCost(order.getTotalCost())
+                .orderDate(order.getOrderDate())
+                .orderState(order.getOrderState().toString())
+                .orderType(order.getOrderType().toString())
+                .payMethod(order.getPayMethod().toString())
+                .subsidiaryId(order.getSubsidiaryId())
+                .client(OrderServiceImpl.clientToDto(order.getClient()))
+                .directionToSend(order.getDirection())
+                .build();
     }
+    
 
     @Override
     public List<ProductsOrderedDto> getOrderedProductByUserId(Long userId) {
