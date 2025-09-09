@@ -26,4 +26,5 @@ public class EmployeeDto{
     private Role role;
     private Double salary;
     private Shift shift;
+    private boolean isEnabled;
 }

@@ -32,176 +32,99 @@ public class OrderServiceImpl implements OrderService {
     private final SaleRepository saleRepository;
 
     @Transactional
-@Override
-public BillResponseDTO createOrder(OrderRequestDTO request) {
-
-    Client client = clientRepository.findById(request.getClientId())
-            .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-
-    LocalTime estimatedTime = request.getEstimatedFinishTime();
-    if (!request.isTakeAway()) {
-        estimatedTime = estimatedTime.plusMinutes(10);
-    }
-
-    Order order = new Order();
-    order.setEstimatedFinishTime(estimatedTime);
-    order.setTotal(request.getTotal());
-    order.setTotalCost(request.getTotalCost());
-    order.setOrderDate(request.getOrderDate());
-    order.setClient(client);
-    order.setOrderState(request.getOrderState());
-    switch (request.getOrderType()) {
-        case ON_SITE -> order.setOrderType(OrderType.ON_SITE);
-        case DELIVERY -> order.setOrderType(OrderType.DELIVERY);
-        case TAKEAWAY -> order.setOrderType(OrderType.TAKEAWAY);
-        default -> order.setOrderType(OrderType.ON_SITE);
-    }
-    order.setPayMethod(request.getPayMethod());
-    order.setSubsidiaryId(request.getSubsidiaryId());
-    order.setDirection(request.getDirection());
-
-    List<OrderDetails> orderDetailsList = new ArrayList<>();
-
-    // --- Manufactured articles (ordered directly) ---
-    if (request.getOrderDetails() != null) {
-        for (OrderRequestDTO.OrderDetailDTO detailDTO : request.getOrderDetails()) {
-            ManufacturedArticle mArticle = manufacturedArticleRepository.findById(detailDTO.getManufacturedArticleId())
-                    .orElseThrow(() -> new RuntimeException("Artículo manufacturado no encontrado"));
-
-            int orderedQty = detailDTO.getQuantity();
-
-            // 1) Discount ingredients according to recipe * orderedQty
-            for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
-                Article article = mad.getArticle();
-                int requiredQty = mad.getQuantity() * orderedQty;
-
-                if (article.getCurrentStock() < requiredQty) {
-                    throw new RuntimeException("Stock insuficiente del insumo: " + article.getDenomination());
-                }
-
-                article.setCurrentStock(article.getCurrentStock() - requiredQty);
-                articleRepository.save(article);
-            }
-
-            // 2) Discount the manufactured article stock itself (if you track pre-made units)
-            Integer mStock = mArticle.getStock() != null ? mArticle.getStock() : 0;
-            if (mStock < orderedQty) {
-                throw new RuntimeException("Stock insuficiente del artículo manufacturado: " + mArticle.getName());
-            }
-            mArticle.setStock(mStock - orderedQty);
-            manufacturedArticleRepository.save(mArticle);
-
-            // 3) Add order detail
-            OrderDetails detail = new OrderDetails();
-            detail.setOrder(order);
-            detail.setManufacturedArticle(mArticle);
-            detail.setQuantity(orderedQty);
-            detail.setSubTotal(detailDTO.getSubTotal());
-            orderDetailsList.add(detail);
+    @Override
+    public BillResponseDTO createOrder(OrderRequestDTO request) {
+        // --- Validate client ---
+        Client client = clientRepository.findById(request.getClientId())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+    
+        // --- Estimate finish time ---
+        LocalTime estimatedTime = request.getEstimatedFinishTime();
+        if (!request.isTakeAway()) {
+            estimatedTime = estimatedTime.plusMinutes(10);
         }
-    }
-
-    // --- Individual articles (for sale) ---
-    if (request.getArticleDetails() != null) {
-        for (OrderRequestDTO.ArticleDetailDTO detailDTO : request.getArticleDetails()) {
-            Article article = articleRepository.findById(detailDTO.articleId())
-                    .orElseThrow(() -> new RuntimeException("Artículo no encontrado"));
-
-            if (!article.isForSale()) {
-                throw new RuntimeException("Articulo no disponible para venta");
+    
+        // --- Build order ---
+        Order order = new Order();
+        order.setEstimatedFinishTime(estimatedTime);
+        order.setTotal(request.getTotal());
+        order.setTotalCost(request.getTotalCost());
+        order.setOrderDate(request.getOrderDate());
+        order.setClient(client);
+        order.setOrderState(request.getOrderState());
+        order.setOrderType(Optional.ofNullable(request.getOrderType()).orElse(OrderType.ON_SITE));
+        order.setPayMethod(request.getPayMethod());
+        order.setSubsidiaryId(request.getSubsidiaryId());
+        order.setDirection(request.getDirection());
+    
+        List<OrderDetails> orderDetailsList = new ArrayList<>();
+    
+        // --- Just register manufactured articles, no stock change here ---
+        if (request.getOrderDetails() != null) {
+            for (OrderRequestDTO.OrderDetailDTO detailDTO : request.getOrderDetails()) {
+                ManufacturedArticle mArticle = manufacturedArticleRepository.findById(detailDTO.getManufacturedArticleId())
+                        .orElseThrow(() -> new RuntimeException("Artículo manufacturado no encontrado"));
+    
+                OrderDetails detail = new OrderDetails();
+                detail.setOrder(order);
+                detail.setManufacturedArticle(mArticle);
+                detail.setQuantity(detailDTO.getQuantity());
+                detail.setSubTotal(detailDTO.getSubTotal());
+                orderDetailsList.add(detail);
             }
-            if (article.getCurrentStock() < detailDTO.quantity()) {
-                throw new RuntimeException("Stock insuficiente de la bebida: " + article.getDenomination());
-            }
-
-            article.setCurrentStock(article.getCurrentStock() - detailDTO.quantity());
-            articleRepository.save(article);
-
-            OrderDetails detail = new OrderDetails();
-            detail.setOrder(order);
-            detail.setArticle(article);
-            detail.setQuantity(detailDTO.quantity());
-            detail.setSubTotal(detailDTO.subTotal());
-            orderDetailsList.add(detail);
         }
-    }
-
-    // --- Sales (promotions) ---
-    if (request.getSalesDetails() != null) {
-        for (OrderRequestDTO.SalesDTO saleDTO : request.getSalesDetails()) {
-            Sale sale = saleRepository.findById(saleDTO.getSaleID())
-                    .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
-
-            int orderedQty = saleDTO.getQuantity();
-
-            for (SaleDetail saleDetail : sale.getSaleDetails()) {
-
-                // Case A: saleDetail points to a direct article (drink/etc)
-                if (saleDetail.getArticle() != null) {
-                    Article article = saleDetail.getArticle();
-                    int requiredQty = saleDetail.getQuantity() * orderedQty;
-
-                    if (article.getCurrentStock() < requiredQty) {
-                        throw new RuntimeException("Stock insuficiente del artículo en la promoción: " + article.getDenomination());
-                    }
-
-                    article.setCurrentStock(article.getCurrentStock() - requiredQty);
-                    articleRepository.save(article);
+    
+        // --- Just register articles (forSale), no stock change here ---
+        if (request.getArticleDetails() != null) {
+            for (OrderRequestDTO.ArticleDetailDTO detailDTO : request.getArticleDetails()) {
+                Article article = articleRepository.findById(detailDTO.articleId())
+                        .orElseThrow(() -> new RuntimeException("Artículo no encontrado"));
+    
+                if (!article.isForSale()) {
+                    throw new RuntimeException("Artículo no disponible para venta");
                 }
-
-                // Case B: saleDetail points to a manufactured article
-                if (saleDetail.getManufacturedArticle() != null) {
-                    ManufacturedArticle mArticle = saleDetail.getManufacturedArticle();
-
-                    // 1) Discount ingredients for that manufactured article (recipe * perSaleQty * orderedQty)
-                    for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
-                        Article article = mad.getArticle();
-                        int requiredQty = mad.getQuantity() * saleDetail.getQuantity() * orderedQty;
-
-                        if (article.getCurrentStock() < requiredQty) {
-                            throw new RuntimeException("Stock insuficiente del insumo en la promoción: " + article.getDenomination());
-                        }
-
-                        article.setCurrentStock(article.getCurrentStock() - requiredQty);
-                        articleRepository.save(article);
-                    }
-
-                    // 2) Discount manufactured-article stock itself
-                    int requiredMfgQty = saleDetail.getQuantity() * orderedQty;
-                    Integer mStock = mArticle.getStock() != null ? mArticle.getStock() : 0;
-                    if (mStock < requiredMfgQty) {
-                        throw new RuntimeException("Stock insuficiente del manufacturado en la promoción: " + mArticle.getName());
-                    }
-
-                    mArticle.setStock(mStock - requiredMfgQty);
-                    manufacturedArticleRepository.save(mArticle);
-                }
+    
+                OrderDetails detail = new OrderDetails();
+                detail.setOrder(order);
+                detail.setArticle(article);
+                detail.setQuantity(detailDTO.quantity());
+                detail.setSubTotal(detailDTO.subTotal());
+                orderDetailsList.add(detail);
             }
-
-            OrderDetails detail = new OrderDetails();
-            detail.setOrder(order);
-            detail.setSale(sale);
-            detail.setQuantity(orderedQty);
-            detail.setSubTotal(saleDTO.getSubTotal());
-            orderDetailsList.add(detail);
         }
+    
+        // --- Just register sales (promotions), no stock change here ---
+        if (request.getSalesDetails() != null) {
+            for (OrderRequestDTO.SalesDTO saleDTO : request.getSalesDetails()) {
+                Sale sale = saleRepository.findById(saleDTO.getSaleID())
+                        .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
+    
+                OrderDetails detail = new OrderDetails();
+                detail.setOrder(order);
+                detail.setSale(sale);
+                detail.setQuantity(saleDTO.getQuantity());
+                detail.setSubTotal(saleDTO.getSubTotal());
+                orderDetailsList.add(detail);
+            }
+        }
+    
+        order.setOrderDetails(orderDetailsList);
+        orderRepository.save(order);
+    
+        // --- Create bill ---
+        Bill bill = new Bill();
+        bill.setOrder(order);
+        bill.setBillingDate(LocalDate.now());
+        bill.setPayment(request.getPayMethod());
+        bill.setMpMerchantOrderID(null);
+        bill.setMpPreferenceID(null);
+        bill.setTotalSale(order.getTotal());
+    
+        bill = billRepository.save(bill);
+        return toDto(bill);
     }
 
-    order.setOrderDetails(orderDetailsList);
-    orderRepository.save(order);
-
-    Bill bill = new Bill();
-    bill.setOrder(order);
-    bill.setBillingDate(LocalDate.now());
-    bill.setPayment(request.getPayMethod());
-    bill.setMpMerchantOrderID(null);
-    bill.setMpPreferenceID(null);
-    bill.setTotalSale(order.getTotal());
-
-    bill = billRepository.save(bill);
-
-    return OrderServiceImpl.toDto(bill);
-}
+    
 
 
     @Override
@@ -231,7 +154,8 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
                                     ? new InventoryImageDTO(d.getArticle().getInventoryImage().getImageData())
                                     : null,
                             d.getArticle().isForSale(),
-                            d.getQuantity()
+                            d.getQuantity(),
+                            d.getArticle().isEnabled()
                     ))
                     .toList();
     
@@ -259,7 +183,8 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
                                             a.getCategory().getIDCategory(),
                                             null,
                                             a.isForSale(),
-                                            sd.getQuantity()
+                                            sd.getQuantity(),
+                                            d.getArticle().isEnabled()
                                     );
                                 })
                                 .filter(Objects::nonNull)
@@ -326,7 +251,8 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
                                                 d.getArticle().getCategory().getIDCategory(),
                                                 null,
                                                 d.getArticle().isForSale(),
-                                                0
+                                                0,
+                                                d.getArticle().isEnabled()
                                         );
                             }
                             )
@@ -370,7 +296,8 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
                             article.getCategory().getIDCategory(),
                             new InventoryImageDTO(article.getInventoryImage().getImageData()),
                             article.isForSale(),
-                            detail.getQuantity()   
+                            detail.getQuantity(),
+                            article.isEnabled()   
                     );
                 }).toList();
     
@@ -398,7 +325,8 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
                                         a.getCategory().getIDCategory(),
                                         null,
                                         a.isForSale(),
-                                        sd.getQuantity()  
+                                        sd.getQuantity(),
+                                        a.isEnabled()  
                                 );
                             })
                             .filter(Objects::nonNull)
@@ -438,27 +366,103 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
 
     @Override
     @Transactional
-    public OrderResponseDTO changeOrderStatus(Integer orderId, OrderState orderState) {
+    public OrderResponseDTO changeOrderStatus(Integer orderId, OrderState newState) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Orden no encontrada"));
     
-        // If cancelling, restore stock for articles marked as forSale
-        if (orderState == OrderState.CANCELED) {
+        OrderState oldState = order.getOrderState();
+    
+        // --- Move to PREPARING: discount stock ---
+        if (newState == OrderState.PREPARING && oldState == OrderState.PENDING) {
             for (OrderDetails detail : order.getOrderDetails()) {
-                // Case A: Direct article (drink, etc.)
+                // Case A: Direct article (drink/etc)
+                if (detail.getArticle() != null && detail.getArticle().isForSale()) {
+                    Article article = detail.getArticle();
+                    if (article.getCurrentStock() < detail.getQuantity()) {
+                        throw new RuntimeException("Stock insuficiente de " + article.getDenomination());
+                    }
+                    article.setCurrentStock(article.getCurrentStock() - detail.getQuantity());
+                    articleRepository.save(article);
+                }
+    
+                // Case B: Manufactured article
+                if (detail.getManufacturedArticle() != null) {
+                    ManufacturedArticle mArticle = detail.getManufacturedArticle();
+                    int qty = detail.getQuantity();
+    
+                    // Discount ingredients from recipe
+                    for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
+                        Article ingredient = mad.getArticle();
+                        int required = mad.getQuantity() * qty;
+                        if (ingredient.getCurrentStock() < required) {
+                            throw new RuntimeException("Stock insuficiente del insumo: " + ingredient.getDenomination());
+                        }
+                        ingredient.setCurrentStock(ingredient.getCurrentStock() - required);
+                        articleRepository.save(ingredient);
+                    }
+    
+                    // Discount manufactured article stock
+                    int stock = mArticle.getStock() != null ? mArticle.getStock() : 0;
+                    if (stock < qty) {
+                        throw new RuntimeException("Stock insuficiente del manufacturado: " + mArticle.getName());
+                    }
+                    mArticle.setStock(stock - qty);
+                    manufacturedArticleRepository.save(mArticle);
+                }
+    
+                // Case C: Sale (promotion)
+                if (detail.getSale() != null) {
+                    int saleQty = detail.getQuantity();
+                    for (SaleDetail saleDetail : detail.getSale().getSaleDetails()) {
+                        if (saleDetail.getArticle() != null) {
+                            Article article = saleDetail.getArticle();
+                            int required = saleDetail.getQuantity() * saleQty;
+                            if (article.getCurrentStock() < required) {
+                                throw new RuntimeException("Stock insuficiente de " + article.getDenomination());
+                            }
+                            article.setCurrentStock(article.getCurrentStock() - required);
+                            articleRepository.save(article);
+                        }
+                        if (saleDetail.getManufacturedArticle() != null) {
+                            ManufacturedArticle mArticle = saleDetail.getManufacturedArticle();
+                            int requiredMfg = saleDetail.getQuantity() * saleQty;
+    
+                            for (ManufacturedArticleDetail mad : mArticle.getManufacturedArticleDetail()) {
+                                Article ingredient = mad.getArticle();
+                                int required = mad.getQuantity() * requiredMfg;
+                                if (ingredient.getCurrentStock() < required) {
+                                    throw new RuntimeException("Stock insuficiente del insumo: " + ingredient.getDenomination());
+                                }
+                                ingredient.setCurrentStock(ingredient.getCurrentStock() - required);
+                                articleRepository.save(ingredient);
+                            }
+    
+                            int stock = mArticle.getStock() != null ? mArticle.getStock() : 0;
+                            if (stock < requiredMfg) {
+                                throw new RuntimeException("Stock insuficiente del manufacturado: " + mArticle.getName());
+                            }
+                            mArticle.setStock(stock - requiredMfg);
+                            manufacturedArticleRepository.save(mArticle);
+                        }
+                    }
+                }
+            }
+        }
+    
+        // --- Cancelled: restore stock ---
+        if (newState == OrderState.CANCELED && oldState != OrderState.CANCELED) {
+            for (OrderDetails detail : order.getOrderDetails()) {
                 if (detail.getArticle() != null && detail.getArticle().isForSale()) {
                     Article article = detail.getArticle();
                     article.setCurrentStock(article.getCurrentStock() + detail.getQuantity());
                     articleRepository.save(article);
                 }
-    
-                // Case B: Article inside a Sale
                 if (detail.getSale() != null) {
                     for (SaleDetail saleDetail : detail.getSale().getSaleDetails()) {
                         if (saleDetail.getArticle() != null && saleDetail.getArticle().isForSale()) {
                             Article article = saleDetail.getArticle();
-                            int restoreQty = saleDetail.getQuantity() * detail.getQuantity();
-                            article.setCurrentStock(article.getCurrentStock() + restoreQty);
+                            int restore = saleDetail.getQuantity() * detail.getQuantity();
+                            article.setCurrentStock(article.getCurrentStock() + restore);
                             articleRepository.save(article);
                         }
                     }
@@ -466,7 +470,7 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
             }
         }
     
-        order.setOrderState(orderState);
+        order.setOrderState(newState);
         orderRepository.save(order);
     
         return OrderResponseDTO.builder()
@@ -483,6 +487,7 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
                 .directionToSend(order.getDirection())
                 .build();
     }
+    
     
 
     @Override
@@ -532,7 +537,8 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
                                             article.getInventoryImage().getImageData() :
                                             null),
                             article.isForSale(),
-                            detail.getQuantity()
+                            detail.getQuantity(),
+                            article.isEnabled()
                     );
     
                     ProductsOrderedDto dto = new ProductsOrderedDto(
@@ -565,7 +571,8 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
                                         a.getCategory().getIDCategory(),
                                         null,
                                         a.isForSale(),
-                                        sd.getQuantity()
+                                        sd.getQuantity(),
+                                        sd.getArticle().isEnabled()
                                 );
                             })
                             .filter(Objects::nonNull)
@@ -673,7 +680,8 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
                                                 d.getArticle().getCategory().getIDCategory(),
                                                 null,
                                                 d.getArticle().isForSale(),
-                                                0
+                                                0,
+                                                d.getArticle().isEnabled()
                                         );
                                     })
                                     .toList(),
@@ -706,7 +714,8 @@ public BillResponseDTO createOrder(OrderRequestDTO request) {
                                             a.getCategory().getIDCategory(),
                                             null,
                                             a.isForSale(),
-                                            detail.getQuantity()
+                                            detail.getQuantity(),
+                                            a.isEnabled()
                                     );
 
 

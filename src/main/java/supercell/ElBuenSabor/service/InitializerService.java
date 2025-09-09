@@ -229,21 +229,21 @@ public class InitializerService {
                 .build();
 
             // --- 15 artículos para vender (bebidas) con imagen ---
-            articles.add(Article.builder().denomination("Coca Cola 500ml").currentStock(50).maxStock(100).buyingPrice(120.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCocaCola).build());
-            articles.add(Article.builder().denomination("Sprite 500ml").currentStock(50).maxStock(100).buyingPrice(120.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgSprite).build());
-            articles.add(Article.builder().denomination("Fanta 500ml").currentStock(50).maxStock(100).buyingPrice(120.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgFanta).build());
-            articles.add(Article.builder().denomination("Agua sin gas 500ml").currentStock(50).maxStock(100).buyingPrice(80.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgAguaSinGas).build());
-            articles.add(Article.builder().denomination("Agua con gas 500ml").currentStock(50).maxStock(100).buyingPrice(80.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgAguaConGas).build());
-            articles.add(Article.builder().denomination("Jugo de naranja").currentStock(40).maxStock(80).buyingPrice(100.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgJugoNaranja).build());
-            articles.add(Article.builder().denomination("Jugo de manzana").currentStock(40).maxStock(80).buyingPrice(100.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgJugoManzana).build());
-            articles.add(Article.builder().denomination("Té frío limón").currentStock(40).maxStock(80).buyingPrice(90.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgTeFrioLimon).build());
-            articles.add(Article.builder().denomination("Coca Light 500ml").currentStock(50).maxStock(100).buyingPrice(120.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCocaLight).build());
-            articles.add(Article.builder().denomination("Gaseosa lima limón").currentStock(50).maxStock(100).buyingPrice(120.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgLimaLimon).build());
-            articles.add(Article.builder().denomination("Cerveza rubia 500ml").currentStock(30).maxStock(60).buyingPrice(150.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCervezaRubia).build());
-            articles.add(Article.builder().denomination("Cerveza negra 500ml").currentStock(30).maxStock(60).buyingPrice(150.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCervezaNegra).build());
-            articles.add(Article.builder().denomination("Vino tinto 750ml").currentStock(20).maxStock(40).buyingPrice(400.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgVinoTinto).build());
-            articles.add(Article.builder().denomination("Vino blanco 750ml").currentStock(20).maxStock(40).buyingPrice(400.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgVinoBlanco).build());
-            articles.add(Article.builder().denomination("Limonada casera").currentStock(40).maxStock(80).buyingPrice(100.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgLimonada).build());
+            articles.add(Article.builder().denomination("Coca Cola 500ml").currentStock(50).maxStock(100).buyingPrice(1500.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCocaCola).build());
+            articles.add(Article.builder().denomination("Sprite 500ml").currentStock(50).maxStock(100).buyingPrice(1250.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgSprite).build());
+            articles.add(Article.builder().denomination("Fanta 500ml").currentStock(50).maxStock(100).buyingPrice(1750.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgFanta).build());
+            articles.add(Article.builder().denomination("Agua sin gas 500ml").currentStock(50).maxStock(100).buyingPrice(1000.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgAguaSinGas).build());
+            articles.add(Article.builder().denomination("Agua con gas 500ml").currentStock(50).maxStock(100).buyingPrice(1250.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgAguaConGas).build());
+            articles.add(Article.builder().denomination("Jugo de naranja").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgJugoNaranja).build());
+            articles.add(Article.builder().denomination("Jugo de manzana").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgJugoManzana).build());
+            articles.add(Article.builder().denomination("Té frío limón").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgTeFrioLimon).build());
+            articles.add(Article.builder().denomination("Coca Light 500ml").currentStock(50).maxStock(100).buyingPrice(1500.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCocaLight).build());
+            articles.add(Article.builder().denomination("Gaseosa lima limón").currentStock(50).maxStock(100).buyingPrice(1200.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgLimaLimon).build());
+            articles.add(Article.builder().denomination("Cerveza rubia 500ml").currentStock(30).maxStock(60).buyingPrice(1500.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCervezaRubia).build());
+            articles.add(Article.builder().denomination("Cerveza negra 500ml").currentStock(30).maxStock(60).buyingPrice(1500.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgCervezaNegra).build());
+            articles.add(Article.builder().denomination("Vino tinto 750ml").currentStock(20).maxStock(40).buyingPrice(1700.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgVinoTinto).build());
+            articles.add(Article.builder().denomination("Vino blanco 750ml").currentStock(20).maxStock(40).buyingPrice(1700.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgVinoBlanco).build());
+            articles.add(Article.builder().denomination("Limonada casera").currentStock(40).maxStock(80).buyingPrice(1000.0).isForSale(true).category(categoryMap.get("Bebida")).measuringUnit(unitMap.get("Unit")).inventoryImage(imgLimonada).build());
 
             articleRepository.saveAll(articles);
 
@@ -551,6 +551,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
         admin.setPhoneNumber("1111111111");
         admin.setEmail("alice.admin@example.com");
         admin.setBirthDate(java.sql.Date.valueOf("1990-05-15"));
+        admin.setEnabled(true);
         employees.add(admin);
     
         Employee cashier = new Employee();
@@ -564,6 +565,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
         cashier.setPhoneNumber("2222222222");
         cashier.setEmail("bob.cashier@example.com");
         cashier.setBirthDate(java.sql.Date.valueOf("1988-11-23"));
+        cashier.setEnabled(true);
         employees.add(cashier);
     
         Employee chef1 = new Employee();
@@ -577,6 +579,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
         chef1.setPhoneNumber("3333333333");
         chef1.setEmail("carla.chef@example.com");
         chef1.setBirthDate(java.sql.Date.valueOf("1992-03-08"));
+        chef1.setEnabled(true);
         employees.add(chef1);
     
         Employee driver = new Employee();
@@ -590,6 +593,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
         driver.setPhoneNumber("4444444444");
         driver.setEmail("david.driver@example.com");
         driver.setBirthDate(java.sql.Date.valueOf("1985-07-19"));
+        driver.setEnabled(true);
         employees.add(driver);
     
         Employee chef2 = new Employee();
@@ -603,6 +607,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
         chef2.setPhoneNumber("5555555555");
         chef2.setEmail("emma.chef@example.com");
         chef2.setBirthDate(java.sql.Date.valueOf("1994-01-30"));
+        chef2.setEnabled(true);
         employees.add(chef2);
     
         employeeRepository.saveAll(employees);

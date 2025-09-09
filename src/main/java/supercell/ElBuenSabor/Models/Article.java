@@ -32,6 +32,8 @@ public class Article {
 
     private boolean isForSale;
 
+    private boolean isEnabled;
+
     @ManyToOne
     @JoinColumn(name = "measuringUnit_id", nullable = false) // MeasuringUnit Foreign Key
     private MeasuringUnit measuringUnit;

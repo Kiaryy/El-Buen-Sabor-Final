@@ -1,9 +1,14 @@
 package supercell.ElBuenSabor.controller.auth;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import supercell.ElBuenSabor.Models.Category;
 import supercell.ElBuenSabor.Models.Employee;
+import supercell.ElBuenSabor.Models.payload.CategoryDTO;
 import supercell.ElBuenSabor.Models.payload.EmployeeDto;
 import supercell.ElBuenSabor.Models.payload.UserLoginDTO;
 import supercell.ElBuenSabor.service.AuthService;
@@ -36,7 +41,12 @@ public class EmployeeController {
     public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO) {
         String response = authService.logIn(userLoginDTO.email(), userLoginDTO.password());
         return ResponseEntity.ok(response);
+    }
 
+    @PatchMapping("/update/{ID}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable("ID") Long ID, @RequestBody EmployeeDto employeeDto){
+        EmployeeServiceImpl service = (EmployeeServiceImpl) authService;
+        return ResponseEntity.status(HttpStatus.OK).body(service.updateEmployee(ID, employeeDto));
     }
 }
 

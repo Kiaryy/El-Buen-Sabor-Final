@@ -30,6 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = Category.builder()
             .name(categoryDTO.name())
             .isForSale(categoryDTO.isForsale())
+            .isEnabled(categoryDTO.isEnabled())
             .build();
         return categoryRepository.save(category);
     }
@@ -42,6 +43,9 @@ public class CategoryServiceImpl implements CategoryService {
             }
             if (categoryDTO.isForsale() || !categoryDTO.isForsale()) {
                 existingCategory.setForSale(categoryDTO.isForsale());
+            }
+            if (categoryDTO.isEnabled() || !categoryDTO.isEnabled()) {
+                existingCategory.setEnabled(categoryDTO.isEnabled());
             }
             return categoryRepository.save(existingCategory);
         }).orElseThrow(() -> new EntityNotFoundException("No se encontro una categoria con el ID: " + ID));

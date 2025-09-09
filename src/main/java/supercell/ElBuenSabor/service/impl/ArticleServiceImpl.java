@@ -57,6 +57,7 @@ public class ArticleServiceImpl implements ArticleService {
             .measuringUnit(measuringUnit.get())
             .category(category.get())
             .isForSale(articleDTO.isForSale())
+            .isEnabled(articleDTO.isEnabled())
             .build();
 
         InventoryImage inventoryImage = InventoryImage.builder()
@@ -98,6 +99,9 @@ public class ArticleServiceImpl implements ArticleService {
             }
             if (articleDTO.isForSale() || !articleDTO.isForSale()) {
                 existingArticle.setForSale(articleDTO.isForSale());
+            }
+            if (articleDTO.isEnabled() || !articleDTO.isEnabled()) {
+                existingArticle.setEnabled(articleDTO.isEnabled());
             }
             if (articleDTO.inventoryImageDTO() != null) {
                 InventoryImage inventoryImage = InventoryImage.builder()

@@ -9,5 +9,6 @@ public record ArticleDTO(
         Long category,
         InventoryImageDTO inventoryImageDTO,
         boolean isForSale,
-        int quantity   // ✅ new field
+        int quantity,
+        boolean isEnabled   
 ) {}

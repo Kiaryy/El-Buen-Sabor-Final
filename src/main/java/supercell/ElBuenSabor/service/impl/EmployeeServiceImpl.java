@@ -62,6 +62,7 @@ public class EmployeeServiceImpl implements AuthService<EmployeeDto> {
         emp.setEmployeeRole(dto.getRole());
         emp.setSalary(dto.getSalary());
         emp.setShift(dto.getShift());
+        emp.setEnabled(dto.isEnabled());
 
         List<Domicile> domiciles = new ArrayList<>();
                 for (DomicileDTO domicile : dto.getDomiciles()) {
@@ -81,4 +82,65 @@ public class EmployeeServiceImpl implements AuthService<EmployeeDto> {
         employeeRepository.save(emp);
         return dto;
     }
+
+    public Employee updateEmployee(Long ID, EmployeeDto employeeDto) {
+        return employeeRepository.findById(ID).map(existingEmployee -> {
+            if (employeeDto.getFirstName() != null) {
+                existingEmployee.setName(employeeDto.getFirstName());
+            }
+            if (employeeDto.getLastName() != null) {
+                existingEmployee.setLastName(employeeDto.getLastName());
+            }
+            if (employeeDto.getPhoneNumber() != null) {
+                existingEmployee.setPhoneNumber(employeeDto.getPhoneNumber());
+            }
+            if (employeeDto.getEmail() != null) {
+                existingEmployee.setEmail(employeeDto.getEmail());
+            }
+            if (employeeDto.getBirthDate() != null) {
+                existingEmployee.setBirthDate(employeeDto.getBirthDate());
+            }
+            if (employeeDto.getUsername() != null) {
+                existingEmployee.setUsername(employeeDto.getUsername());
+            }
+            if (employeeDto.getPassword() != null) {
+                existingEmployee.setPassword(employeeDto.getPassword());
+            }
+            if (employeeDto.getRole() != null) {
+                existingEmployee.setEmployeeRole(employeeDto.getRole());
+            }
+            if (employeeDto.getSalary() != null) {
+                existingEmployee.setSalary(employeeDto.getSalary());
+            }
+            if (employeeDto.getShift() != null) {
+                existingEmployee.setShift(employeeDto.getShift());
+            }
+    
+            // Enabled is a primitive boolean, so always update
+            existingEmployee.setEnabled(employeeDto.isEnabled());
+    
+            // Domiciles update (optional: replace old domiciles)
+            if (employeeDto.getDomiciles() != null && !employeeDto.getDomiciles().isEmpty()) {
+                List<Domicile> domiciles = new ArrayList<>();
+                for (DomicileDTO domicile : employeeDto.getDomiciles()) {
+                    Location location = locationRepository.findById(domicile.location())
+                            .orElseThrow(() -> new EntityNotFoundException("Location no encontrado con ID: " + domicile.location()));
+    
+                    Domicile newDomicile = Domicile.builder()
+                            .street(domicile.street())
+                            .zipCode(domicile.zipcode())
+                            .number(domicile.number())
+                            .location(location)
+                            .employee(existingEmployee)
+                            .build();
+    
+                    domiciles.add(newDomicile);
+                }
+                existingEmployee.setDomiciles(domiciles);
+            }
+    
+            return employeeRepository.save(existingEmployee);
+        }).orElseThrow(() -> new EntityNotFoundException("No se encontró un empleado con el ID: " + ID));
+    }
+    
 }

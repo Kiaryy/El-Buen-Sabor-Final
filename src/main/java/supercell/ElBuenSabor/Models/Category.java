@@ -19,4 +19,5 @@ public class Category {
 
     private String name;
     private boolean isForSale;
+    private boolean isEnabled;
 }

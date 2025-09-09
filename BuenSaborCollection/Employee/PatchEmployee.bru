@@ -1,0 +1,17 @@
+meta {
+  name: PatchEmployee
+  type: http
+  seq: 3
+}
+
+patch {
+  url: http://localhost:8080/employee/update/{ID}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "enabled":true
+  }
+}

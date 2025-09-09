@@ -31,6 +31,7 @@ public class Employee extends Person {
 
     private String username;
     private String password;
+    private boolean isEnabled;
 
         
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
