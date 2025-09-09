@@ -677,7 +677,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
                 LocalDate.of(2025, Month.DECEMBER, 21), LocalDate.of(2026, Month.MARCH, 20),
                 "images/sale/summer_sale.png",
                 List.of(
-                    detail(articleRepository.findById(42L).orElseThrow(), 1),
+                    detail(articleRepository.findById(46L).orElseThrow(), 1),
                     detail(manufacturedArticleRepository.findById(2L).orElseThrow(), 1),
                     detail(manufacturedArticleRepository.findById(3L).orElseThrow(), 1)
                 )
@@ -688,7 +688,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
                 LocalDate.of(2025, Month.JUNE, 20), LocalDate.of(2025, Month.SEPTEMBER, 22),
                 "images/sale/winter_sale.png",
                 List.of(
-                    detail(articleRepository.findById(43L).orElseThrow(), 1),
+                    detail(articleRepository.findById(47L).orElseThrow(), 1),
                     detail(manufacturedArticleRepository.findById(9L).orElseThrow(), 1),
                     detail(manufacturedArticleRepository.findById(11L).orElseThrow(), 1)
                 )
@@ -699,7 +699,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
                 LocalDate.of(2025, Month.SEPTEMBER, 23), LocalDate.of(2025, Month.DECEMBER, 22),
                 "images/sale/spring_sale.png",
                 List.of(
-                    detail(articleRepository.findById(47L).orElseThrow(), 1),
+                    detail(articleRepository.findById(51L).orElseThrow(), 1),
                     detail(manufacturedArticleRepository.findById(10L).orElseThrow(), 1),
                     detail(manufacturedArticleRepository.findById(15L).orElseThrow(), 1)
                 )
@@ -710,7 +710,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
                 LocalDate.of(2026, Month.MARCH, 20), LocalDate.of(2026, Month.JUNE, 20),
                 "images/sale/fall_sale.png",
                 List.of(
-                    detail(articleRepository.findById(44L).orElseThrow(), 1),
+                    detail(articleRepository.findById(48L).orElseThrow(), 1),
                     detail(manufacturedArticleRepository.findById(5L).orElseThrow(), 1),
                     detail(manufacturedArticleRepository.findById(11L).orElseThrow(), 1)
                 )
@@ -721,7 +721,7 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
                 LocalDate.of(2025, Month.DECEMBER, 1), LocalDate.of(2025, Month.DECEMBER, 30),
                 "images/sale/christmass_sale.png",
                 List.of(
-                    detail(articleRepository.findById(56L).orElseThrow(), 2),
+                    detail(articleRepository.findById(60L).orElseThrow(), 2),
                     detail(manufacturedArticleRepository.findById(12L).orElseThrow(), 1),
                     detail(manufacturedArticleRepository.findById(1L).orElseThrow(), 1)
                 )
