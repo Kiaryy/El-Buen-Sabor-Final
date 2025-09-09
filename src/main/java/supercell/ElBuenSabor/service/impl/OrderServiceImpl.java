@@ -133,10 +133,10 @@ public class OrderServiceImpl implements OrderService {
         List<OrderResponseDTO> responseList = new ArrayList<>();
     
         for (Order order : orders) {
-            // Force initialize orderDetails
+            // Force initialize sale details
             order.getOrderDetails().forEach(detail -> {
                 if (detail.getSale() != null) {
-                    detail.getSale().getSaleDetails().size(); // load sales
+                    detail.getSale().getSaleDetails().size();
                 }
             });
     
@@ -184,7 +184,7 @@ public class OrderServiceImpl implements OrderService {
                                             null,
                                             a.isForSale(),
                                             sd.getQuantity(),
-                                            d.getArticle().isEnabled()
+                                            a.isEnabled()   // ✅ fixed
                                     );
                                 })
                                 .filter(Objects::nonNull)
@@ -229,6 +229,7 @@ public class OrderServiceImpl implements OrderService {
     
         return responseList;
     }
+    
     
     
 
