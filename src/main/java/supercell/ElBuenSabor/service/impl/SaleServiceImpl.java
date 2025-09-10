@@ -41,10 +41,10 @@ public class SaleServiceImpl implements SaleService {
     public Sale addSale(SaleDTO saleDTO) {
         Sale sale = Sale.builder()
             .denomination(saleDTO.denomination())
-            .startDate(saleDTO.startDate())
-            .endDate(saleDTO.endDate())
-            .startTime(saleDTO.startTime())
-            .endTime(saleDTO.endTime())
+            // .startDate(saleDTO.startDate())
+            // .endDate(saleDTO.endDate())
+            // .startTime(saleDTO.startTime())
+            // .endTime(saleDTO.endTime())
             .saleDescription(saleDTO.saleDescription())
             .saleType(saleDTO.saleType())
             .saleDiscount(saleDTO.saleDiscount())
@@ -94,11 +94,11 @@ public class SaleServiceImpl implements SaleService {
         return saleRepository.findById(ID).map(existingSale -> {
             boolean discountUpdated = false;
 
-            if (saleDTO.denomination() != null) existingSale.setDenomination(saleDTO.denomination());
-            if (saleDTO.startDate() != null) existingSale.setStartDate(saleDTO.startDate());
-            if (saleDTO.endDate() != null) existingSale.setEndDate(saleDTO.endDate());
-            if (saleDTO.startTime() != null) existingSale.setStartTime(saleDTO.startTime());
-            if (saleDTO.endTime() != null) existingSale.setEndTime(saleDTO.endTime());
+            // if (saleDTO.denomination() != null) existingSale.setDenomination(saleDTO.denomination());
+            // if (saleDTO.startDate() != null) existingSale.setStartDate(saleDTO.startDate());
+            // if (saleDTO.endDate() != null) existingSale.setEndDate(saleDTO.endDate());
+            // if (saleDTO.startTime() != null) existingSale.setStartTime(saleDTO.startTime());
+            // if (saleDTO.endTime() != null) existingSale.setEndTime(saleDTO.endTime());
 
             if (saleDTO.saleDiscount() != null) {
                 existingSale.setSaleDiscount(saleDTO.saleDiscount());

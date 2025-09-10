@@ -8,10 +8,10 @@ import supercell.ElBuenSabor.Models.enums.SaleType;
 
 public record SaleDTO(
     String denomination,
-    LocalDate startDate,
-    LocalDate endDate,
-    LocalTime startTime,
-    LocalTime endTime,
+    // LocalDate startDate,
+    // LocalDate endDate,
+    // LocalTime startTime,
+    // LocalTime endTime,
     String saleDescription,
     SaleType saleType,
     boolean isActive,

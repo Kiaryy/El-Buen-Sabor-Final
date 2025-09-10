@@ -24,10 +24,10 @@ public class Sale {
     private Long IDSale;
     
     private String denomination;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
+    // private LocalDate startDate;
+    // private LocalDate endDate;
+    // private LocalTime startTime;
+    // private LocalTime endTime;
     private String saleDescription;
     private Double salePrice;
     private Double saleDiscount;
