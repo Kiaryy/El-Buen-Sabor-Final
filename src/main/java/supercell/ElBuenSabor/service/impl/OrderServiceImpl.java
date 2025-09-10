@@ -401,11 +401,11 @@ public class OrderServiceImpl implements OrderService {
                         articleRepository.save(ingredient);
                     }
     
-                    int stock = mArticle.getStock() != null ? mArticle.getStock() : 0;
-                    if (stock < qty) {
-                        throw new RuntimeException("Stock insuficiente del manufacturado: " + mArticle.getName());
-                    }
-                    mArticle.setStock(stock - qty);
+                    // int stock = mArticle.getStock() != null ? mArticle.getStock() : 0;
+                    // if (stock < qty) {
+                    //     throw new RuntimeException("Stock insuficiente del manufacturado: " + mArticle.getName());
+                    // }
+                    // mArticle.setStock(stock - qty);
                     manufacturedArticleRepository.save(mArticle);
                 }
     
@@ -436,11 +436,11 @@ public class OrderServiceImpl implements OrderService {
                                 articleRepository.save(ingredient);
                             }
     
-                            int stock = mArticle.getStock() != null ? mArticle.getStock() : 0;
-                            if (stock < requiredMfg) {
-                                throw new RuntimeException("Stock insuficiente del manufacturado: " + mArticle.getName());
-                            }
-                            mArticle.setStock(stock - requiredMfg);
+                            // int stock = mArticle.getStock() != null ? mArticle.getStock() : 0;
+                            // if (stock < requiredMfg) {
+                            //     throw new RuntimeException("Stock insuficiente del manufacturado: " + mArticle.getName());
+                            // }
+                            // mArticle.setStock(stock - requiredMfg);
                             manufacturedArticleRepository.save(mArticle);
                         }
                     }

@@ -480,7 +480,6 @@ private Category requireCategory(Map<String, Category> categoryMap, String name)
                 .price(finalPrice)
                 .isAvailable(true)
                 .estimatedTimeMinutes(time)
-                .stock(50)
                 .category(category)
                 .build();
 

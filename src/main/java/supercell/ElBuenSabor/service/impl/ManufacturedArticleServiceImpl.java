@@ -55,7 +55,7 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
         for (ManufacturedArticleDetailDTO detailDTO : manufacturedArticleDTO.manufacturedArticleDetail()) {
             Article article = articleRepository.findById(detailDTO.articleId())
                 .orElseThrow(() -> new EntityNotFoundException("Artículo no encontrado con ID: " + detailDTO.articleId()));
-
+    
             ManufacturedArticleDetail detail = ManufacturedArticleDetail.builder()
                 .article(article)
                 .quantity(detailDTO.quantity())
@@ -64,24 +64,26 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
     
             details.add(detail);
         }
-
         manufacturedArticle.setManufacturedArticleDetail(details);
-
-        double price = details.stream()
+    
+        // --- Price calculation logic ---
+        double autoPrice = details.stream()
             .mapToDouble(detail -> detail.getArticle().getBuyingPrice() * detail.getQuantity())
-            .sum();
-
-        manufacturedArticle.setPrice(price * 1.25);
-        
+            .sum() * 1.25;
+    
+        if (manufacturedArticleDTO.price() != null && manufacturedArticleDTO.price() > 0) {
+            manufacturedArticle.setPrice(manufacturedArticleDTO.price());
+        } else {
+            manufacturedArticle.setPrice(autoPrice);
+        }
+    
         InventoryImage inventoryImage = InventoryImage.builder()
             .imageData(manufacturedArticleDTO.inventoryImageDTO().imageData())
             .build();
-    
         manufacturedArticle.setManufacInventoryImage(inventoryImage);
-
+    
         Category category = categoryRepository.findById(manufacturedArticleDTO.category())
             .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada con el ID: " + manufacturedArticleDTO.category()));
-        
         manufacturedArticle.setCategory(category);
     
         return manufacturedArticleRepository.save(manufacturedArticle);
@@ -89,10 +91,11 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
     
     
     
+    
     @Override
     public ManufacturedArticle updateManufacturedArticle(Long ID, ManufacturedArticleDTO manufacturedArticleDTO) {
-        return manufacturedArticleRepository.findById(ID).map(existingManufacturedArticle ->{
-            if(manufacturedArticleDTO.name() !=null){
+        return manufacturedArticleRepository.findById(ID).map(existingManufacturedArticle -> {
+            if (manufacturedArticleDTO.name() != null) {
                 existingManufacturedArticle.setName(manufacturedArticleDTO.name());
             }
             if (manufacturedArticleDTO.description() != null) {
@@ -101,50 +104,59 @@ public class ManufacturedArticleServiceImpl implements ManufacturedArticleServic
             if (manufacturedArticleDTO.estimatedTimeMinutes() != 0) {
                 existingManufacturedArticle.setEstimatedTimeMinutes(manufacturedArticleDTO.estimatedTimeMinutes());
             }
-            if (manufacturedArticleDTO.isAvailable() || !manufacturedArticleDTO.isAvailable()) {
-                existingManufacturedArticle.setAvailable(manufacturedArticleDTO.isAvailable());
-            }
+            existingManufacturedArticle.setAvailable(manufacturedArticleDTO.isAvailable());
+    
             if (manufacturedArticleDTO.manufacturedArticleDetail() != null && !manufacturedArticleDTO.manufacturedArticleDetail().isEmpty()) {
                 List<ManufacturedArticleDetail> details = new ArrayList<>();
                 for (ManufacturedArticleDetailDTO detailDTO : manufacturedArticleDTO.manufacturedArticleDetail()) {
                     Article article = articleRepository.findById(detailDTO.articleId())
                         .orElseThrow(() -> new EntityNotFoundException("Artículo no encontrado con ID: " + detailDTO.articleId()));
-            
+    
                     ManufacturedArticleDetail detail = ManufacturedArticleDetail.builder()
                         .article(article)
                         .quantity(detailDTO.quantity())
                         .manufacturedArticle(existingManufacturedArticle) 
                         .build();
-            
+    
                     details.add(detail);
                 }
                 existingManufacturedArticle.getManufacturedArticleDetail().clear();
-                existingManufacturedArticle.getManufacturedArticleDetail().addAll(details); 
-
-                double price = details.stream()
-                .mapToDouble(detail -> detail.getArticle().getBuyingPrice() * detail.getQuantity())
-                .sum();
-    
-                existingManufacturedArticle.setPrice(price * 1.25);
-                saleService.updateSalePricesUsingManufacturedArticle(existingManufacturedArticle);
+                existingManufacturedArticle.getManufacturedArticleDetail().addAll(details);
             }
+    
+            // --- PRICE LOGIC ---
+            if (manufacturedArticleDTO.price() != null && manufacturedArticleDTO.price() > 0) {
+                // manual override
+                existingManufacturedArticle.setPrice(manufacturedArticleDTO.price());
+            } else {
+                // recalc auto price based on details
+                double autoPrice = existingManufacturedArticle.getManufacturedArticleDetail().stream()
+                    .mapToDouble(detail -> detail.getArticle().getBuyingPrice() * detail.getQuantity())
+                    .sum() * 1.25;
+                existingManufacturedArticle.setPrice(autoPrice);
+            }
+    
+            // notify sales that depend on this manufacturedArticle
+            saleService.updateSalePricesUsingManufacturedArticle(existingManufacturedArticle);
+    
             if (manufacturedArticleDTO.inventoryImageDTO() != null) {
                 InventoryImage inventoryImage = InventoryImage.builder()
                     .imageData(manufacturedArticleDTO.inventoryImageDTO().imageData())
                     .build();
-
                 existingManufacturedArticle.setManufacInventoryImage(inventoryImage);
             }
+    
             if (manufacturedArticleDTO.category() != null && manufacturedArticleDTO.category() != 0) {
                 Category category = categoryRepository.findById(manufacturedArticleDTO.category())
                     .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada con el ID: " + manufacturedArticleDTO.category()));
-                
                 existingManufacturedArticle.setCategory(category);
             }
+    
             return manufacturedArticleRepository.save(existingManufacturedArticle);
         }).orElseThrow(() -> new EntityNotFoundException("No se encontro un articulo manufacturado con el ID: " + ID));
-        
     }
+    
+    
 
     @Transactional
     public void updatePricesForManufacturedArticlesUsingArticle(Article updatedArticle) {
