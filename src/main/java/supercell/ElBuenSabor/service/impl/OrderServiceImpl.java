@@ -193,8 +193,8 @@ public class OrderServiceImpl implements OrderService {
                         return new SaleResponseDTO(
                                 Math.toIntExact(sale.getIDSale()),
                                 sale.getDenomination(),
-                                sale.getStartDate(),
-                                sale.getEndDate(),
+                                // sale.getStartDate(),
+                                // sale.getEndDate(),
                                 sale.getSaleDescription(),
                                 saleArticles,
                                 sale.getSalePrice() != null ? sale.getSalePrice() : 0.0,
@@ -336,8 +336,8 @@ public class OrderServiceImpl implements OrderService {
                     return new SaleResponseDTO(
                             Math.toIntExact(sale.getIDSale()),
                             sale.getDenomination(),
-                            sale.getStartDate(),
-                            sale.getEndDate(),
+                            // sale.getStartDate(),
+                            // sale.getEndDate(),
                             sale.getSaleDescription(),
                             saleArticles,
                             sale.getSalePrice(),
@@ -725,8 +725,8 @@ public class OrderServiceImpl implements OrderService {
                     return new SaleResponseDTO(
                             Math.toIntExact(sale.getIDSale()),
                             sale.getDenomination(),
-                            sale.getStartDate(),
-                            sale.getEndDate(),
+                            // sale.getStartDate(),
+                            // sale.getEndDate(),
                             sale.getSaleDescription(),
                             articleDTOs,
                             sale.getSalePrice(),
